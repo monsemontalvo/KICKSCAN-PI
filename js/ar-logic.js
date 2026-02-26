@@ -1,76 +1,143 @@
 // js/ar-logic.js
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-// --- CORRECCIÓN CRÍTICA ---
-// 1. Exponemos THREE globalmente porque MindAR lo busca ahí.
+// Exponemos THREE globalmente para MindAR
 window.THREE = THREE;
-// 2. Importamos explícitamente la librería usando la clave del import-map
-import 'mindar-image-three'; 
-// --------------------------
+import 'mindar-image-three';
+
+// --- CONFIGURACIÓN DE MODELOS 3D POR PAÍS ---
+// Asegúrate de tener los archivos .glb en tu carpeta assets/models/
+const modelosPorPais = [
+    {
+        // Índice 0: MÉXICO
+        archivo: 'assets/models/ajolotebailador.glb', 
+        scale: [0.5, 0.5, 0.5], // Ajusta el tamaño (x, y, z) si sale muy grande o chico
+        position: [0, -0.4, 0]  // Ajusta la posición (x, y, z) para que pise el logo
+    },
+    {
+        // Índice 1: COLOMBIA (Ejemplo)
+        archivo: 'assets/models/colombia_ball.glb', // Pon aquí tus otros modelos
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        // Índice 2: IRLANDA
+        archivo: 'assets/models/irlanda_hat.glb', 
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        // Índice 3: ESPAÑA
+        archivo: 'assets/models/espana_bull.glb', 
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        // Índice 4: COREA
+        archivo: 'assets/models/corea_tiger.glb', 
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        // Índice 5: JAPÓN
+        archivo: 'assets/models/japon_samurai.glb', 
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    }
+];
 
 let mindarThree = null;
 let isARRunning = false;
+let mixers = []; // Aquí guardaremos los controladores de animación
+let clock = new THREE.Clock(); // Reloj para las animaciones
 
 window.iniciarAR = async () => {
     if (isARRunning) return;
-    console.log("Intentando iniciar AR...");
+    console.log("Iniciando AR con modelos 3D...");
 
-    // Verificación de seguridad: ¿Cargó la librería?
     if (!window.MINDAR || !window.MINDAR.IMAGE) {
-        alert("Error: La librería MindAR no se cargó correctamente. Revisa la consola.");
-        console.error("MINDAR no está definido en window.");
+        console.error("Librería MindAR no cargada.");
         return;
     }
 
     try {
-        // Configuración de MindAR
         mindarThree = new window.MINDAR.IMAGE.MindARThree({
             container: document.querySelector("#ar-container"),
-            imageTargetSrc: "assets/targets/targets.mind", // Verifica que este archivo exista
-            maxTrack: 1,
-            uiLoading: "no", 
-            uiScanning: "no", 
-            uiError: "yes" // Cambiamos a 'yes' para ver si sale error en pantalla
+            imageTargetSrc: "assets/targets/targets.mind", 
+            maxTrack: 1, // Solo un país a la vez
+            uiLoading: "no", uiScanning: "no", uiError: "yes"
         });
 
         const {renderer, scene, camera} = mindarThree;
 
-        // Iluminación
-        const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
-        scene.add(light);
+        // Iluminación para los modelos 3D
+        const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+        scene.add(hemisphereLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        directionalLight.position.set(5, 5, 5); // Luz tipo sol
+        scene.add(directionalLight);
 
-        // --- Configuración de Targets (0 a 5) ---
+        // Cargador de modelos GLB
+        const loader = new GLTFLoader();
+
+        // Configurar los 6 Targets (Anchors)
         for (let i = 0; i < 6; i++) {
             const anchor = mindarThree.addAnchor(i);
+            const infoModelo = modelosPorPais[i];
+
+            // 1. Cargar el modelo 3D específico para este índice
+            // Si no tienes modelo para alguno, puedes comentar la carga para que no de error 404
+            if (infoModelo && infoModelo.archivo) {
+                loader.load(infoModelo.archivo, (gltf) => {
+                    const model = gltf.scene;
+
+                    // Aplicar configuración personalizada (escala y posición)
+                    model.scale.set(...infoModelo.scale);
+                    model.position.set(...infoModelo.position);
+
+                    // --- MANEJO DE ANIMACIONES (EL AJOLOTE BAILADOR) ---
+                    // Si el modelo trae animaciones, reproducimos la primera (Track 0)
+                    if (gltf.animations && gltf.animations.length > 0) {
+                        const mixer = new THREE.AnimationMixer(model);
+                        const action = mixer.clipAction(gltf.animations[0]); 
+                        action.play();
+                        mixers.push(mixer); // Guardamos para actualizar en el loop
+                    }
+
+                    // Agregar modelo al anchor (se pega a la imagen real)
+                    anchor.group.add(model);
+                    console.log(`Modelo cargado para índice ${i}: ${infoModelo.archivo}`);
+
+                }, undefined, (error) => {
+                    console.warn(`No se pudo cargar modelo para índice ${i}. Verifica la ruta: ${infoModelo.archivo}`);
+                });
+            }
             
-            // Debug visual: Anillo azul para confirmar detección
-            const geometry = new THREE.RingGeometry(0.4, 0.5, 32);
-            const material = new THREE.MeshBasicMaterial({ 
-                color: 0x00aaff, side: THREE.DoubleSide, transparent: true, opacity: 0.8 
-            });
-            const ring = new THREE.Mesh(geometry, material);
-            anchor.group.add(ring);
-            
+            // 2. Eventos de Detección (Muestra la Ventana Deslizante)
             anchor.onTargetFound = () => {
-                console.log(`¡Target encontrado! Índice: ${i}`);
                 if(window.mostrarInfoPais) window.mostrarInfoPais(i);
             };
         }
 
-        // Iniciar
         await mindarThree.start();
         
-        // Loop de renderizado
+        // Loop de Renderizado (Actualiza gráficos y animaciones)
         renderer.setAnimationLoop(() => {
+            const delta = clock.getDelta();
+            
+            // Actualizar todas las animaciones (bailes)
+            mixers.forEach(mixer => mixer.update(delta));
+
             renderer.render(scene, camera);
         });
-
+        
         isARRunning = true;
-        console.log("Cámara iniciada correctamente.");
 
     } catch (error) {
-        console.error("Error CRÍTICO al iniciar AR:", error);
-        alert("No se pudo abrir la cámara. Revisa: 1. Permisos 2. HTTPS 3. Archivo .mind");
+        console.error("Error AR:", error);
+        alert("Error al iniciar cámara AR.");
     }
 }
 
@@ -79,5 +146,7 @@ window.detenerAR = () => {
         mindarThree.stop();
         mindarThree.renderer.setAnimationLoop(null);
         isARRunning = false;
+        // Limpiar mixers de animación
+        mixers = [];
     }
 };
