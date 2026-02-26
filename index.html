@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mundial 2026 - KICKSCAN</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        display: ['"Bebas Neue"', 'sans-serif'],
+                    },
+                    colors: {
+                        // Aquí puedes agregar colores personalizados si los usabas
+                        'glass-border': 'rgba(255, 255, 255, 0.12)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r147/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.1/dist/mindar-image-three.prod.js"></script>
+</head>
+<body class="bg-black text-white overflow-hidden selection:bg-blue-500 selection:text-white">
+
+    <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black transition-opacity duration-700">
+        <div class="relative mb-8">
+            <div class="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full animate-pulse"></div>
+            <img src="assets/img/soccer.png" alt="Logo Mundial" class="logo-animado relative z-10 w-32 h-32 object-contain drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+        </div>
+        
+        <h1 class="font-display text-6xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2 animate-bounce">
+            KICKSCAN
+        </h1>
+        <p class="font-sans text-gray-400 tracking-[0.3em] text-sm uppercase">
+            Experiencia Mundial 2026
+        </p>
+
+        <div class="mt-12 w-16 h-1 bg-gray-800 rounded-full overflow-hidden">
+            <div class="h-full bg-blue-500 w-1/2 animate-[loading_1s_infinite_ease-in-out]"></div>
+        </div>
+    </div>
+
+    <div id="app-container" style="display: none;" class="relative w-full h-screen">
+        
+        <nav class="ui-overlay pointer-events-none fixed top-0 left-0 w-full h-full z-40 flex flex-col justify-between p-6">
+            
+            <header class="glass-panel p-4 rounded-2xl flex items-center justify-between pointer-events-auto animate-fade-in-down">
+                <div class="flex items-center gap-3">
+                    <img src="assets/img/soccer.png" class="w-8 h-8">
+                    <span class="font-display text-xl tracking-wide">KICKSCAN</span>
+                </div>
+                <div class="text-xs font-sans bg-white/10 px-3 py-1 rounded-full text-green-400 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    ONLINE
+                </div>
+            </header>
+
+            <div class="glass-panel p-2 rounded-2xl flex justify-center gap-4 pointer-events-auto mb-6 mx-auto max-w-sm">
+                <button onclick="cambiarModo('ar')" class="flex-1 py-3 px-6 rounded-xl font-display text-lg transition-all active:scale-95 bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/30">
+                    📷 ESCANEAR
+                </button>
+                <button onclick="cambiarModo('filtros')" class="flex-1 py-3 px-6 rounded-xl font-display text-lg transition-all active:scale-95 bg-white/10 hover:bg-white/20 border border-white/10">
+                    ✨ FILTROS
+                </button>
+            </div>
+        </nav>
+
+        <div id="ar-container" class="absolute inset-0 z-0">
+            </div>
+
+        <div id="filter-container" class="absolute inset-0 z-10 hidden bg-gray-900">
+            <canvas id="filter-canvas" class="w-full h-full object-cover"></canvas>
+            
+            <video id="video-source" autoplay playsinline class="hidden"></video>
+
+            <div class="absolute bottom-32 left-0 w-full flex justify-center gap-4 z-50 pointer-events-auto overflow-x-auto px-4 py-2">
+                <button onclick="aplicarFiltro('normal')" class="filter-btn active">Normal</button>
+                <button onclick="aplicarFiltro('pixel')" class="filter-btn">Pixelado</button>
+                <button onclick="aplicarFiltro('termico')" class="filter-btn">Térmico</button>
+                <button onclick="aplicarFiltro('ruido')" class="filter-btn">TV Vieja</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/main.js"></script> 
+    <script src="js/ar-logic.js"></script>
+    <script src="js/filters.js"></script>
+
+    <script>
+        // Pequeño script inline para manejar visualmente los botones de filtro
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            // Estilos base Tailwind para los botones de filtro
+            btn.className = "px-4 py-2 rounded-full font-sans text-sm font-bold border border-white/20 bg-black/50 backdrop-blur-md transition-all whitespace-nowrap hover:bg-white/20";
+            
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-blue-600', 'border-blue-400');
+                    b.classList.add('bg-black/50');
+                });
+                this.classList.remove('bg-black/50');
+                this.classList.add('bg-blue-600', 'border-blue-400');
+            });
+        });
+        // Activar el primero por defecto
+        if(filterBtns.length > 0) filterBtns[0].click();
+    </script>
+</body>
+</html>
