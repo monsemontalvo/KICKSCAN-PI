@@ -1,60 +1,83 @@
 // js/ar-logic.js
+import * as THREE from 'three';
+
+// --- CORRECCIÓN CRÍTICA ---
+// 1. Exponemos THREE globalmente porque MindAR lo busca ahí.
+window.THREE = THREE;
+// 2. Importamos explícitamente la librería usando la clave del import-map
+import 'mindar-image-three'; 
+// --------------------------
 
 let mindarThree = null;
 let isARRunning = false;
 
-// Hacemos la función accesible globalmente para que main.js pueda llamarla
 window.iniciarAR = async () => {
-    // Si ya está corriendo, no hacemos nada
     if (isARRunning) return;
+    console.log("Intentando iniciar AR...");
 
-    console.log("Inicializando MindAR...");
+    // Verificación de seguridad: ¿Cargó la librería?
+    if (!window.MINDAR || !window.MINDAR.IMAGE) {
+        alert("Error: La librería MindAR no se cargó correctamente. Revisa la consola.");
+        console.error("MINDAR no está definido en window.");
+        return;
+    }
 
     try {
-        // 1. Configuración de MindAR
+        // Configuración de MindAR
         mindarThree = new window.MINDAR.IMAGE.MindARThree({
             container: document.querySelector("#ar-container"),
-            imageTargetSrc: "assets/targets/targets.mind", // RUTA IMPORTANTE
-            filterMinCF: 0.0001, 
-            filterBeta: 0.001,
+            imageTargetSrc: "assets/targets/targets.mind", // Verifica que este archivo exista
+            maxTrack: 1,
+            uiLoading: "no", 
+            uiScanning: "no", 
+            uiError: "yes" // Cambiamos a 'yes' para ver si sale error en pantalla
         });
 
         const {renderer, scene, camera} = mindarThree;
 
-        // 2. Iluminación
+        // Iluminación
         const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
         scene.add(light);
 
-        // 3. Cargar el Modelo 3D (Balón)
-        const loader = new THREE.GLTFLoader();
-        loader.load('assets/models/low_poly_soccer_ball_or_football.glb', (gltf) => {
-            const model = gltf.scene;
+        // --- Configuración de Targets (0 a 5) ---
+        for (let i = 0; i < 6; i++) {
+            const anchor = mindarThree.addAnchor(i);
             
-            // Ajustes del modelo (escala y posición)
-            model.scale.set(0.2, 0.2, 0.2); 
-            model.position.set(0, -0.4, 0); 
-            
-            // Anclar el modelo al primer target (índice 0) del archivo .mind
-            const anchor = mindarThree.addAnchor(0);
-            anchor.group.add(model);
-            
-            // Animación: Rotar el balón constantemente
-            // Usamos el loop de renderizado para animar
-            const clock = new THREE.Clock();
-            renderer.setAnimationLoop(() => {
-                const delta = clock.getDelta();
-                if (model) model.rotation.y += 1.5 * delta; // Velocidad de rotación
-                renderer.render(scene, camera);
+            // Debug visual: Anillo azul para confirmar detección
+            const geometry = new THREE.RingGeometry(0.4, 0.5, 32);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0x00aaff, side: THREE.DoubleSide, transparent: true, opacity: 0.8 
             });
+            const ring = new THREE.Mesh(geometry, material);
+            anchor.group.add(ring);
+            
+            anchor.onTargetFound = () => {
+                console.log(`¡Target encontrado! Índice: ${i}`);
+                if(window.mostrarInfoPais) window.mostrarInfoPais(i);
+            };
+        }
+
+        // Iniciar
+        await mindarThree.start();
+        
+        // Loop de renderizado
+        renderer.setAnimationLoop(() => {
+            renderer.render(scene, camera);
         });
 
-        // 4. Iniciar el motor
-        await mindarThree.start();
         isARRunning = true;
-        console.log("AR listo y escaneando...");
+        console.log("Cámara iniciada correctamente.");
 
     } catch (error) {
-        console.error("Error crítico al iniciar AR:", error);
-        alert("No se pudo iniciar la cámara AR. Verifica permisos y HTTPS.");
+        console.error("Error CRÍTICO al iniciar AR:", error);
+        alert("No se pudo abrir la cámara. Revisa: 1. Permisos 2. HTTPS 3. Archivo .mind");
     }
 }
+
+window.detenerAR = () => {
+    if (mindarThree) {
+        mindarThree.stop();
+        mindarThree.renderer.setAnimationLoop(null);
+        isARRunning = false;
+    }
+};

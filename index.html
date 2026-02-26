@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mundial 2026 - KICKSCAN</title>
-
+    <title>KICKSCAN - Mundial 2026</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
-
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,105 +18,104 @@
                         sans: ['Montserrat', 'sans-serif'],
                         display: ['"Bebas Neue"', 'sans-serif'],
                     },
-                    colors: {
-                        // Aquí puedes agregar colores personalizados si los usabas
-                        'glass-border': 'rgba(255, 255, 255, 0.12)',
-                    }
+                    colors: { 'glass': 'rgba(255, 255, 255, 0.1)' }
                 }
             }
         }
     </script>
-
     <link rel="stylesheet" href="css/styles.css">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r147/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.1/dist/mindar-image-three.prod.js"></script>
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.147.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.147.0/examples/jsm/",
+        "mindar-image-three": "https://cdn.jsdelivr.net/npm/mind-ar@1.2.1/dist/mindar-image-three.prod.js"
+      }
+    }
+    </script>
+    
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/ar-logic.js"></script>
 </head>
-<body class="bg-black text-white overflow-hidden selection:bg-blue-500 selection:text-white">
+<body class="bg-black text-white overflow-hidden selection:bg-blue-500">
 
-    <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black transition-opacity duration-700">
+    <div id="splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black transition-opacity duration-700">
         <div class="relative mb-8">
             <div class="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full animate-pulse"></div>
-            <img src="assets/img/soccer.png" alt="Logo Mundial" class="logo-animado relative z-10 w-32 h-32 object-contain drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+            <img src="assets/img/soccer.png" alt="Logo" class="logo-animado relative z-10 w-32 h-32 object-contain drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
         </div>
-        
-        <h1 class="font-display text-6xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2 animate-bounce">
-            KICKSCAN
-        </h1>
-        <p class="font-sans text-gray-400 tracking-[0.3em] text-sm uppercase">
-            Experiencia Mundial 2026
-        </p>
-
+        <h1 class="font-display text-6xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2 animate-bounce">KICKSCAN</h1>
+        <p class="font-sans text-gray-400 tracking-[0.3em] text-sm uppercase">Experiencia Mundial 2026</p>
         <div class="mt-12 w-16 h-1 bg-gray-800 rounded-full overflow-hidden">
             <div class="h-full bg-blue-500 w-1/2 animate-[loading_1s_infinite_ease-in-out]"></div>
         </div>
     </div>
 
-    <div id="app-container" style="display: none;" class="relative w-full h-screen">
-        
-        <nav class="ui-overlay pointer-events-none fixed top-0 left-0 w-full h-full z-40 flex flex-col justify-between p-6">
-            
-            <header class="glass-panel p-4 rounded-2xl flex items-center justify-between pointer-events-auto animate-fade-in-down">
-                <div class="flex items-center gap-3">
-                    <img src="assets/img/soccer.png" class="w-8 h-8">
-                    <span class="font-display text-xl tracking-wide">KICKSCAN</span>
-                </div>
-                <div class="text-xs font-sans bg-white/10 px-3 py-1 rounded-full text-green-400 flex items-center gap-2">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    ONLINE
-                </div>
-            </header>
+    <section id="screen-home" class="hidden relative w-full h-screen flex flex-col items-center justify-center z-50 bg-black">
+        <canvas id="home-3d-canvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-80"></canvas>
+        <div class="relative z-10 text-center p-6 mt-32">
+            <h1 class="font-display text-7xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 animate-pulse">KICKSCAN</h1>
+            <p class="font-sans text-gray-400 tracking-[0.4em] text-sm uppercase mb-12">Escanea tu Pasión</p>
+            <button onclick="window.irAEscanear()" class="group relative px-8 py-4 bg-white text-black font-display text-2xl tracking-wider clip-path-slant hover:bg-blue-500 hover:text-white transition-all duration-300">
+                INICIAR ESCANEO
+                <div class="absolute inset-0 border-2 border-white translate-x-1 translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform pointer-events-none"></div>
+            </button>
+        </div>
+        <div class="absolute bottom-8 text-xs text-gray-600 font-sans">Powered by FCFM Multimedia</div>
+    </section>
 
-            <div class="glass-panel p-2 rounded-2xl flex justify-center gap-4 pointer-events-auto mb-6 mx-auto max-w-sm">
-                <button onclick="cambiarModo('ar')" class="flex-1 py-3 px-6 rounded-xl font-display text-lg transition-all active:scale-95 bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/30">
-                    📷 ESCANEAR
-                </button>
-                <button onclick="cambiarModo('filtros')" class="flex-1 py-3 px-6 rounded-xl font-display text-lg transition-all active:scale-95 bg-white/10 hover:bg-white/20 border border-white/10">
-                    ✨ FILTROS
-                </button>
-            </div>
-        </nav>
+    <section id="screen-ar" class="hidden relative w-full h-screen bg-gray-900">
+        <div id="ar-container" class="absolute inset-0 w-full h-full z-0"></div>
+        <button onclick="window.volverAlHome()" class="absolute top-6 left-6 z-20 w-10 h-10 bg-black/50 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/20">✕</button>
 
-        <div id="ar-container" class="absolute inset-0 z-0">
-            </div>
-
-        <div id="filter-container" class="absolute inset-0 z-10 hidden bg-gray-900">
-            <canvas id="filter-canvas" class="w-full h-full object-cover"></canvas>
-            
-            <video id="video-source" autoplay playsinline class="hidden"></video>
-
-            <div class="absolute bottom-32 left-0 w-full flex justify-center gap-4 z-50 pointer-events-auto overflow-x-auto px-4 py-2">
-                <button onclick="aplicarFiltro('normal')" class="filter-btn active">Normal</button>
-                <button onclick="aplicarFiltro('pixel')" class="filter-btn">Pixelado</button>
-                <button onclick="aplicarFiltro('termico')" class="filter-btn">Térmico</button>
-                <button onclick="aplicarFiltro('ruido')" class="filter-btn">TV Vieja</button>
+        <div id="scan-guide" class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+            <div class="w-64 h-64 border-2 border-white/30 rounded-3xl relative animate-pulse">
+                <div class="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-blue-500 -mt-1 -ml-1"></div>
+                <div class="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-blue-500 -mt-1 -mr-1"></div>
+                <div class="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-blue-500 -mb-1 -ml-1"></div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-blue-500 -mb-1 -mr-1"></div>
+                <p class="absolute -bottom-12 w-full text-center font-sans text-sm font-bold text-white/80">Apunta al logo del país</p>
             </div>
         </div>
 
-    </div>
+        <div id="bottom-sheet" class="fixed bottom-0 left-0 w-full bg-gray-900/90 backdrop-blur-xl rounded-t-3xl p-6 transform translate-y-full transition-transform duration-500 ease-out z-30 border-t border-white/10 shadow-2xl">
+            <div class="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-6"></div>
+            <div class="flex items-start justify-between mb-4">
+                <div>
+                    <h2 id="country-name" class="font-display text-4xl text-blue-400">PAÍS</h2>
+                    <div class="flex gap-4 mt-2 text-sm font-sans text-gray-300">
+                        <div class="bg-white/10 px-3 py-1 rounded-lg">🏆 <span id="stat-1">0</span></div>
+                        <div class="bg-white/10 px-3 py-1 rounded-lg">⚽ <span id="stat-2">0</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-black/30 p-4 rounded-xl border border-white/5 mb-6">
+                <h3 class="text-xs text-blue-400 font-bold uppercase mb-1">Dato Curioso</h3>
+                <p id="country-trivia" class="font-sans text-sm text-gray-300 leading-relaxed">...</p>
+            </div>
+            <button onclick="window.verHighlights()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl font-display text-xl tracking-wide shadow-lg shadow-blue-500/20 active:scale-95 transition-transform">VER HIGHLIGHTS 🎬</button>
+        </div>
+    </section>
 
-    <script src="js/main.js"></script> 
-    <script src="js/ar-logic.js"></script>
-    <script src="js/filters.js"></script>
-
-    <script>
-        // Pequeño script inline para manejar visualmente los botones de filtro
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        filterBtns.forEach(btn => {
-            // Estilos base Tailwind para los botones de filtro
-            btn.className = "px-4 py-2 rounded-full font-sans text-sm font-bold border border-white/20 bg-black/50 backdrop-blur-md transition-all whitespace-nowrap hover:bg-white/20";
-            
-            btn.addEventListener('click', function() {
-                filterBtns.forEach(b => {
-                    b.classList.remove('bg-blue-600', 'border-blue-400');
-                    b.classList.add('bg-black/50');
-                });
-                this.classList.remove('bg-black/50');
-                this.classList.add('bg-blue-600', 'border-blue-400');
-            });
-        });
-        // Activar el primero por defecto
-        if(filterBtns.length > 0) filterBtns[0].click();
-    </script>
+    <section id="screen-highlights" class="hidden fixed inset-0 z-50 bg-black flex flex-col">
+        <div class="p-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent absolute top-0 w-full z-10">
+            <button onclick="window.cerrarHighlights()" class="text-white font-display text-lg tracking-wide flex items-center gap-2">← VOLVER</button>
+            <span id="hl-title" class="font-display text-xl text-blue-400">HIGHLIGHTS</span>
+        </div>
+        <div class="relative flex-1 flex items-center justify-center bg-gray-900">
+            <video id="highlight-video" class="w-full max-h-screen object-contain transition-all duration-300" loop playsinline controls></video>
+        </div>
+        <div class="absolute bottom-0 w-full bg-gradient-to-t from-black via-black/80 to-transparent p-6 pb-10">
+            <p class="text-center font-sans text-xs text-gray-400 mb-4 uppercase tracking-widest">Aplicar Filtros</p>
+            <div class="flex justify-center gap-3 overflow-x-auto pb-2">
+                <button onclick="window.aplicarFiltroVideo('none')" class="filter-btn active px-4 py-2 rounded-full bg-white text-black text-xs font-bold font-sans">Normal</button>
+                <button onclick="window.aplicarFiltroVideo('sepia')" class="filter-btn px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10">Sepia</button>
+                <button onclick="window.aplicarFiltroVideo('grayscale')" class="filter-btn px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10">B/N</button>
+                <button onclick="window.aplicarFiltroVideo('contrast')" class="filter-btn px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10">Retro</button>
+                <button onclick="window.aplicarFiltroVideo('invert')" class="filter-btn px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10">Negativo</button>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
