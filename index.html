@@ -38,43 +38,57 @@
     <script type="module" src="js/main.js"></script>
     <script type="module" src="js/ar-logic.js"></script>
 </head>
-<body class="bg-black text-white overflow-hidden selection:bg-blue-500">
+<body class="bg-black text-white overflow-hidden selection:bg-green-500">
 
     <div id="splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black transition-opacity duration-700">
         <div class="relative mb-8">
-            <div class="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full animate-pulse"></div>
-            <img src="assets/img/soccer.png" alt="Logo" class="logo-animado relative z-10 w-32 h-32 object-contain drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+            <div class="absolute inset-0 bg-green-500/20 blur-3xl rounded-full animate-pulse"></div>
+            <img src="assets/img/soccer.png" alt="Logo" class="logo-animado relative z-10 w-32 h-32 object-contain drop-shadow-[0_0_15px_rgba(34,197,94,0.5)]">
         </div>
-        <h1 class="font-display text-6xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2 animate-bounce">KICKSCAN</h1>
+        
+        <h1 class="font-display text-6xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600 mb-2 animate-bounce">
+            KICKSCAN
+        </h1>
         <p class="font-sans text-gray-400 tracking-[0.3em] text-sm uppercase">Experiencia Mundial 2026</p>
+
         <div class="mt-12 w-16 h-1 bg-gray-800 rounded-full overflow-hidden">
-            <div class="h-full bg-blue-500 w-1/2 animate-[loading_1s_infinite_ease-in-out]"></div>
+            <div class="h-full bg-green-500 w-1/2 animate-[loading_1s_infinite_ease-in-out]"></div>
         </div>
     </div>
 
-    <section id="screen-home" class="hidden relative w-full h-screen flex flex-col items-center justify-center z-50 bg-black">
-        <canvas id="home-3d-canvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-80"></canvas>
-        <div class="relative z-10 text-center p-6 mt-32">
-            <h1 class="font-display text-7xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 animate-pulse">KICKSCAN</h1>
-            <p class="font-sans text-gray-400 tracking-[0.4em] text-sm uppercase mb-12">Escanea tu Pasión</p>
-            <button onclick="window.irAEscanear()" class="group relative px-8 py-4 bg-white text-black font-display text-2xl tracking-wider clip-path-slant hover:bg-blue-500 hover:text-white transition-all duration-300">
-                INICIAR ESCANEO
-                <div class="absolute inset-0 border-2 border-white translate-x-1 translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform pointer-events-none"></div>
-            </button>
+    <section id="screen-home" class="hidden relative w-full h-screen overflow-hidden bg-black font-display">
+        
+        <div class="absolute inset-0 z-0">
+             <canvas id="home-3d-canvas" class="w-full h-full object-cover"></canvas>
         </div>
-        <div class="absolute bottom-8 text-xs text-gray-600 font-sans">Powered by FCFM Multimedia</div>
+
+        <div class="absolute inset-0 z-10 flex flex-col justify-between p-8 pointer-events-none">
+            
+            <div class="mt-10 text-center">
+                <h1 class="font-display text-7xl md:text-9xl text-transparent bg-clip-text bg-gradient-to-b from-white to-transparent opacity-80" style="-webkit-text-stroke: 1px white;">
+                    KICKSCAN
+                </h1>
+            </div>
+
+            <div class="w-full flex justify-center pb-16 pointer-events-auto">
+                <button onclick="window.irAEscanear()" class="group relative px-10 py-4 bg-white text-black font-display text-2xl tracking-widest clip-path-slant hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                    INICIAR ESCANEO
+                    <div class="absolute inset-0 border-2 border-white translate-x-1 translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform pointer-events-none"></div>
+                </button>
+            </div>
+        </div>
     </section>
 
     <section id="screen-ar" class="hidden relative w-full h-screen bg-gray-900">
         <div id="ar-container" class="absolute inset-0 w-full h-full z-0"></div>
-        <button onclick="window.volverAlHome()" class="absolute top-6 left-6 z-20 w-10 h-10 bg-black/50 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/20">✕</button>
+        <button onclick="window.volverAlHome()" class="absolute top-6 left-6 z-20 w-10 h-10 bg-black/50 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/20 active:scale-90 transition-transform">✕</button>
 
         <div id="scan-guide" class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
             <div class="w-64 h-64 border-2 border-white/30 rounded-3xl relative animate-pulse">
-                <div class="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-blue-500 -mt-1 -ml-1"></div>
-                <div class="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-blue-500 -mt-1 -mr-1"></div>
-                <div class="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-blue-500 -mb-1 -ml-1"></div>
-                <div class="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-blue-500 -mb-1 -mr-1"></div>
+                <div class="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-green-500 -mt-1 -ml-1"></div>
+                <div class="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-green-500 -mt-1 -mr-1"></div>
+                <div class="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-green-500 -mb-1 -ml-1"></div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-green-500 -mb-1 -mr-1"></div>
                 <p class="absolute -bottom-12 w-full text-center font-sans text-sm font-bold text-white/80">Apunta al logo del país</p>
             </div>
         </div>
@@ -83,7 +97,7 @@
             <div class="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-6"></div>
             <div class="flex items-start justify-between mb-4">
                 <div>
-                    <h2 id="country-name" class="font-display text-4xl text-blue-400">PAÍS</h2>
+                    <h2 id="country-name" class="font-display text-4xl text-green-400">PAÍS</h2>
                     <div class="flex gap-4 mt-2 text-sm font-sans text-gray-300">
                         <div class="bg-white/10 px-3 py-1 rounded-lg">🏆 <span id="stat-1">0</span></div>
                         <div class="bg-white/10 px-3 py-1 rounded-lg">⚽ <span id="stat-2">0</span></div>
@@ -91,17 +105,17 @@
                 </div>
             </div>
             <div class="bg-black/30 p-4 rounded-xl border border-white/5 mb-6">
-                <h3 class="text-xs text-blue-400 font-bold uppercase mb-1">Dato Curioso</h3>
+                <h3 class="text-xs text-green-400 font-bold uppercase mb-1">Dato Curioso</h3>
                 <p id="country-trivia" class="font-sans text-sm text-gray-300 leading-relaxed">...</p>
             </div>
-            <button onclick="window.verHighlights()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl font-display text-xl tracking-wide shadow-lg shadow-blue-500/20 active:scale-95 transition-transform">VER HIGHLIGHTS 🎬</button>
+            <button onclick="window.verHighlights()" class="w-full py-4 bg-gradient-to-r from-green-600 to-green-800 rounded-xl font-display text-xl tracking-wide shadow-lg shadow-green-500/20 active:scale-95 transition-transform">VER HIGHLIGHTS 🎬</button>
         </div>
     </section>
 
     <section id="screen-highlights" class="hidden fixed inset-0 z-50 bg-black flex flex-col">
         <div class="p-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent absolute top-0 w-full z-10">
             <button onclick="window.cerrarHighlights()" class="text-white font-display text-lg tracking-wide flex items-center gap-2">← VOLVER</button>
-            <span id="hl-title" class="font-display text-xl text-blue-400">HIGHLIGHTS</span>
+            <span id="hl-title" class="font-display text-xl text-green-400">HIGHLIGHTS</span>
         </div>
         <div class="relative flex-1 flex items-center justify-center bg-gray-900">
             <video id="highlight-video" class="w-full max-h-screen object-contain transition-all duration-300" loop playsinline controls></video>

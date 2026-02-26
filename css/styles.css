@@ -1,69 +1,64 @@
-/* css/styles.css - VERSIÓN COMPLETA */
+/* css/styles.css - VERSIÓN LIMPIA (THREE.JS MODE) */
 
-/* --- 1. IMPORTACIÓN DE FUENTES --- */
+/* --- 1. CONFIGURACIÓN BASE --- */
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;800;900&display=swap');
 
-/* --- 2. CONFIGURACIÓN BASE --- */
 body {
   background-color: #000000;
   color: #f5f5f7;
   font-family: "Montserrat", -apple-system, sans-serif;
   margin: 0;
-  overflow: hidden; /* Importante para evitar scroll en la app SPA */
+  overflow: hidden; /* Evita scroll en toda la app */
   -webkit-font-smoothing: antialiased;
 }
 
-/* --- 3. UTILIDADES VISUALES (EFECTO CRISTAL) --- */
-.glass-panel {
-  background: rgba(28, 28, 30, 0.65);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-}
-
-/* --- 4. ANIMACIONES (Splash Screen y Carga) --- */
+/* --- 2. ANIMACIONES GLOBALES (Splash y Loading) --- */
 @keyframes logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-
-.logo-animado {
-  animation: logo-spin infinite 20s linear;
-}
+.logo-animado { animation: logo-spin infinite 20s linear; }
 
 @keyframes loading {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(200%); }
 }
 
-/* --- 5. ESTILOS ESPECÍFICOS DEL HOME (NUEVO) --- */
-/* Efecto de corte diagonal para el botón principal */
+/* --- 3. UTILIDADES DE UI --- */
+
+/* Efecto Cristal (Usado en paneles AR) */
+.glass-panel {
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Corte diagonal para el botón principal */
 .clip-path-slant {
     clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
 }
 
-/* --- 6. BOTTOM SHEET (Ventana Deslizante) --- */
+/* Scrollbars ocultos (para menús horizontales) */
+::-webkit-scrollbar { 
+    width: 0px; 
+    height: 0px;
+    background: transparent; 
+}
+
+/* --- 4. BOTTOM SHEET (Ventana Deslizante AR) --- */
 #bottom-sheet {
-    /* Optimización para animación suave */
     will-change: transform;
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
-    /* Por defecto está oculto hacia abajo (translate-y-full lo maneja tailwind, pero forzamos aquí por seguridad) */
+    box-shadow: 0 -10px 50px rgba(0,0,0,0.9);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-#bottom-sheet.active {
-    transform: translateY(0) !important;
+#bottom-sheet.active { 
+    transform: translateY(0) !important; 
 }
 
-/* --- 7. FILTROS DE VIDEO (HIGHLIGHTS) --- */
-/* Estas clases se aplican dinámicamente al tag <video> */
+/* --- 5. FILTROS DE VIDEO (Highlights) --- */
+/* Estas clases se aplican al tag <video> mediante JS */
 
 .filter-none { 
     filter: none; 
@@ -78,19 +73,11 @@ body {
 }
 
 .filter-contrast { 
-    /* Estilo "Retro" / TV Vieja */
+    /* Estilo Retro / TV Vieja */
     filter: contrast(1.4) saturate(1.4) sepia(0.3); 
 }
 
 .filter-invert { 
     /* Estilo Negativo / Futurista */
     filter: invert(0.9) hue-rotate(180deg); 
-}
-
-/* --- 8. UI OVERLAY GENÉRICO --- */
-/* Ocultar barra de scroll en contenedores horizontales (botones de filtro) */
-::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
-    background: transparent;
 }
