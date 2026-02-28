@@ -1,0 +1,17 @@
+# Videos
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wmv
+
+# Audio
+*.mp3
+*.wav
+*.ogg
+*.m4a
+
+# Si tienes todos los assets en una carpeta específica, 
+# es mejor ignorar la carpeta completa:
+/assets/videos/
+/assets/audio/

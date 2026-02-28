@@ -1,4 +1,3 @@
-// js/ar-logic.js
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -9,20 +8,41 @@ import 'mindar-image-three';
 // --- CONFIGURACIÓN DE MODELOS 3D POR PAÍS ---
 const modelosPorPais = [
     {
+        // Índice 0: MÉXICO
         archivo: 'assets/models/ajolotebailador.glb', 
         scale: [0.5, 0.5, 0.5], 
         position: [0, -0.4, 0]
     },
     {
-        archivo: 'assets/models/low_poly_soccer_ball_or_football.glb', // Ejemplo temporal
+        // Índice 1: COLOMBIA
+        archivo: 'assets/models/low_poly_soccer_ball_or_football.glb',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     },
-    // ... (El resto de tu configuración de modelos sigue igual)
-    { archivo: '', scale: [1,1,1], position: [0,0,0] }, // Irlanda
-    { archivo: '', scale: [1,1,1], position: [0,0,0] }, // España
-    { archivo: '', scale: [1,1,1], position: [0,0,0] }, // Corea
-    { archivo: '', scale: [1,1,1], position: [0,0,0] }  // Japón
+    {
+        // Índice 2: IRLANDA
+        archivo: 'assets/models/irlanda_hat.glb', 
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        // Índice 3: ESPAÑA
+        archivo: 'assets/models/espana_bull.glb', 
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        // Índice 4: COREA
+        archivo: 'assets/models/corea_tiger.glb', 
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        // Índice 5: JAPÓN
+        archivo: 'assets/models/japon_samurai.glb', 
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    }
 ];
 
 let mindarThree = null;
@@ -30,22 +50,59 @@ let isARRunning = false;
 let mixers = []; 
 let clock = new THREE.Clock();
 
-// VARIABLES PARA CONTROLAR LA PERSISTENCIA
-let currentModel = null;     // El modelo que estamos viendo actualmente
-let currentAnchor = null;    // El ancla (target) al que pertenece ese modelo original
+// VARIABLES DE CONTROL DE ESTADO
+let currentModel = null;     
+let currentAnchor = null;  
+let allLoadedModels = []; // Lista maestra para limpieza forzosa  
+
+// --- FUNCIÓN CLAVE: RESETEAR MODELO ---
+function resetearModeloAnterior() {
+    // Si hay un modelo activo, lo apagamos
+    if (currentModel) {
+        // 1. Ocultarlo INMEDIATAMENTE
+        currentModel.visible = false;
+
+        // 2. Si sabemos de dónde vino, lo devolvemos a su caja (anchor) y reseteamos posición
+        if (currentAnchor) {
+            currentAnchor.group.add(currentModel);
+            
+            const index = currentModel.userData.countryIndex;
+            const config = modelosPorPais[index];
+            if (config) {
+                currentModel.position.set(...config.position);
+                currentModel.scale.set(...config.scale);
+                currentModel.rotation.set(0, 0, 0); 
+            }
+        }
+    }
+    // Limpiar referencias
+    currentModel = null;
+    currentAnchor = null;
+}
 
 window.iniciarAR = async () => {
     if (isARRunning) return;
-    console.log("Iniciando AR con modelos persistentes...");
+    console.log("Iniciando AR (Modo Limpio)...");
 
     if (!window.MINDAR || !window.MINDAR.IMAGE) {
         console.error("Librería MindAR no cargada.");
         return;
     }
 
+    // --- LIMPIEZA PREVENTIVA ---
+    // Borramos cualquier canvas viejo que haya quedado en el contenedor
+    const container = document.querySelector("#ar-container");
+    if (container) container.innerHTML = '';
+    
+    // Reiniciamos variables
+    mixers = [];
+    allLoadedModels = [];
+    currentModel = null;
+    currentAnchor = null;
+
     try {
         mindarThree = new window.MINDAR.IMAGE.MindARThree({
-            container: document.querySelector("#ar-container"),
+            container: container,
             imageTargetSrc: "assets/targets/targets.mind", 
             maxTrack: 1, 
             uiLoading: "no", uiScanning: "no", uiError: "yes"
@@ -53,10 +110,9 @@ window.iniciarAR = async () => {
 
         const {renderer, scene, camera} = mindarThree;
 
-        // Iluminación
+        // Luces
         const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
         scene.add(hemisphereLight);
-        
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
         directionalLight.position.set(5, 5, 5); 
         scene.add(directionalLight);
@@ -68,16 +124,19 @@ window.iniciarAR = async () => {
             const anchor = mindarThree.addAnchor(i);
             const infoModelo = modelosPorPais[i];
 
-            // 1. Cargar modelo
             if (infoModelo && infoModelo.archivo) {
                 loader.load(infoModelo.archivo, (gltf) => {
                     const model = gltf.scene;
+                    
+                    // Configuración inicial
                     model.scale.set(...infoModelo.scale);
                     model.position.set(...infoModelo.position);
+                    model.visible = false; // Oculto por defecto
                     
-                    // Guardamos una referencia al ID del país en el modelo para usarlo luego
                     model.userData.countryIndex = i;
+                    model.userData.originalAnchor = anchor; // Guardamos su "casa"
 
+                    // Animaciones
                     if (gltf.animations && gltf.animations.length > 0) {
                         const mixer = new THREE.AnimationMixer(model);
                         const action = mixer.clipAction(gltf.animations[0]); 
@@ -85,42 +144,46 @@ window.iniciarAR = async () => {
                         mixers.push(mixer);
                     }
 
+                    // Agregar al ancla
                     anchor.group.add(model);
-                    console.log(`Modelo cargado para índice ${i}`);
+                    
+                    // Guardar en la lista maestra para poder limpiarlos luego
+                    allLoadedModels.push(model);
+                    
+                    console.log(`Modelo cargado índice ${i}`);
 
                 }, undefined, (error) => {
-                    console.warn(`Error cargando modelo ${i}: ${infoModelo.archivo}`);
+                    console.warn(`Error modelo ${i}: ${infoModelo.archivo}`);
                 });
             }
             
-            // 2. LÓGICA DE DETECCIÓN MODIFICADA (AQUÍ ESTÁ LA MAGIA)
+            // --- LÓGICA DE DETECCIÓN ---
             anchor.onTargetFound = () => {
-                // Si ya estamos mostrando ESTE mismo país, no hacemos nada
+                // Si ya estamos viendo este mismo país, ignorar
                 if (currentModel && currentModel.userData.countryIndex === i) return;
 
-                console.log("Target detectado: " + i);
+                console.log(`¡Target encontrado: ${i}!`);
 
-                // A. Si había otro modelo mostrándose, lo devolvemos a su ancla original y lo ocultamos
-                if (currentModel && currentAnchor) {
-                    currentAnchor.group.attach(currentModel); // Regresa a casa
-                    currentModel.visible = false; // Se oculta porque el target no está visible
-                }
+                // 1. LIMPIAR EL ANTERIOR (Si existe)
+                resetearModeloAnterior();
 
-                // B. Buscamos el modelo nuevo dentro del ancla detectada
+                // 2. MOSTRAR EL NUEVO
                 if (anchor.group.children.length > 0) {
-                    const newModel = anchor.group.children[0];
+                    // Buscamos el modelo dentro del anchor (a veces hay luces u otros objetos, buscamos el Scene/Group)
+                    // Filtramos por el que tiene nuestro userData
+                    const newModel = anchor.group.children.find(child => child.userData.countryIndex === i) || anchor.group.children[0];
                     
-                    // C. ¡TRUCO! Lo pegamos a la escena principal ("scene")
-                    // .attach() mueve el objeto manteniendo su posición visual actual en el mundo
-                    scene.attach(newModel);
-                    newModel.visible = true;
+                    if (newModel) {
+                        // Truco de Persistencia: Pegarlo a la escena global
+                        scene.attach(newModel); 
+                        newModel.visible = true;
 
-                    // D. Actualizamos las referencias
-                    currentModel = newModel;
-                    currentAnchor = anchor;
+                        currentModel = newModel;
+                        currentAnchor = anchor;
+                    }
                 }
 
-                // E. Mostrar UI
+                // 3. UI
                 if(window.mostrarInfoPais) window.mostrarInfoPais(i);
             };
         }
@@ -137,17 +200,36 @@ window.iniciarAR = async () => {
 
     } catch (error) {
         console.error("Error AR:", error);
-        alert("Error al iniciar cámara AR. Asegúrate de estar en HTTPS.");
+        alert("Error al iniciar cámara AR.");
     }
 }
 
+// --- DETENER Y LIMPIAR ---
 window.detenerAR = () => {
     if (mindarThree) {
         mindarThree.stop();
         mindarThree.renderer.setAnimationLoop(null);
         isARRunning = false;
+        
+        // 1. Limpiar modelo activo
+        resetearModeloAnterior();
+
+        // 2. SEGURIDAD ADICIONAL: Apagar todos los modelos cargados
+        // Esto evita que quede alguno flotando si la lógica falló
+        allLoadedModels.forEach(model => {
+            model.visible = false;
+            // Opcional: devolverlos a sus anchors originales si quieres ser muy limpio
+            if (model.userData.originalAnchor) {
+                model.userData.originalAnchor.group.add(model);
+            }
+        });
+
+        // 3. Limpiar arrays
         mixers = [];
-        currentModel = null;
-        currentAnchor = null;
+        allLoadedModels = [];
+        
+        // 4. Limpiar el canvas del DOM para evitar superposiciones
+        const container = document.querySelector("#ar-container");
+        if (container) container.innerHTML = '';
     }
 };
