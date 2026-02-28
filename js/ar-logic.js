@@ -5,41 +5,47 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 window.THREE = THREE;
 import 'mindar-image-three';
 
-// --- CONFIGURACIÓN DE MODELOS 3D POR PAÍS ---
+// --- CONFIGURACIÓN DE MODELOS Y CANCIONES ---
 const modelosPorPais = [
     {
-        // Índice 0: MÉXICO
+        id: 'mexico',
         archivo: 'assets/models/ajolotebailador.glb', 
+        song: 'assets/songs/Mexico-mariachiloco.mp3', 
         scale: [0.5, 0.5, 0.5], 
         position: [0, -0.4, 0]
     },
     {
-        // Índice 1: COLOMBIA
+        id: 'colombia',
         archivo: 'assets/models/low_poly_soccer_ball_or_football.glb',
+        song: 'assets/songs/Colombia-Caminosdelavida.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     },
     {
-        // Índice 2: IRLANDA
+        id: 'irlanda',
         archivo: 'assets/models/irlanda_hat.glb', 
+        song: 'assets/songs/Irlanda-pub.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     },
     {
-        // Índice 3: ESPAÑA
+        id: 'espana',
         archivo: 'assets/models/espana_bull.glb', 
+        song: 'assets/songs/Espana-Macarena.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     },
     {
-        // Índice 4: COREA
+        id: 'corea',
         archivo: 'assets/models/corea_tiger.glb', 
+        song: 'assets/songs/Corea-Gangnamstyle.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     },
     {
-        // Índice 5: JAPÓN
+        id: 'japon',
         archivo: 'assets/models/japon_samurai.glb', 
+        song: 'assets/songs/Japon-miku.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     }
@@ -50,22 +56,114 @@ let isARRunning = false;
 let mixers = []; 
 let clock = new THREE.Clock();
 
-// VARIABLES DE CONTROL DE ESTADO
+// Variables de Control
 let currentModel = null;     
 let currentAnchor = null;  
-let allLoadedModels = []; // Lista maestra para limpieza forzosa  
+let allLoadedModels = []; 
 
-// --- FUNCIÓN CLAVE: RESETEAR MODELO ---
+// Variables Audio y Confeti
+let audioListener = null;
+let currentSound = null;
+let confettiSystem = null;
+
+// --- SISTEMA DE CONFETI (HIJO DEL MODELO) ---
+function crearConfeti() {
+    // NOTA: Creamos las posiciones relativas al centro (0,0,0)
+    // porque agregaremos este sistema DENTRO del modelo.
+    const particleCount = 400; 
+    const geometry = new THREE.BufferGeometry();
+    const positions = [];
+    const velocities = [];
+    const colors = [];
+
+    const colorPalette = [
+        new THREE.Color(0x00ff00), // Verde
+        new THREE.Color(0xffffff), // Blanco
+        new THREE.Color(0xff0000), // Rojo
+        new THREE.Color(0xffff00), // Amarillo
+        new THREE.Color(0x00ccff)  // Azul claro
+    ];
+
+    for (let i = 0; i < particleCount; i++) {
+        // Origen: un poco arriba del centro (Y=0.5) para que salga de la "cabeza" del modelo
+        positions.push(
+            (Math.random() - 0.5) * 0.5, // X (rango pequeño inicial)
+            (Math.random() * 0.5) + 0.5, // Y 
+            (Math.random() - 0.5) * 0.5  // Z
+        );
+        
+        // Velocidad explosiva
+        velocities.push(
+            (Math.random() - 0.5) * 3,   // X explosión
+            (Math.random() * 3) + 2,     // Y explosión fuerte arriba
+            (Math.random() - 0.5) * 3    // Z explosión
+        );
+
+        const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        colors.push(color.r, color.g, color.b);
+    }
+
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+    const material = new THREE.PointsMaterial({
+        size: 0.2, // TAMAÑO GRANDE para asegurar visibilidad (compensando escala del modelo)
+        vertexColors: true,
+        transparent: true,
+        opacity: 1.0,
+        depthWrite: false, // Ayuda a que se vean brillantes y no se oculten entre sí
+        blending: THREE.AdditiveBlending
+    });
+
+    const particles = new THREE.Points(geometry, material);
+    particles.userData = { velocities: velocities };
+    return particles;
+}
+
+function actualizarConfeti() {
+    if (!confettiSystem) return;
+
+    const positions = confettiSystem.geometry.attributes.position.array;
+    const velocities = confettiSystem.userData.velocities;
+    
+    // Si la opacidad es 0, borrar
+    if (confettiSystem.material.opacity <= 0) {
+        if (confettiSystem.parent) confettiSystem.parent.remove(confettiSystem);
+        confettiSystem = null;
+        return;
+    }
+
+    for (let i = 0; i < positions.length / 3; i++) {
+        // Mover partícula según velocidad
+        positions[i * 3] += velocities[i * 3] * 0.01;     
+        positions[i * 3 + 1] += velocities[i * 3 + 1] * 0.01; 
+        positions[i * 3 + 2] += velocities[i * 3 + 2] * 0.01; 
+
+        // Gravedad
+        velocities[i * 3 + 1] -= 0.05; 
+    }
+    
+    confettiSystem.geometry.attributes.position.needsUpdate = true;
+    confettiSystem.material.opacity -= 0.008; // Desvanecer lento
+}
+
+// --- FUNCIÓN DE LIMPIEZA TOTAL ---
 function resetearModeloAnterior() {
-    // Si hay un modelo activo, lo apagamos
-    if (currentModel) {
-        // 1. Ocultarlo INMEDIATAMENTE
-        currentModel.visible = false;
+    // 1. Limpiar Confeti (Antes de mover el modelo)
+    if (confettiSystem && currentModel) {
+        currentModel.remove(confettiSystem); // Quitar confeti del modelo
+        confettiSystem = null;
+    }
 
-        // 2. Si sabemos de dónde vino, lo devolvemos a su caja (anchor) y reseteamos posición
+    // 2. Limpiar Modelo 3D
+    if (currentModel) {
+        currentModel.visible = false;
+        
+        // Devolver a su anchor original
         if (currentAnchor) {
-            currentAnchor.group.add(currentModel);
+            currentAnchor.group.attach(currentModel);
             
+            // Resetear transformaciones
             const index = currentModel.userData.countryIndex;
             const config = modelosPorPais[index];
             if (config) {
@@ -75,30 +173,34 @@ function resetearModeloAnterior() {
             }
         }
     }
-    // Limpiar referencias
+
+    // 3. Detener Audio
+    if (currentSound && currentSound.isPlaying) {
+        currentSound.stop();
+    }
+
     currentModel = null;
     currentAnchor = null;
 }
 
 window.iniciarAR = async () => {
     if (isARRunning) return;
-    console.log("Iniciando AR (Modo Limpio)...");
+    console.log("Iniciando AR...");
 
-    if (!window.MINDAR || !window.MINDAR.IMAGE) {
-        console.error("Librería MindAR no cargada.");
-        return;
-    }
-
-    // --- LIMPIEZA PREVENTIVA ---
-    // Borramos cualquier canvas viejo que haya quedado en el contenedor
     const container = document.querySelector("#ar-container");
     if (container) container.innerHTML = '';
     
-    // Reiniciamos variables
     mixers = [];
     allLoadedModels = [];
     currentModel = null;
     currentAnchor = null;
+    currentSound = null;
+    confettiSystem = null;
+
+    if (!window.MINDAR || !window.MINDAR.IMAGE) {
+        alert("Error: Librería MindAR no cargada.");
+        return;
+    }
 
     try {
         mindarThree = new window.MINDAR.IMAGE.MindARThree({
@@ -110,16 +212,20 @@ window.iniciarAR = async () => {
 
         const {renderer, scene, camera} = mindarThree;
 
+        // Audio Listener
+        audioListener = new THREE.AudioListener();
+        camera.add(audioListener);
+
         // Luces
-        const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
-        scene.add(hemisphereLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-        directionalLight.position.set(5, 5, 5); 
-        scene.add(directionalLight);
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+        scene.add(hemiLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        dirLight.position.set(5, 5, 5);
+        scene.add(dirLight);
 
         const loader = new GLTFLoader();
+        const audioLoader = new THREE.AudioLoader();
 
-        // Configurar los 6 Targets
         for (let i = 0; i < 6; i++) {
             const anchor = mindarThree.addAnchor(i);
             const infoModelo = modelosPorPais[i];
@@ -127,63 +233,66 @@ window.iniciarAR = async () => {
             if (infoModelo && infoModelo.archivo) {
                 loader.load(infoModelo.archivo, (gltf) => {
                     const model = gltf.scene;
-                    
-                    // Configuración inicial
                     model.scale.set(...infoModelo.scale);
                     model.position.set(...infoModelo.position);
-                    model.visible = false; // Oculto por defecto
+                    model.visible = false;
                     
                     model.userData.countryIndex = i;
-                    model.userData.originalAnchor = anchor; // Guardamos su "casa"
+                    model.userData.originalAnchor = anchor; 
 
-                    // Animaciones
                     if (gltf.animations && gltf.animations.length > 0) {
                         const mixer = new THREE.AnimationMixer(model);
                         const action = mixer.clipAction(gltf.animations[0]); 
                         action.play();
                         mixers.push(mixer);
                     }
-
-                    // Agregar al ancla
                     anchor.group.add(model);
-                    
-                    // Guardar en la lista maestra para poder limpiarlos luego
                     allLoadedModels.push(model);
-                    
-                    console.log(`Modelo cargado índice ${i}`);
 
-                }, undefined, (error) => {
-                    console.warn(`Error modelo ${i}: ${infoModelo.archivo}`);
+                }, undefined, (e) => console.warn("Error modelo " + i));
+            }
+
+            if (infoModelo && infoModelo.song) {
+                audioLoader.load(infoModelo.song, (buffer) => {
+                    infoModelo.audioBuffer = buffer;
                 });
             }
             
-            // --- LÓGICA DE DETECCIÓN ---
+            // --- DETECCIÓN ---
             anchor.onTargetFound = () => {
-                // Si ya estamos viendo este mismo país, ignorar
                 if (currentModel && currentModel.userData.countryIndex === i) return;
 
-                console.log(`¡Target encontrado: ${i}!`);
+                console.log(`¡Fiesta en ${i}!`);
 
-                // 1. LIMPIAR EL ANTERIOR (Si existe)
+                // 1. Limpiar anterior
                 resetearModeloAnterior();
 
-                // 2. MOSTRAR EL NUEVO
-                if (anchor.group.children.length > 0) {
-                    // Buscamos el modelo dentro del anchor (a veces hay luces u otros objetos, buscamos el Scene/Group)
-                    // Filtramos por el que tiene nuestro userData
-                    const newModel = anchor.group.children.find(child => child.userData.countryIndex === i) || anchor.group.children[0];
-                    
-                    if (newModel) {
-                        // Truco de Persistencia: Pegarlo a la escena global
-                        scene.attach(newModel); 
-                        newModel.visible = true;
+                // 2. Activar Nuevo
+                const newModel = anchor.group.children.find(child => child.userData.countryIndex === i) || anchor.group.children[0];
 
-                        currentModel = newModel;
-                        currentAnchor = anchor;
-                    }
+                if (newModel) {
+                    // PERSISTENCIA (Amazon Style): Pegar a la escena
+                    scene.attach(newModel); 
+                    newModel.visible = true;
+                    currentModel = newModel;
+                    currentAnchor = anchor;
+
+                    // 3. AGREGAR CONFETI AL MODELO (HIJO)
+                    // Al ser hijo, se mueve con el modelo fijo
+                    confettiSystem = crearConfeti();
+                    newModel.add(confettiSystem);
                 }
 
-                // 3. UI
+                // 4. MÚSICA
+                if (infoModelo.audioBuffer) {
+                    if (currentSound && currentSound.isPlaying) currentSound.stop();
+                    currentSound = new THREE.Audio(audioListener);
+                    currentSound.setBuffer(infoModelo.audioBuffer);
+                    currentSound.setLoop(true); 
+                    currentSound.setVolume(0.5);
+                    currentSound.play();
+                }
+
                 if(window.mostrarInfoPais) window.mostrarInfoPais(i);
             };
         }
@@ -193,6 +302,10 @@ window.iniciarAR = async () => {
         renderer.setAnimationLoop(() => {
             const delta = clock.getDelta();
             mixers.forEach(mixer => mixer.update(delta));
+            
+            // ANIMAR CONFETI
+            actualizarConfeti();
+
             renderer.render(scene, camera);
         });
         
@@ -200,36 +313,31 @@ window.iniciarAR = async () => {
 
     } catch (error) {
         console.error("Error AR:", error);
-        alert("Error al iniciar cámara AR.");
     }
 }
 
-// --- DETENER Y LIMPIAR ---
+// --- LIMPIEZA TOTAL AL SALIR ---
 window.detenerAR = () => {
     if (mindarThree) {
         mindarThree.stop();
         mindarThree.renderer.setAnimationLoop(null);
         isARRunning = false;
         
-        // 1. Limpiar modelo activo
         resetearModeloAnterior();
 
-        // 2. SEGURIDAD ADICIONAL: Apagar todos los modelos cargados
-        // Esto evita que quede alguno flotando si la lógica falló
-        allLoadedModels.forEach(model => {
-            model.visible = false;
-            // Opcional: devolverlos a sus anchors originales si quieres ser muy limpio
-            if (model.userData.originalAnchor) {
-                model.userData.originalAnchor.group.add(model);
+        allLoadedModels.forEach(m => {
+            m.visible = false;
+            if (m.userData.originalAnchor) {
+                m.userData.originalAnchor.group.add(m);
             }
         });
 
-        // 3. Limpiar arrays
         mixers = [];
         allLoadedModels = [];
         
-        // 4. Limpiar el canvas del DOM para evitar superposiciones
         const container = document.querySelector("#ar-container");
         if (container) container.innerHTML = '';
+        
+        console.log("AR Detenido.");
     }
 };
