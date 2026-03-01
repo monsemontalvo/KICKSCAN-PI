@@ -379,7 +379,7 @@ window.verHighlights = () => {
     
     window.ocultarBottomSheetCompleto(); 
     
-    // --- CORRECCIÓN: DETENER AR AL SALIR ---
+    // --- DETENER AR ---
     if (window.detenerAR) window.detenerAR(); 
     
     document.getElementById('screen-ar').classList.add('hidden');
@@ -413,7 +413,7 @@ window.cerrarGaleria = async () => {
     document.getElementById('screen-ar').classList.remove('hidden');
     document.getElementById('scan-guide').classList.remove('hidden');
 
-    // --- CORRECCIÓN: REINICIAR AR AL VOLVER ---
+    // --- REINICIAR AR ---
     if (window.iniciarAR) await window.iniciarAR();
 };
 
@@ -446,7 +446,10 @@ window.cerrarHighlights = () => {
 window.aplicarFiltroVideo = (filtro) => {
     const video = document.getElementById('highlight-video');
     const botones = document.querySelectorAll('.filter-btn');
+    
+    // Aplicamos la clase CSS correspondiente
     video.className = "w-full max-h-screen object-contain transition-all duration-300 filter-" + filtro;
+    
     botones.forEach(btn => {
         btn.classList.remove('bg-white', 'text-black');
         btn.classList.add('bg-white/10', 'text-white');
