@@ -107,7 +107,7 @@
         </div>
     </section>
 
-    <section id="screen-ar" class="hidden relative w-full h-screen bg-gray-900 overflow-hidden">
+    <section id="screen-ar" class="hidden relative w-full h-screen bg-black overflow-hidden">
         <div id="ar-container" class="absolute inset-0 w-full h-full z-0"></div>
         
         <button onclick="window.volverAlHome()" class="absolute top-6 left-6 z-20 w-10 h-10 bg-black/50 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/20 active:scale-90 transition-transform shadow-lg">✕</button>
@@ -132,18 +132,18 @@
             </div>
         </div>
 
-        <div id="bottom-sheet" class="fixed bottom-0 left-0 w-full h-[60vh] bg-gray-900/95 backdrop-blur-xl rounded-t-3xl transform translate-y-full transition-transform duration-300 ease-out z-30 border-t border-white/10 shadow-2xl flex flex-col overflow-hidden">
+        <div id="bottom-sheet" class="liquid-glass fixed bottom-0 left-0 w-full h-[60vh] rounded-t-[3rem] transform translate-y-full transition-transform duration-300 ease-out z-30 flex flex-col overflow-hidden">
             
-            <div id="sheet-header" class="flex-shrink-0 bg-gray-900/50 backdrop-blur-md">
-                <div id="drag-handle" class="w-full p-4 flex justify-center cursor-grab active:cursor-grabbing touch-none bg-gradient-to-b from-white/5 to-transparent">
-                    <div class="w-12 h-1.5 bg-gray-600 rounded-full"></div>
+            <div id="sheet-header" class="flex-shrink-0 border-b border-white/5">
+                <div id="drag-handle" class="w-full p-4 flex justify-center cursor-grab active:cursor-grabbing touch-none">
+                    <div class="w-12 h-1 bg-white/30 rounded-full"></div>
                 </div>
 
-                <div class="px-6 pt-2 pb-4 border-b border-white/10">
-                    <h2 id="country-name" class="font-display text-5xl text-white tracking-wide">PAÍS</h2>
+                <div class="px-6 pt-2 pb-4 border-b border-white/5">
+                    <h2 id="country-name" class="font-display text-5xl text-white tracking-wide drop-shadow-lg">PAÍS</h2>
                 </div>
 
-                <div id="tab-navigation" class="flex justify-around items-center py-3 px-2 border-b border-white/10">
+                <div id="tab-navigation" class="flex justify-around items-center py-3 px-2 border-b border-white/5">
                     <button onclick="window.switchTab(this, 'stats')" class="tab-btn active p-3 rounded-xl transition-all duration-300 bg-green-600 text-white border border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.3)]"><span class="text-2xl">📊</span></button>
                     <button onclick="window.switchTab(this, 'facts')" class="tab-btn p-3 rounded-xl transition-all duration-300 bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10"><span class="text-2xl">💡</span></button>
                     <button onclick="window.switchTab(this, 'trivia')" class="tab-btn p-3 rounded-xl transition-all duration-300 bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10"><span class="text-2xl">🧠</span></button>
@@ -155,12 +155,12 @@
                 <div id="content-stats" class="content-container space-y-6">
                     <h3 class="font-display text-2xl text-green-400 mb-4 uppercase tracking-wider">Estadísticas</h3>
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-gradient-to-b from-white/10 to-transparent border border-white/10 p-5 rounded-2xl flex flex-col items-center shadow-inner">
+                        <div class="liquid-glass-light p-5 rounded-2xl flex flex-col items-center">
                             <span class="text-4xl mb-2">🏆</span>
                             <span id="stat-titulos" class="font-display text-2xl text-white text-center leading-none tracking-wide">0</span>
                             <span class="text-xs text-gray-400 font-sans uppercase mt-1 tracking-widest">Títulos</span>
                         </div>
-                        <div class="bg-gradient-to-b from-white/10 to-transparent border border-white/10 p-5 rounded-2xl flex flex-col items-center shadow-inner">
+                        <div class="liquid-glass-light p-5 rounded-2xl flex flex-col items-center">
                             <span class="text-4xl mb-2">🌍</span>
                             <span id="stat-participaciones" class="font-display text-2xl text-white text-center leading-none tracking-wide">0</span>
                             <span class="text-xs text-gray-400 font-sans uppercase mt-1 tracking-widest">Mundiales</span>
@@ -179,7 +179,7 @@
         </div>
     </section>
 
-    <section id="screen-gallery" class="hidden fixed inset-0 z-[60] bg-gray-900 flex flex-col">
+    <section id="screen-gallery" class="hidden fixed inset-0 z-[60] bg-black flex flex-col">
         <div class="p-4 flex items-center justify-between bg-black/80 backdrop-blur-md border-b border-white/10">
             <button onclick="window.cerrarGaleria()" class="text-white font-display text-xl tracking-wide flex items-center gap-2 hover:text-green-400 transition-colors">← VOLVER</button>
             <span id="gallery-title" class="font-display text-2xl text-green-400 tracking-wider">ACERVO HISTÓRICO</span>
@@ -196,13 +196,16 @@
             <button onclick="window.volverAGaleria()" class="text-white font-display text-lg tracking-wide flex items-center gap-2 hover:text-green-400 transition-colors">← GALERÍA</button>
             <span id="hl-title" class="font-display text-xl text-green-400">VIDEO</span>
         </div>
-        <div class="relative flex-1 flex items-center justify-center bg-gray-900">
+        
+        <div class="relative flex-1 flex items-center justify-center bg-black">
             <video id="highlight-video" class="w-full max-h-screen object-contain" loop playsinline controls></video>
         </div>
         
-        <div class="absolute bottom-0 w-full bg-gradient-to-t from-black via-black/80 to-transparent p-6 pb-10 flex-shrink-0 z-10">
-            <p class="text-center font-sans text-xs text-gray-400 mb-4 uppercase tracking-widest">Edición de Video</p>
-            <div class="flex justify-start gap-3 overflow-x-auto pb-4 pt-2 px-2 scrollbar-hide">
+        <div class="absolute bottom-0 w-full bg-gradient-to-t from-transparent via-black/90 to-transparent p-6 pb-24 flex-shrink-0 z-10 pointer-events-none">
+            
+            <p class="text-center font-sans text-xs text-gray-400 mb-4 uppercase tracking-widest pointer-events-auto">Edición de Video</p>
+            
+            <div class="flex justify-start gap-3 overflow-x-auto pb-4 pt-2 px-2 scrollbar-hide pointer-events-auto">
                 
                 <button onclick="window.aplicarFiltroVideo('none')" class="filter-btn active px-4 py-2 rounded-full bg-white text-black text-xs font-bold font-sans flex-shrink-0 whitespace-nowrap">Normal</button>
                 

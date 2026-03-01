@@ -124,19 +124,70 @@ window.addEventListener('load', () => {
     }, 2500);
 });
 
-// --- HELPER TEXTURAS ---
+// --- HELPER TEXTURAS (MEJORADO - AUTO AJUSTE DE TEXTO) ---
 function createCardTexture(text, colorHex) {
     const canvas = document.createElement('canvas');
-    canvas.width = 256; canvas.height = 350; 
+    canvas.width = 256; 
+    canvas.height = 350; 
     const ctx = canvas.getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 256, 350);
-    gradient.addColorStop(0, colorHex); gradient.addColorStop(1, '#000000');
-    ctx.fillStyle = gradient; ctx.fillRect(0, 0, 256, 350);
-    ctx.strokeStyle = 'white'; ctx.lineWidth = 10; ctx.strokeRect(5, 5, 246, 340);
-    ctx.fillStyle = 'white'; ctx.font = 'bold 40px Arial'; ctx.textAlign = 'center';
+    
+    // Fondo con degradado más suave para estilo "Glass"
+    const gradient = ctx.createLinearGradient(0, 0, 0, 350);
+    gradient.addColorStop(0, colorHex); 
+    gradient.addColorStop(1, 'rgba(0,0,0,0.9)');
+    
+    ctx.fillStyle = gradient; 
+    
+    // Dibujamos con bordes redondeados (simulados)
+    ctx.beginPath();
+    ctx.moveTo(20, 0);
+    ctx.lineTo(236, 0);
+    ctx.quadraticCurveTo(256, 0, 256, 20);
+    ctx.lineTo(256, 330);
+    ctx.quadraticCurveTo(256, 350, 236, 350);
+    ctx.lineTo(20, 350);
+    ctx.quadraticCurveTo(0, 350, 0, 330);
+    ctx.lineTo(0, 20);
+    ctx.quadraticCurveTo(0, 0, 20, 0);
+    ctx.fill();
+
+    // Borde sutil blanco
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)'; 
+    ctx.lineWidth = 4; 
+    ctx.stroke();
+
+    // --- LÓGICA DE TEXTO AUTO-AJUSTABLE ---
+    let fontSize = 40;
+    ctx.font = `900 ${fontSize}px "Montserrat", Arial`; // Usamos Montserrat Bold
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    const maxW = 220; // Ancho máximo permitido
+    // Reducimos la fuente mientras el texto sea más ancho que el máximo
+    while (ctx.measureText(text).width > maxW && fontSize > 10) {
+        fontSize -= 2;
+        ctx.font = `900 ${fontSize}px "Montserrat", Arial`;
+    }
+    
+    // Sombra para mejor lectura
+    ctx.shadowColor = "rgba(0,0,0,0.8)";
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 4;
+
+    ctx.fillStyle = 'white'; 
+    // Dibujamos el texto en el centro (128) y un poco más abajo del centro vertical visual (175)
     ctx.fillText(text, 128, 175);
-    ctx.beginPath(); ctx.arc(128, 80, 40, 0, 2 * Math.PI);
-    ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.fill();
+    
+    // Reset de sombra para el círculo
+    ctx.shadowBlur = 0;
+    
+    // Círculo decorativo superior
+    ctx.beginPath(); 
+    ctx.arc(128, 70, 30, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgba(255,255,255,0.15)'; 
+    ctx.fill();
+    
     return new THREE.CanvasTexture(canvas);
 }
 
@@ -170,7 +221,20 @@ function initHome3D() {
         carouselGroup.add(mesh);
     });
     
+    // --- CORRECCIÓN: EVENT LISTENER PARA RESIZE ---
+    window.addEventListener('resize', onWindowResize, false);
+    
     startHomeLoop();
+}
+
+// --- FUNCIÓN DE RESIZE ---
+function onWindowResize() {
+    if (!homeCamera || !homeRenderer) return;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    homeCamera.aspect = width / height;
+    homeCamera.updateProjectionMatrix();
+    homeRenderer.setSize(width, height);
 }
 
 function startHomeLoop() {
@@ -206,7 +270,8 @@ window.mostrarInfoPais = (index) => {
     factsContainer.innerHTML = '';
     country.facts.forEach((fact, i) => {
         const div = document.createElement('div');
-        div.className = 'bg-gradient-to-r from-green-900/30 to-black p-5 rounded-2xl border-l-4 border-green-500 shadow-lg';
+        // ESTILO NUEVO: Liquid Glass Light
+        div.className = 'liquid-glass-light p-5 rounded-2xl border border-white/5 shadow-sm';
         div.innerHTML = `<p class="font-sans text-sm text-gray-200 leading-relaxed"><strong class="text-green-400 mr-1">#${i+1}</strong> ${fact}</p>`;
         factsContainer.appendChild(div);
     });
@@ -330,7 +395,7 @@ function initBottomSheet() {
     const onEnd = () => {
         if (!isDragging) return;
         isDragging = false;
-        sheet.style.transition = 'transform 0.3s ease-out'; 
+        sheet.style.transition = 'transform 0.5s cubic-bezier(0.19, 1, 0.22, 1)'; // Animación Apple
         handle.style.cursor = 'grab';
         
         if (!isMinimized) {
@@ -419,11 +484,12 @@ window.verHighlights = () => {
     
     currentCountry.videos.forEach((vid, index) => {
         const item = document.createElement('div');
-        item.className = 'bg-white/5 border border-white/10 rounded-xl overflow-hidden active:scale-95 transition-transform cursor-pointer group';
+        // Usamos background negro/transparente en lugar de gris
+        item.className = 'bg-black/40 border border-white/10 rounded-xl overflow-hidden active:scale-95 transition-transform cursor-pointer group';
         item.onclick = () => window.reproducirVideoDesdeGaleria(index);
         
         item.innerHTML = `
-            <div class="h-32 bg-gray-800 relative flex items-center justify-center group-hover:bg-gray-700 transition-colors">
+            <div class="h-32 bg-black/60 relative flex items-center justify-center group-hover:bg-white/5 transition-colors">
                 <span class="text-4xl opacity-80 group-hover:scale-110 transition-transform">▶️</span>
             </div>
             <div class="p-3">
