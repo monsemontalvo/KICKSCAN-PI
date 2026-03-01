@@ -1,7 +1,45 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-// --- BASE DE DATOS (IGUAL QUE ANTES) ---
+// --- SISTEMA DE EFECTOS DE SONIDO (SFX) ---
+const sfxClick = new Audio('assets/sounds/click.mp3');
+const sfxCorrect = new Audio('assets/sounds/correct.mp3');
+const sfxWrong = new Audio('assets/sounds/wrong.mp3');
+
+// Helper para reproducir con volumen seguro
+const playSfx = (sound) => {
+    // Obtenemos el volumen actual del sistema AR (si existe), si no, usamos 0.5
+    const vol = window.getARVolume ? window.getARVolume() : 0.5;
+    
+    // Si el volumen es 0 (Mute), no reproducimos
+    if (vol <= 0) return;
+
+    sound.volume = vol; 
+    sound.currentTime = 0; // Reiniciar audio si ya estaba sonando
+    sound.play().catch(e => {
+        // Ignorar errores de autoplay
+    });
+};
+
+// --- LISTENER GLOBAL DE CLICKS (FEEDBACK TÁCTIL) ---
+document.addEventListener('click', (e) => {
+    // 1. Identificar si se hizo click en un botón (o en un icono dentro de un botón)
+    const btn = e.target.tagName === 'BUTTON' ? e.target : e.target.closest('button');
+
+    if (btn) {
+        // 2. EXCEPCIÓN: Si el botón está dentro del contenedor de TRIVIA, NO reproducir el click genérico.
+        // Esto evita que se superponga con el sonido de "Correcto" o "Incorrecto".
+        if (btn.closest('#trivia-items-container')) {
+            return;
+        }
+
+        // 3. En cualquier otro botón, reproducir click normal
+        playSfx(sfxClick);
+    }
+});
+
+
+// --- BASE DE DATOS DE PAÍSES ---
 const countriesData = [
     { 
         id: 'mexico', index: 0, name: 'MÉXICO', color: '#106337', 
@@ -224,9 +262,7 @@ window.mostrarInfoPais = (index) => {
 };
 
 window.switchTab = (btn, tabId) => {
-    // Si la ventana está minimizada, abrirla al tocar un tab
     abrirBottomSheet();
-
     const buttons = document.querySelectorAll('#tab-navigation .tab-btn');
     buttons.forEach(b => {
         b.classList.remove('active', 'bg-green-600', 'text-white', 'border-green-400', 'shadow-[0_0_15px_rgba(34,197,94,0.3)]');
@@ -245,12 +281,23 @@ window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
     const parent = btn.parentElement;
     const buttons = parent.querySelectorAll('button');
     buttons.forEach(b => b.disabled = true);
+    
     if (optIndex === correctIndex) {
-        btn.classList.remove('bg-black/40'); btn.classList.add('bg-green-600', 'text-white', 'font-bold', 'border-green-400'); btn.innerHTML += ' ✅';
+        // RESPUESTA CORRECTA
+        btn.classList.remove('bg-black/40'); 
+        btn.classList.add('bg-green-600', 'text-white', 'font-bold', 'border-green-400'); 
+        btn.innerHTML += ' ✅';
+        playSfx(sfxCorrect); // Solo sonido de éxito
     } else {
-        btn.classList.remove('bg-black/40'); btn.classList.add('bg-red-600', 'text-white', 'border-red-400'); btn.innerHTML += ' ❌';
+        // RESPUESTA INCORRECTA
+        btn.classList.remove('bg-black/40'); 
+        btn.classList.add('bg-red-600', 'text-white', 'border-red-400'); 
+        btn.innerHTML += ' ❌';
+        playSfx(sfxWrong); // Solo sonido de error
+        
         const correctBtn = buttons[correctIndex];
-        correctBtn.classList.remove('bg-black/40'); correctBtn.classList.add('bg-green-600/50', 'text-white', 'border-green-400/50');
+        correctBtn.classList.remove('bg-black/40'); 
+        correctBtn.classList.add('bg-green-600/50', 'text-white', 'border-green-400/50');
     }
 };
 
@@ -261,7 +308,7 @@ function initBottomSheet() {
     let startY = 0;
     let currentY = 0;
     let isDragging = false;
-    let isMinimized = false; // Nuevo estado
+    let isMinimized = false; 
 
     const onStart = (y) => {
         startY = y;
@@ -274,20 +321,16 @@ function initBottomSheet() {
         if (!isDragging) return;
         const deltaY = y - startY;
         
-        // Si está abierto, solo permite arrastrar abajo
-        // Si está minimizado, permite arrastrar arriba (delta negativo)
         if (!isMinimized && deltaY > 0) {
              sheet.style.transform = `translateY(${deltaY}px)`;
              currentY = deltaY;
         } else if (isMinimized && deltaY < 0) {
-            // Calcular posición desde el estado minimizado
-            // Estamos en peekOffset, queremos ir a 0
             const headerHeight = document.getElementById('sheet-header').offsetHeight;
             const sheetHeight = sheet.offsetHeight;
             const peekOffset = sheetHeight - headerHeight;
             
             sheet.style.transform = `translateY(${peekOffset + deltaY}px)`;
-            currentY = deltaY; // Guardar desplazamiento
+            currentY = deltaY; 
         }
     };
 
@@ -297,16 +340,13 @@ function initBottomSheet() {
         sheet.style.transition = 'transform 0.3s ease-out'; 
         handle.style.cursor = 'grab';
         
-        // Lógica de decisión
         if (!isMinimized) {
-            // Estaba abierto, si bajó más de 100px -> Minimizar
             if (currentY > 100) {
                 minimizarBottomSheet();
             } else {
                 abrirBottomSheet();
             }
         } else {
-            // Estaba minimizado, si subió más de 50px -> Abrir
             if (currentY < -50) {
                 abrirBottomSheet();
             } else {
@@ -316,12 +356,10 @@ function initBottomSheet() {
         currentY = 0;
     };
 
-    // Events Touch
     handle.addEventListener('touchstart', (e) => onStart(e.touches[0].clientY));
     window.addEventListener('touchmove', (e) => { if (isDragging) { e.preventDefault(); onMove(e.touches[0].clientY); } }, { passive: false });
     window.addEventListener('touchend', onEnd);
 
-    // Events Mouse
     handle.addEventListener('mousedown', (e) => { e.preventDefault(); onStart(e.clientY); });
     window.addEventListener('mousemove', (e) => { if (isDragging) onMove(e.clientY); });
     window.addEventListener('mouseup', onEnd);
@@ -329,32 +367,25 @@ function initBottomSheet() {
 
 function abrirBottomSheet() {
     const sheet = document.getElementById('bottom-sheet');
-    sheet.classList.remove('translate-y-full'); // Quitar clase de oculto inicial
+    sheet.classList.remove('translate-y-full'); 
     sheet.style.transform = 'translateY(0)';
     document.getElementById('scan-guide').classList.add('hidden');
-    // Actualizar estado interno (en variable global o atributo)
-    // Para simplificar, asumimos que si llamamos a esto, ya no está minimizado
-    // NOTA: Para que initBottomSheet sepa el estado, usamos una variable en su scope o comprobamos transform.
-    // Aquí reiniciamos el flag en el closure, pero como es módulo, necesitamos acceso.
-    // Truco: Despachar evento o simplemente confiar en que el usuario interactúa bien.
-    // Mejor solución rápida: resetear isMinimized en la próxima interacción.
 }
 
 function minimizarBottomSheet() {
     const sheet = document.getElementById('bottom-sheet');
     const headerHeight = document.getElementById('sheet-header').offsetHeight;
     const sheetHeight = sheet.offsetHeight;
-    const translateY = sheetHeight - headerHeight; // Calcular cuánto bajar para dejar solo el header
+    const translateY = sheetHeight - headerHeight; 
     
     sheet.style.transform = `translateY(${translateY}px)`;
-    // Dejar visible para que el usuario sepa que puede volver
 }
 
 // Para usar desde fuera (volverAlHome)
 window.ocultarBottomSheetCompleto = () => {
     const sheet = document.getElementById('bottom-sheet');
-    sheet.style.transform = ''; // Limpiar inline
-    sheet.classList.add('translate-y-full'); // Ocultar totalmente con CSS
+    sheet.style.transform = ''; 
+    sheet.classList.add('translate-y-full'); 
     document.getElementById('scan-guide').classList.remove('hidden');
 };
 

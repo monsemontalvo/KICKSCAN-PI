@@ -71,7 +71,6 @@ let preMuteVolume = 0.5;
 
 // --- SISTEMA DE AUDIO UI ---
 window.ajustarVolumen = (delta) => {
-    // Si estaba muteado y subimos volumen, desmutear
     if (isMuted && delta > 0) {
         isMuted = false;
         actualizarIconoMute();
@@ -79,11 +78,9 @@ window.ajustarVolumen = (delta) => {
 
     globalVolume += delta;
     
-    // Limitar entre 0 y 1
     if (globalVolume > 1) globalVolume = 1;
     if (globalVolume < 0) globalVolume = 0;
 
-    // Si baja a 0, marcar como mute
     if (globalVolume === 0) {
         isMuted = true;
         actualizarIconoMute();
@@ -106,6 +103,11 @@ window.alternarMute = () => {
     aplicarVolumen();
 };
 
+// EXPORTAR VOLUMEN PARA MAIN.JS (SFX)
+window.getARVolume = () => {
+    return globalVolume;
+};
+
 function aplicarVolumen() {
     if (currentSound) {
         currentSound.setVolume(globalVolume);
@@ -117,7 +119,7 @@ function actualizarIconoMute() {
     if (btn) {
         if (isMuted || globalVolume === 0) {
             btn.innerText = '🔇';
-            btn.classList.add('bg-red-600/40'); // Indicador visual rojo
+            btn.classList.add('bg-red-600/40'); 
         } else {
             btn.innerText = '🔊';
             btn.classList.remove('bg-red-600/40');
@@ -348,7 +350,6 @@ window.iniciarAR = async () => {
                 const btn = document.getElementById('btn-confetti');
                 if(btn) btn.classList.remove('hidden');
                 
-                // Mostrar controles de audio
                 const audioControls = document.getElementById('audio-controls');
                 if(audioControls) audioControls.classList.remove('hidden');
 
@@ -369,7 +370,6 @@ window.iniciarAR = async () => {
                     currentSound = new THREE.Audio(audioListener);
                     currentSound.setBuffer(infoModelo.audioBuffer);
                     currentSound.setLoop(true); 
-                    // Usar el volumen global configurado
                     currentSound.setVolume(globalVolume);
                     currentSound.play();
                 }
@@ -405,7 +405,6 @@ window.detenerAR = () => {
         const btn = document.getElementById('btn-confetti');
         if(btn) btn.classList.add('hidden');
         
-        // Ocultar controles de audio
         const audioControls = document.getElementById('audio-controls');
         if(audioControls) audioControls.classList.add('hidden');
 
