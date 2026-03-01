@@ -124,70 +124,36 @@ window.addEventListener('load', () => {
     }, 2500);
 });
 
-// --- HELPER TEXTURAS (MEJORADO - AUTO AJUSTE DE TEXTO) ---
+// --- HELPER TEXTURAS ---
 function createCardTexture(text, colorHex) {
     const canvas = document.createElement('canvas');
     canvas.width = 256; 
     canvas.height = 350; 
     const ctx = canvas.getContext('2d');
-    
-    // Fondo con degradado más suave para estilo "Glass"
     const gradient = ctx.createLinearGradient(0, 0, 0, 350);
     gradient.addColorStop(0, colorHex); 
     gradient.addColorStop(1, 'rgba(0,0,0,0.9)');
-    
     ctx.fillStyle = gradient; 
-    
-    // Dibujamos con bordes redondeados (simulados)
     ctx.beginPath();
-    ctx.moveTo(20, 0);
-    ctx.lineTo(236, 0);
-    ctx.quadraticCurveTo(256, 0, 256, 20);
-    ctx.lineTo(256, 330);
-    ctx.quadraticCurveTo(256, 350, 236, 350);
-    ctx.lineTo(20, 350);
-    ctx.quadraticCurveTo(0, 350, 0, 330);
-    ctx.lineTo(0, 20);
-    ctx.quadraticCurveTo(0, 0, 20, 0);
+    ctx.moveTo(20, 0); ctx.lineTo(236, 0); ctx.quadraticCurveTo(256, 0, 256, 20);
+    ctx.lineTo(256, 330); ctx.quadraticCurveTo(256, 350, 236, 350);
+    ctx.lineTo(20, 350); ctx.quadraticCurveTo(0, 350, 0, 330);
+    ctx.lineTo(0, 20); ctx.quadraticCurveTo(0, 0, 20, 0);
     ctx.fill();
-
-    // Borde sutil blanco
-    ctx.strokeStyle = 'rgba(255,255,255,0.3)'; 
-    ctx.lineWidth = 4; 
-    ctx.stroke();
-
-    // --- LÓGICA DE TEXTO AUTO-AJUSTABLE ---
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 4; ctx.stroke();
     let fontSize = 40;
-    ctx.font = `900 ${fontSize}px "Montserrat", Arial`; // Usamos Montserrat Bold
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    
-    const maxW = 220; // Ancho máximo permitido
-    // Reducimos la fuente mientras el texto sea más ancho que el máximo
+    ctx.font = `900 ${fontSize}px "Montserrat", Arial`; 
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const maxW = 220; 
     while (ctx.measureText(text).width > maxW && fontSize > 10) {
-        fontSize -= 2;
-        ctx.font = `900 ${fontSize}px "Montserrat", Arial`;
+        fontSize -= 2; ctx.font = `900 ${fontSize}px "Montserrat", Arial`;
     }
-    
-    // Sombra para mejor lectura
-    ctx.shadowColor = "rgba(0,0,0,0.8)";
-    ctx.shadowBlur = 8;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 4;
-
+    ctx.shadowColor = "rgba(0,0,0,0.8)"; ctx.shadowBlur = 8; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 4;
     ctx.fillStyle = 'white'; 
-    // Dibujamos el texto en el centro (128) y un poco más abajo del centro vertical visual (175)
     ctx.fillText(text, 128, 175);
-    
-    // Reset de sombra para el círculo
     ctx.shadowBlur = 0;
-    
-    // Círculo decorativo superior
-    ctx.beginPath(); 
-    ctx.arc(128, 70, 30, 0, 2 * Math.PI);
-    ctx.fillStyle = 'rgba(255,255,255,0.15)'; 
-    ctx.fill();
-    
+    ctx.beginPath(); ctx.arc(128, 70, 30, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fill();
     return new THREE.CanvasTexture(canvas);
 }
 
@@ -220,14 +186,10 @@ function initHome3D() {
         mesh.rotation.y = -angle + Math.PI/2;
         carouselGroup.add(mesh);
     });
-    
-    // --- CORRECCIÓN: EVENT LISTENER PARA RESIZE ---
     window.addEventListener('resize', onWindowResize, false);
-    
     startHomeLoop();
 }
 
-// --- FUNCIÓN DE RESIZE ---
 function onWindowResize() {
     if (!homeCamera || !homeRenderer) return;
     const width = window.innerWidth;
@@ -243,7 +205,6 @@ function startHomeLoop() {
             homeAnimationId = null; 
             return;
         }
-
         homeAnimationId = requestAnimationFrame(animate);
         if (homeBall) homeBall.rotation.y += 0.005;
         if (carouselGroup) carouselGroup.rotation.y += 0.002;
@@ -257,35 +218,40 @@ function startHomeLoop() {
 window.mostrarInfoPais = (index) => {
     const country = countriesData.find(c => c.index === index);
     if (!country) return;
+    
+    // Si ya estamos viendo el mismo país, no reiniciamos TODO (para evitar parpadeos)
+    // Pero si es diferente, limpiamos.
+    const esNuevoPais = (currentCountry && currentCountry.index !== index) || !currentCountry;
+    
     currentCountry = country;
-
-    // Reiniciar puntaje
-    currentScore = 0;
+    
+    // Si cambiamos de país, reseteamos el puntaje
+    if(esNuevoPais) {
+        currentScore = 0;
+    }
 
     document.getElementById('country-name').innerText = country.name;
     document.getElementById('stat-titulos').innerText = country.stats.titulos;
     document.getElementById('stat-participaciones').innerText = country.stats.copas;
-
+    
+    // Actualizar Facts
     const factsContainer = document.getElementById('facts-items-container');
     factsContainer.innerHTML = '';
     country.facts.forEach((fact, i) => {
         const div = document.createElement('div');
-        // ESTILO NUEVO: Liquid Glass Light
         div.className = 'liquid-glass-light p-5 rounded-2xl border border-white/5 shadow-sm';
         div.innerHTML = `<p class="font-sans text-sm text-gray-200 leading-relaxed"><strong class="text-green-400 mr-1">#${i+1}</strong> ${fact}</p>`;
         factsContainer.appendChild(div);
     });
 
+    // Actualizar Trivia
     const triviaContainer = document.getElementById('trivia-items-container');
     triviaContainer.innerHTML = ''; 
-
-    // AGREGAR BARRA DE PUNTAJE
     const scoreDiv = document.createElement('div');
     scoreDiv.className = 'bg-white/10 border border-white/20 p-3 rounded-xl mb-4 text-center sticky top-0 z-10 backdrop-blur-md';
-    scoreDiv.innerHTML = `<span id="trivia-score-text" class="font-display text-2xl text-green-400 tracking-widest">PUNTAJE: 0 / ${country.trivia.length}</span>`;
+    scoreDiv.innerHTML = `<span id="trivia-score-text" class="font-display text-2xl text-green-400 tracking-widest">PUNTAJE: ${currentScore} / ${country.trivia.length}</span>`;
     triviaContainer.appendChild(scoreDiv);
-
-    // GENERAR PREGUNTAS
+    
     country.trivia.forEach((triv, qIndex) => {
         const div = document.createElement('div');
         div.className = 'bg-white/5 border border-white/10 rounded-2xl p-5 shadow-inner';
@@ -300,9 +266,13 @@ window.mostrarInfoPais = (index) => {
         triviaContainer.appendChild(div);
     });
 
-    const firstTab = document.querySelector('#tab-navigation .tab-btn');
-    switchTab(firstTab, 'stats');
-
+    // Resetear a pestaña Stats si es un nuevo país, si no, mantenemos donde estaba
+    if(esNuevoPais){
+        const firstTab = document.querySelector('#tab-navigation .tab-btn');
+        switchTab(firstTab, 'stats');
+    }
+    
+    // IMPORTANTE: Asegurar que se abra la ventana
     abrirBottomSheet();
 };
 
@@ -315,7 +285,6 @@ window.switchTab = (btn, tabId) => {
     });
     btn.classList.remove('bg-white/5', 'text-gray-400', 'border-white/10');
     btn.classList.add('active', 'bg-green-600', 'text-white', 'border-green-400', 'shadow-[0_0_15px_rgba(34,197,94,0.3)]');
-
     const containers = document.querySelectorAll('.content-container');
     containers.forEach(c => c.classList.add('hidden'));
     document.getElementById(`content-${tabId}`).classList.remove('hidden');
@@ -325,37 +294,22 @@ window.switchTab = (btn, tabId) => {
 window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
     const parent = btn.parentElement;
     const buttons = parent.querySelectorAll('button');
-    
-    // Evitar responder de nuevo
     buttons.forEach(b => b.disabled = true);
-    
     if (optIndex === correctIndex) {
-        // CORRECTO
-        btn.classList.remove('bg-black/40'); 
-        btn.classList.add('bg-green-600', 'text-white', 'font-bold', 'border-green-400'); 
-        btn.innerHTML += ' ✅';
-        playSfx(sfxCorrect); 
-
-        // Actualizar Puntaje
+        btn.classList.remove('bg-black/40'); btn.classList.add('bg-green-600', 'text-white', 'font-bold', 'border-green-400'); 
+        btn.innerHTML += ' ✅'; playSfx(sfxCorrect); 
         currentScore++;
         const scoreText = document.getElementById('trivia-score-text');
         if (scoreText && currentCountry) {
             scoreText.innerText = `PUNTAJE: ${currentScore} / ${currentCountry.trivia.length}`;
-            // Animación visual pequeña
             scoreText.parentElement.classList.add('border-green-500');
             setTimeout(() => scoreText.parentElement.classList.remove('border-green-500'), 300);
         }
-
     } else {
-        // INCORRECTO
-        btn.classList.remove('bg-black/40'); 
-        btn.classList.add('bg-red-600', 'text-white', 'border-red-400'); 
-        btn.innerHTML += ' ❌';
-        playSfx(sfxWrong); 
-        
+        btn.classList.remove('bg-black/40'); btn.classList.add('bg-red-600', 'text-white', 'border-red-400'); 
+        btn.innerHTML += ' ❌'; playSfx(sfxWrong); 
         const correctBtn = buttons[correctIndex];
-        correctBtn.classList.remove('bg-black/40'); 
-        correctBtn.classList.add('bg-green-600/50', 'text-white', 'border-green-400/50');
+        correctBtn.classList.remove('bg-black/40'); correctBtn.classList.add('bg-green-600/50', 'text-white', 'border-green-400/50');
     }
 };
 
@@ -363,61 +317,30 @@ window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
 function initBottomSheet() {
     const sheet = document.getElementById('bottom-sheet');
     const handle = document.getElementById('drag-handle');
-    let startY = 0;
-    let currentY = 0;
-    let isDragging = false;
-    let isMinimized = false; 
+    let startY = 0; let currentY = 0; let isDragging = false; let isMinimized = false; 
 
-    const onStart = (y) => {
-        startY = y;
-        isDragging = true;
-        sheet.style.transition = 'none'; 
-        handle.style.cursor = 'grabbing';
-    };
-
+    const onStart = (y) => { startY = y; isDragging = true; sheet.style.transition = 'none'; handle.style.cursor = 'grabbing'; };
     const onMove = (y) => {
         if (!isDragging) return;
         const deltaY = y - startY;
-        
-        if (!isMinimized && deltaY > 0) {
-             sheet.style.transform = `translateY(${deltaY}px)`;
-             currentY = deltaY;
-        } else if (isMinimized && deltaY < 0) {
+        if (!isMinimized && deltaY > 0) { sheet.style.transform = `translateY(${deltaY}px)`; currentY = deltaY; } 
+        else if (isMinimized && deltaY < 0) {
             const headerHeight = document.getElementById('sheet-header').offsetHeight;
             const sheetHeight = sheet.offsetHeight;
             const peekOffset = sheetHeight - headerHeight;
-            
-            sheet.style.transform = `translateY(${peekOffset + deltaY}px)`;
-            currentY = deltaY; 
+            sheet.style.transform = `translateY(${peekOffset + deltaY}px)`; currentY = deltaY; 
         }
     };
-
     const onEnd = () => {
         if (!isDragging) return;
-        isDragging = false;
-        sheet.style.transition = 'transform 0.5s cubic-bezier(0.19, 1, 0.22, 1)'; // Animación Apple
-        handle.style.cursor = 'grab';
-        
-        if (!isMinimized) {
-            if (currentY > 100) {
-                minimizarBottomSheet();
-            } else {
-                abrirBottomSheet();
-            }
-        } else {
-            if (currentY < -50) {
-                abrirBottomSheet();
-            } else {
-                minimizarBottomSheet();
-            }
-        }
+        isDragging = false; sheet.style.transition = 'transform 0.5s cubic-bezier(0.19, 1, 0.22, 1)'; handle.style.cursor = 'grab';
+        if (!isMinimized) { if (currentY > 100) minimizarBottomSheet(); else abrirBottomSheet(); } 
+        else { if (currentY < -50) abrirBottomSheet(); else minimizarBottomSheet(); }
         currentY = 0;
     };
-
     handle.addEventListener('touchstart', (e) => onStart(e.touches[0].clientY));
     window.addEventListener('touchmove', (e) => { if (isDragging) { e.preventDefault(); onMove(e.touches[0].clientY); } }, { passive: false });
     window.addEventListener('touchend', onEnd);
-
     handle.addEventListener('mousedown', (e) => { e.preventDefault(); onStart(e.clientY); });
     window.addEventListener('mousemove', (e) => { if (isDragging) onMove(e.clientY); });
     window.addEventListener('mouseup', onEnd);
@@ -425,8 +348,7 @@ function initBottomSheet() {
 
 function abrirBottomSheet() {
     const sheet = document.getElementById('bottom-sheet');
-    sheet.classList.remove('translate-y-full'); 
-    sheet.style.transform = 'translateY(0)';
+    sheet.classList.remove('translate-y-full'); sheet.style.transform = 'translateY(0)';
     document.getElementById('scan-guide').classList.add('hidden');
 }
 
@@ -435,15 +357,12 @@ function minimizarBottomSheet() {
     const headerHeight = document.getElementById('sheet-header').offsetHeight;
     const sheetHeight = sheet.offsetHeight;
     const translateY = sheetHeight - headerHeight; 
-    
     sheet.style.transform = `translateY(${translateY}px)`;
 }
 
-// Para usar desde fuera (volverAlHome)
 window.ocultarBottomSheetCompleto = () => {
     const sheet = document.getElementById('bottom-sheet');
-    sheet.style.transform = ''; 
-    sheet.classList.add('translate-y-full'); 
+    sheet.style.transform = ''; sheet.classList.add('translate-y-full'); 
     document.getElementById('scan-guide').classList.remove('hidden');
 };
 
@@ -455,13 +374,18 @@ window.irAEscanear = async () => {
 };
 
 window.volverAlHome = () => {
+    // RESETEAR ESTADO: Limpiamos país activo y puntaje
+    currentCountry = null;
+    currentScore = 0;
+    
+    // Ocultar la ventana deslizante
     window.ocultarBottomSheetCompleto();
+    
     document.getElementById('screen-ar').classList.add('hidden');
     document.getElementById('screen-home').classList.remove('hidden');
     
     if (!homeAnimationId) startHomeLoop();
-
-    if(window.detenerAR) window.detenerAR();
+    if(window.detenerAR) window.detenerAR(); 
 };
 
 // --- NUEVA LÓGICA DE GALERÍA (ACERVO) ---
@@ -470,10 +394,9 @@ window.volverAlHome = () => {
 window.verHighlights = () => {
     if (!currentCountry) return;
     
+    // Ocultar hoja de datos, pero NO DETENER AR COMPLETAMENTE
+    if(window.detenerAudioAR) window.detenerAudioAR();
     window.ocultarBottomSheetCompleto(); 
-    
-    // --- DETENER AR ---
-    if (window.detenerAR) window.detenerAR(); 
     
     document.getElementById('screen-ar').classList.add('hidden');
     document.getElementById('screen-gallery').classList.remove('hidden');
@@ -484,10 +407,8 @@ window.verHighlights = () => {
     
     currentCountry.videos.forEach((vid, index) => {
         const item = document.createElement('div');
-        // Usamos background negro/transparente en lugar de gris
         item.className = 'bg-black/40 border border-white/10 rounded-xl overflow-hidden active:scale-95 transition-transform cursor-pointer group';
         item.onclick = () => window.reproducirVideoDesdeGaleria(index);
-        
         item.innerHTML = `
             <div class="h-32 bg-black/60 relative flex items-center justify-center group-hover:bg-white/5 transition-colors">
                 <span class="text-4xl opacity-80 group-hover:scale-110 transition-transform">▶️</span>
@@ -505,19 +426,25 @@ window.verHighlights = () => {
 window.cerrarGaleria = async () => {
     document.getElementById('screen-gallery').classList.add('hidden');
     document.getElementById('screen-ar').classList.remove('hidden');
-    document.getElementById('scan-guide').classList.remove('hidden');
+    
+    // --- LÓGICA DE REAPERTURA DE VENTANA ---
+    // Si tenemos un país activo (porque el AR es persistente),
+    // queremos volver a ver la info (Bottom Sheet) y NO la guía de escaneo.
+    if (currentCountry) {
+        document.getElementById('scan-guide').classList.add('hidden'); // Asegurar guía oculta
+        abrirBottomSheet(); // Volver a mostrar info
+    } else {
+        document.getElementById('scan-guide').classList.remove('hidden'); // Si no hay nada, mostrar guía
+    }
 
-    // --- REINICIAR AR ---
-    if (window.iniciarAR) await window.iniciarAR();
+    if(window.renudarAudioAR) window.renudarAudioAR();
 };
 
 window.reproducirVideoDesdeGaleria = (index) => {
     if (!currentCountry || !currentCountry.videos[index]) return;
     const videoData = currentCountry.videos[index];
-    
     document.getElementById('screen-gallery').classList.add('hidden');
     document.getElementById('screen-highlights').classList.remove('hidden');
-    
     const video = document.getElementById('highlight-video');
     document.getElementById('hl-title').innerText = videoData.title;
     video.src = videoData.src;
@@ -527,22 +454,17 @@ window.reproducirVideoDesdeGaleria = (index) => {
 
 window.volverAGaleria = () => {
     const video = document.getElementById('highlight-video');
-    video.pause(); 
-    video.src = ""; 
+    video.pause(); video.src = ""; 
     document.getElementById('screen-highlights').classList.add('hidden');
     document.getElementById('screen-gallery').classList.remove('hidden');
 };
 
-window.cerrarHighlights = () => {
-    window.volverAGaleria();
-};
+window.cerrarHighlights = () => { window.volverAGaleria(); };
 
 window.aplicarFiltroVideo = (filtro) => {
     const video = document.getElementById('highlight-video');
     const botones = document.querySelectorAll('.filter-btn');
-    
     video.className = "w-full max-h-screen object-contain transition-all duration-300 filter-" + filtro;
-    
     botones.forEach(btn => {
         btn.classList.remove('bg-white', 'text-black');
         btn.classList.add('bg-white/10', 'text-white');
@@ -551,4 +473,13 @@ window.aplicarFiltroVideo = (filtro) => {
         event.target.classList.remove('bg-white/10', 'text-white');
         event.target.classList.add('bg-white', 'text-black');
     }
+};
+
+window.cambiarAnimacion = (tipo) => {
+    const sfxClick = new Audio('assets/sounds/click.mp3');
+    sfxClick.volume = 0.5; sfxClick.play().catch(e=>{});
+    if (window.cambiarAnimacionAR) window.cambiarAnimacionAR(tipo);
+    const btns = document.querySelectorAll('.anim-btn');
+    btns.forEach(b => { b.classList.remove('border-green-500'); });
+    if(event && event.currentTarget) event.currentTarget.classList.add('border-green-500');
 };

@@ -5,46 +5,76 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 window.THREE = THREE;
 import 'mindar-image-three';
 
-// --- CONFIGURACIÓN DE MODELOS Y CANCIONES ---
+// --- CONFIGURACIÓN DE MODELOS Y ACCIONES ---
 const modelosPorPais = [
     {
         id: 'mexico',
-        archivo: 'assets/models/ajolotebailador.glb', 
+        acciones: {
+            idle: 'assets/models/MEX IDLE.glb',
+            bailar: 'assets/models/ajolotebailador.glb',
+            patear: 'assets/models/MEX KICK.glb',
+            correr: 'assets/models/MEX RUN.glb'
+        },
         song: 'assets/songs/Mexico-mariachiloco.mp3', 
         scale: [0.5, 0.5, 0.5], 
         position: [0, -0.4, 0]
     },
     {
         id: 'colombia',
-        archivo: 'assets/models/low_poly_soccer_ball_or_football.glb',
+        acciones: {
+            idle: 'assets/models/low_poly_soccer_ball_or_football.glb', 
+            bailar: 'assets/models/low_poly_soccer_ball_or_football.glb', 
+            patear: 'assets/models/low_poly_soccer_ball_or_football.glb', 
+            correr: 'assets/models/low_poly_soccer_ball_or_football.glb'  
+        },
         song: 'assets/songs/Colombia-Caminosdelavida.mp3',
         scale: [0.5, 0.5, 0.5], 
         position: [0, 0, 0]
     },
     {
         id: 'irlanda',
-        archivo: 'assets/models/irlanda_hat.glb', 
+        acciones: {
+            idle: 'assets/models/irlanda_hat.glb',
+            bailar: 'assets/models/irlanda_hat.glb',
+            patear: 'assets/models/irlanda_hat.glb',
+            correr: 'assets/models/irlanda_hat.glb'
+        },
         song: 'assets/songs/Irlanda-pub.mp3',
         scale: [0.5, 0.5, 0.5], 
         position: [0, 0, 0]
     },
     {
         id: 'espana',
-        archivo: 'assets/models/espana_bull.glb', 
+        acciones: {
+            idle: 'assets/models/espana_bull.glb',
+            bailar: 'assets/models/espana_bull.glb',
+            patear: 'assets/models/espana_bull.glb',
+            correr: 'assets/models/espana_bull.glb'
+        },
         song: 'assets/songs/Espana-Macarena.mp3',
         scale: [0.5, 0.5, 0.5], 
         position: [0, 0, 0]
     },
     {
         id: 'corea',
-        archivo: 'assets/models/corea_tiger.glb', 
+        acciones: {
+            idle: 'assets/models/corea_tiger.glb',
+            bailar: 'assets/models/corea_tiger.glb',
+            patear: 'assets/models/corea_tiger.glb',
+            correr: 'assets/models/corea_tiger.glb'
+        },
         song: 'assets/songs/Corea-Gangnamstyle.mp3',
         scale: [0.5, 0.5, 0.5], 
         position: [0, 0, 0]
     },
     {
         id: 'japon',
-        archivo: 'assets/models/japon_samurai.glb', 
+        acciones: {
+            idle: 'assets/models/japon_samurai.glb',
+            bailar: 'assets/models/japon_samurai.glb',
+            patear: 'assets/models/japon_samurai.glb',
+            correr: 'assets/models/japon_samurai.glb'
+        },
         song: 'assets/songs/Japon-miku.mp3',
         scale: [0.5, 0.5, 0.5], 
         position: [0, 0, 0]
@@ -57,61 +87,41 @@ let isARRunning = false;
 let mixers = []; 
 let clock = new THREE.Clock();
 
-// Control de Modelos
-let currentModel = null;     
-let currentAnchor = null;  
-let allLoadedModels = []; 
-
-// Audio y Volumen
-let audioListener = null;
+// Control de Modelos y Estado
+let currentAnchorIndex = -1; 
 let currentSound = null;
-let globalVolume = 0.5; // Volumen inicial
+let currentVisibleModel = null; 
+let globalVolume = 0.5;
 let isMuted = false;
 let preMuteVolume = 0.5;
+let audioListener = null;
 
-// --- SISTEMA DE AUDIO UI ---
+// --- AUDIO UI ---
 window.ajustarVolumen = (delta) => {
-    if (isMuted && delta > 0) {
-        isMuted = false;
-        actualizarIconoMute();
-    }
-
+    if (isMuted && delta > 0) { isMuted = false; actualizarIconoMute(); }
     globalVolume += delta;
-    
     if (globalVolume > 1) globalVolume = 1;
     if (globalVolume < 0) globalVolume = 0;
-
-    if (globalVolume === 0) {
-        isMuted = true;
-        actualizarIconoMute();
-    }
-
+    if (globalVolume === 0) { isMuted = true; actualizarIconoMute(); }
     aplicarVolumen();
 };
 
 window.alternarMute = () => {
     isMuted = !isMuted;
-    
     if (isMuted) {
         preMuteVolume = globalVolume > 0 ? globalVolume : 0.5;
         globalVolume = 0;
     } else {
         globalVolume = preMuteVolume;
     }
-    
     actualizarIconoMute();
     aplicarVolumen();
 };
 
-// EXPORTAR VOLUMEN PARA MAIN.JS (SFX)
-window.getARVolume = () => {
-    return globalVolume;
-};
+window.getARVolume = () => { return globalVolume; };
 
 function aplicarVolumen() {
-    if (currentSound) {
-        currentSound.setVolume(globalVolume);
-    }
+    if (currentSound) currentSound.setVolume(globalVolume);
 }
 
 function actualizarIconoMute() {
@@ -127,8 +137,20 @@ function actualizarIconoMute() {
     }
 }
 
+// NUEVO: Funciones para detener/renudar audio desde fuera
+window.detenerAudioAR = () => {
+    if (currentSound && currentSound.isPlaying) {
+        currentSound.pause(); 
+    }
+};
 
-// --- SISTEMA DE CONFETI 2D ---
+window.renudarAudioAR = () => {
+    if (currentSound && !currentSound.isPlaying && isARRunning) {
+        currentSound.play();
+    }
+};
+
+// --- CONFETI ---
 let confettiCanvas = null;
 let confettiCtx = null;
 let confettiParticles = [];
@@ -138,7 +160,6 @@ let confettiTimeout = null;
 
 function initConfettiSystem() {
     if (document.getElementById('confetti-overlay')) return;
-
     confettiCanvas = document.createElement('canvas');
     confettiCanvas.id = 'confetti-overlay';
     confettiCanvas.style.position = 'fixed';
@@ -149,9 +170,7 @@ function initConfettiSystem() {
     confettiCanvas.style.pointerEvents = 'none'; 
     confettiCanvas.style.zIndex = '9999'; 
     document.body.appendChild(confettiCanvas);
-
     confettiCtx = confettiCanvas.getContext('2d');
-    
     window.addEventListener('resize', resizeConfetti);
     resizeConfetti();
 }
@@ -166,118 +185,133 @@ function resizeConfetti() {
 function createParticle() {
     const colors = ['#22c55e', '#ef4444', '#fbbf24', '#3b82f6', '#ffffff'];
     return {
-        x: Math.random() * window.innerWidth, 
-        y: -20, 
-        size: Math.random() * 10 + 5, 
-        color: colors[Math.floor(Math.random() * colors.length)],
-        speedY: Math.random() * 3 + 2, 
-        speedX: Math.random() * 2 - 1, 
-        rotation: Math.random() * 360,
-        rotationSpeed: Math.random() * 10 - 5
+        x: Math.random() * window.innerWidth, y: -20, 
+        size: Math.random() * 10 + 5, color: colors[Math.floor(Math.random() * colors.length)],
+        speedY: Math.random() * 3 + 2, speedX: Math.random() * 2 - 1, 
+        rotation: Math.random() * 360, rotationSpeed: Math.random() * 10 - 5
     };
 }
 
 function updateConfetti() {
     if (!confettiCtx || !confettiCanvas) return;
-
     confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-
-    if (confettiActive && confettiParticles.length < 150) {
-        confettiParticles.push(createParticle());
-    }
-
+    if (confettiActive && confettiParticles.length < 150) confettiParticles.push(createParticle());
     for (let i = 0; i < confettiParticles.length; i++) {
         const p = confettiParticles[i];
-        p.y += p.speedY;
-        p.x += p.speedX;
-        p.rotation += p.rotationSpeed;
-
+        p.y += p.speedY; p.x += p.speedX; p.rotation += p.rotationSpeed;
         confettiCtx.save();
         confettiCtx.translate(p.x, p.y);
         confettiCtx.rotate(p.rotation * Math.PI / 180);
         confettiCtx.fillStyle = p.color;
         confettiCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
         confettiCtx.restore();
-
-        if (p.y > window.innerHeight) {
-            confettiParticles.splice(i, 1);
-            i--;
-        }
+        if (p.y > window.innerHeight) { confettiParticles.splice(i, 1); i--; }
     }
-
-    if (confettiActive || confettiParticles.length > 0) {
-        confettiAnimationId = requestAnimationFrame(updateConfetti);
-    } else {
-        confettiAnimationId = null;
-        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-    }
+    if (confettiActive || confettiParticles.length > 0) confettiAnimationId = requestAnimationFrame(updateConfetti);
+    else { confettiAnimationId = null; confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); }
 }
 
-window.lanzarConfettiManual = () => {
-    lanzarConfetti(10000); 
-};
-
+window.lanzarConfettiManual = () => { lanzarConfetti(10000); };
 function lanzarConfetti(duracion = 10000) {
     initConfettiSystem();
     if (confettiTimeout) clearTimeout(confettiTimeout);
     confettiActive = true;
-    if (!confettiAnimationId) {
-        updateConfetti();
-    }
-    confettiTimeout = setTimeout(() => {
-        confettiActive = false;
-    }, duracion);
+    if (!confettiAnimationId) updateConfetti();
+    confettiTimeout = setTimeout(() => { confettiActive = false; }, duracion);
 }
-
 function detenerConfetiInmediato() {
-    confettiActive = false;
-    confettiParticles = []; 
-    if (confettiAnimationId) {
-        cancelAnimationFrame(confettiAnimationId);
-        confettiAnimationId = null;
-    }
-    if (confettiCtx && confettiCanvas) {
-        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-    }
+    confettiActive = false; confettiParticles = []; 
+    if (confettiAnimationId) { cancelAnimationFrame(confettiAnimationId); confettiAnimationId = null; }
+    if (confettiCtx && confettiCanvas) confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
     if (confettiTimeout) clearTimeout(confettiTimeout);
 }
 
-// --- FUNCIÓN DE LIMPIEZA AR ---
+// --- FUNCIÓN LIMPIEZA / RESET ---
 function resetearModeloAnterior() {
-    if (currentModel) {
-        currentModel.visible = false;
-        if (currentAnchor) {
-            currentAnchor.group.attach(currentModel);
-            const index = currentModel.userData.countryIndex;
-            const config = modelosPorPais[index];
-            if (config) {
-                currentModel.position.set(...config.position);
-                currentModel.scale.set(...config.scale);
-                currentModel.rotation.set(0, 0, 0); 
-            }
+    if (currentVisibleModel) {
+        currentVisibleModel.visible = false;
+        
+        // Devolver el modelo a su Anchor original
+        if (currentVisibleModel.userData.originalAnchor) {
+            currentVisibleModel.userData.originalAnchor.group.attach(currentVisibleModel);
+        }
+
+        // Restaurar posición original
+        const index = currentVisibleModel.userData.paisIndex;
+        const config = modelosPorPais[index];
+        if (config) {
+            currentVisibleModel.position.set(...config.position);
+            currentVisibleModel.scale.set(...config.scale);
+            currentVisibleModel.rotation.set(0, 0, 0);
         }
     }
-
+    
     if (currentSound && currentSound.isPlaying) {
         currentSound.stop();
     }
-
-    currentModel = null;
-    currentAnchor = null;
+    
+    currentVisibleModel = null;
+    currentAnchorIndex = -1;
 }
+
+// --- CAMBIAR ANIMACIÓN ---
+window.cambiarAnimacionAR = (tipoAccion) => {
+    if (currentAnchorIndex === -1 || !mindarThree) return;
+
+    const anchor = mindarThree.anchors[currentAnchorIndex];
+    if (!anchor) return;
+
+    let positionRef = currentVisibleModel ? currentVisibleModel.position.clone() : null;
+    let rotationRef = currentVisibleModel ? currentVisibleModel.rotation.clone() : null;
+
+    if (currentVisibleModel) {
+        currentVisibleModel.visible = false;
+        if (currentVisibleModel.userData.originalAnchor) {
+            currentVisibleModel.userData.originalAnchor.group.attach(currentVisibleModel);
+        }
+    }
+
+    // Buscar el nuevo modelo deseado
+    const nuevoModelo = anchor.group.children.find(
+        child => child.userData.esModelo && child.userData.accion === tipoAccion
+    );
+
+    if (nuevoModelo) {
+        nuevoModelo.visible = true;
+        
+        // PERSISTENCIA: Pegar a la escena principal
+        mindarThree.scene.attach(nuevoModelo);
+        
+        if (positionRef) {
+            nuevoModelo.position.copy(positionRef);
+            nuevoModelo.rotation.copy(rotationRef);
+        }
+
+        const mixer = mixers.find(m => m.getRoot() === nuevoModelo);
+        if (mixer) {
+            mixer.stopAllAction();
+            if(nuevoModelo.userData.clip) {
+                const action = mixer.clipAction(nuevoModelo.userData.clip);
+                action.play();
+            }
+        }
+        
+        currentVisibleModel = nuevoModelo;
+    }
+};
+
 
 // --- INICIO DE AR ---
 window.iniciarAR = async () => {
     if (isARRunning) return;
-    console.log("Iniciando AR...");
+    console.log("Iniciando AR Persistente...");
 
     const container = document.querySelector("#ar-container");
     if (container) container.innerHTML = '';
     
     mixers = [];
-    allLoadedModels = [];
-    currentModel = null;
-    currentAnchor = null;
+    currentAnchorIndex = -1;
+    currentVisibleModel = null;
     currentSound = null;
     
     initConfettiSystem();
@@ -310,83 +344,86 @@ window.iniciarAR = async () => {
         const loader = new GLTFLoader();
         const audioLoader = new THREE.AudioLoader();
 
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < modelosPorPais.length; i++) {
             const anchor = mindarThree.addAnchor(i);
-            const infoModelo = modelosPorPais[i];
+            const infoPais = modelosPorPais[i];
 
-            if (infoModelo && infoModelo.archivo) {
-                loader.load(infoModelo.archivo, (gltf) => {
+            if (infoPais.song) {
+                audioLoader.load(infoPais.song, (buffer) => { infoPais.audioBuffer = buffer; });
+            }
+
+            for (const [accion, rutaArchivo] of Object.entries(infoPais.acciones)) {
+                loader.load(rutaArchivo, (gltf) => {
                     const model = gltf.scene;
-                    model.scale.set(...infoModelo.scale);
-                    model.position.set(...infoModelo.position);
-                    model.visible = false;
+                    model.scale.set(...infoPais.scale);
+                    model.position.set(...infoPais.position);
+                    model.visible = false; 
                     
-                    model.userData.countryIndex = i;
+                    model.userData.esModelo = true;
+                    model.userData.paisIndex = i;
+                    model.userData.accion = accion;
                     model.userData.originalAnchor = anchor; 
 
                     if (gltf.animations && gltf.animations.length > 0) {
                         const mixer = new THREE.AnimationMixer(model);
-                        const action = mixer.clipAction(gltf.animations[0]); 
-                        action.play();
+                        const clip = gltf.animations[0];
+                        const actionPlay = mixer.clipAction(clip);
+                        actionPlay.play();
                         mixers.push(mixer);
+                        model.userData.clip = clip; 
                     }
                     anchor.group.add(model);
-                    allLoadedModels.push(model);
 
-                }, undefined, (e) => console.warn("Error modelo " + i));
-            }
-
-            if (infoModelo && infoModelo.song) {
-                audioLoader.load(infoModelo.song, (buffer) => {
-                    infoModelo.audioBuffer = buffer;
-                });
+                }, undefined, (e) => console.warn(`Error cargando ${accion} de país ${i}`));
             }
             
+            // --- DETECCIÓN DEL PAÍS ---
             anchor.onTargetFound = () => {
-                if (currentModel && currentModel.userData.countryIndex === i) return;
+                if (currentAnchorIndex === i) return; // Si es el mismo país, ignorar.
 
-                console.log(`¡Fiesta en ${i}!`);
-
-                const btn = document.getElementById('btn-confetti');
-                if(btn) btn.classList.remove('hidden');
+                console.log(`Detectado: ${infoPais.id}`);
                 
-                const audioControls = document.getElementById('audio-controls');
-                if(audioControls) audioControls.classList.remove('hidden');
-
+                // 1. Limpiar el país anterior (modelo y audio)
                 resetearModeloAnterior();
+                
+                currentAnchorIndex = i;
 
-                const newModel = anchor.group.children.find(child => child.userData.countryIndex === i) || anchor.group.children[0];
+                // 2. Mostrar Controles UI
+                const btnConfetti = document.getElementById('btn-confetti');
+                const audioControls = document.getElementById('audio-controls');
+                const animControls = document.getElementById('anim-controls'); 
+                
+                if(btnConfetti) btnConfetti.classList.remove('hidden');
+                if(audioControls) audioControls.classList.remove('hidden');
+                if(animControls) animControls.classList.remove('hidden');
 
-                if (newModel) {
-                    scene.attach(newModel); 
-                    newModel.visible = true;
-                    currentModel = newModel;
-                    currentAnchor = anchor;
-                    lanzarConfetti(10000); 
-                }
+                // 3. Activar modelo IDLE
+                window.cambiarAnimacionAR('idle');
 
-                if (infoModelo.audioBuffer) {
-                    if (currentSound && currentSound.isPlaying) currentSound.stop();
+                // 4. Audio
+                if (infoPais.audioBuffer) {
                     currentSound = new THREE.Audio(audioListener);
-                    currentSound.setBuffer(infoModelo.audioBuffer);
+                    currentSound.setBuffer(infoPais.audioBuffer);
                     currentSound.setLoop(true); 
                     currentSound.setVolume(globalVolume);
                     currentSound.play();
                 }
 
+                if(window.lanzarConfettiManual) window.lanzarConfettiManual();
+                
+                // 5. Actualizar interfaz de datos (Main.js)
                 if(window.mostrarInfoPais) window.mostrarInfoPais(i);
             };
         }
 
         await mindarThree.start();
+        isARRunning = true;
         
         renderer.setAnimationLoop(() => {
             const delta = clock.getDelta();
             mixers.forEach(mixer => mixer.update(delta));
             renderer.render(scene, camera);
         });
-        
-        isARRunning = true;
 
     } catch (error) {
         console.error("Error AR:", error);
@@ -399,28 +436,16 @@ window.detenerAR = () => {
         mindarThree.renderer.setAnimationLoop(null);
         isARRunning = false;
         
-        resetearModeloAnterior();
+        resetearModeloAnterior(); 
         detenerConfetiInmediato(); 
         
-        const btn = document.getElementById('btn-confetti');
-        if(btn) btn.classList.add('hidden');
-        
-        const audioControls = document.getElementById('audio-controls');
-        if(audioControls) audioControls.classList.add('hidden');
-
-        allLoadedModels.forEach(m => {
-            m.visible = false;
-            if (m.userData.originalAnchor) {
-                m.userData.originalAnchor.group.add(m);
-            }
-        });
+        document.getElementById('btn-confetti').classList.add('hidden');
+        document.getElementById('audio-controls').classList.add('hidden');
+        document.getElementById('anim-controls').classList.add('hidden');
 
         mixers = [];
-        allLoadedModels = [];
-        
         const container = document.querySelector("#ar-container");
         if (container) container.innerHTML = '';
-        
         console.log("AR Detenido.");
     }
 };
