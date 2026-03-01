@@ -106,6 +106,9 @@ let currentCountry = null;
 let homeRenderer, homeScene, homeCamera, homeBall, carouselGroup; 
 let homeAnimationId = null; 
 
+// VARIABLE PARA EL PUNTAJE
+let currentScore = 0; 
+
 // --- INICIALIZACIÓN ---
 window.addEventListener('load', () => {
     initBottomSheet(); 
@@ -192,6 +195,9 @@ window.mostrarInfoPais = (index) => {
     if (!country) return;
     currentCountry = country;
 
+    // Reiniciar puntaje
+    currentScore = 0;
+
     document.getElementById('country-name').innerText = country.name;
     document.getElementById('stat-titulos').innerText = country.stats.titulos;
     document.getElementById('stat-participaciones').innerText = country.stats.copas;
@@ -207,6 +213,14 @@ window.mostrarInfoPais = (index) => {
 
     const triviaContainer = document.getElementById('trivia-items-container');
     triviaContainer.innerHTML = ''; 
+
+    // AGREGAR BARRA DE PUNTAJE
+    const scoreDiv = document.createElement('div');
+    scoreDiv.className = 'bg-white/10 border border-white/20 p-3 rounded-xl mb-4 text-center sticky top-0 z-10 backdrop-blur-md';
+    scoreDiv.innerHTML = `<span id="trivia-score-text" class="font-display text-2xl text-green-400 tracking-widest">PUNTAJE: 0 / ${country.trivia.length}</span>`;
+    triviaContainer.appendChild(scoreDiv);
+
+    // GENERAR PREGUNTAS
     country.trivia.forEach((triv, qIndex) => {
         const div = document.createElement('div');
         div.className = 'bg-white/5 border border-white/10 rounded-2xl p-5 shadow-inner';
@@ -246,14 +260,29 @@ window.switchTab = (btn, tabId) => {
 window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
     const parent = btn.parentElement;
     const buttons = parent.querySelectorAll('button');
+    
+    // Evitar responder de nuevo
     buttons.forEach(b => b.disabled = true);
     
     if (optIndex === correctIndex) {
+        // CORRECTO
         btn.classList.remove('bg-black/40'); 
         btn.classList.add('bg-green-600', 'text-white', 'font-bold', 'border-green-400'); 
         btn.innerHTML += ' ✅';
         playSfx(sfxCorrect); 
+
+        // Actualizar Puntaje
+        currentScore++;
+        const scoreText = document.getElementById('trivia-score-text');
+        if (scoreText && currentCountry) {
+            scoreText.innerText = `PUNTAJE: ${currentScore} / ${currentCountry.trivia.length}`;
+            // Animación visual pequeña
+            scoreText.parentElement.classList.add('border-green-500');
+            setTimeout(() => scoreText.parentElement.classList.remove('border-green-500'), 300);
+        }
+
     } else {
+        // INCORRECTO
         btn.classList.remove('bg-black/40'); 
         btn.classList.add('bg-red-600', 'text-white', 'border-red-400'); 
         btn.innerHTML += ' ❌';
@@ -365,7 +394,6 @@ window.volverAlHome = () => {
     document.getElementById('screen-ar').classList.add('hidden');
     document.getElementById('screen-home').classList.remove('hidden');
     
-    // Reiniciar loop visual del Home
     if (!homeAnimationId) startHomeLoop();
 
     if(window.detenerAR) window.detenerAR();
@@ -447,7 +475,6 @@ window.aplicarFiltroVideo = (filtro) => {
     const video = document.getElementById('highlight-video');
     const botones = document.querySelectorAll('.filter-btn');
     
-    // Aplicamos la clase CSS correspondiente
     video.className = "w-full max-h-screen object-contain transition-all duration-300 filter-" + filtro;
     
     botones.forEach(btn => {
