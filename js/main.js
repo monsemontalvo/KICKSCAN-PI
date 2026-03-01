@@ -8,140 +8,98 @@ const sfxWrong = new Audio('assets/sounds/wrong.mp3');
 
 // Helper para reproducir con volumen seguro
 const playSfx = (sound) => {
-    // Obtenemos el volumen actual del sistema AR (si existe), si no, usamos 0.5
     const vol = window.getARVolume ? window.getARVolume() : 0.5;
-    
-    // Si el volumen es 0 (Mute), no reproducimos
     if (vol <= 0) return;
-
     sound.volume = vol; 
-    sound.currentTime = 0; // Reiniciar audio si ya estaba sonando
-    sound.play().catch(e => {
-        // Ignorar errores de autoplay
-    });
+    sound.currentTime = 0; 
+    sound.play().catch(e => {});
 };
 
-// --- LISTENER GLOBAL DE CLICKS (FEEDBACK TÁCTIL) ---
 document.addEventListener('click', (e) => {
-    // 1. Identificar si se hizo click en un botón (o en un icono dentro de un botón)
     const btn = e.target.tagName === 'BUTTON' ? e.target : e.target.closest('button');
-
     if (btn) {
-        // 2. EXCEPCIÓN: Si el botón está dentro del contenedor de TRIVIA, NO reproducir el click genérico.
-        // Esto evita que se superponga con el sonido de "Correcto" o "Incorrecto".
         if (btn.closest('#trivia-items-container')) {
             return;
         }
-
-        // 3. En cualquier otro botón, reproducir click normal
         playSfx(sfxClick);
     }
 });
 
 
-// --- BASE DE DATOS DE PAÍSES ---
+// --- BASE DE DATOS DE PAÍSES (AHORA CON 4 VIDEOS CADA UNO) ---
 const countriesData = [
     { 
         id: 'mexico', index: 0, name: 'MÉXICO', color: '#106337', 
         stats: { titulos: '1 Confed. / 11 Oro', copas: '17' }, 
-        facts: [
-            'El Estadio Azteca es el único en el mundo que ha albergado dos finales de Copa del Mundo (1970 y 1986).',
-            'México fue el primer país en organizar una Copa del Mundo dos veces.',
-            'La selección mexicana es la que más veces ha participado en un Mundial sin haberlo ganado nunca.'
-        ],
-        trivia: [
-            { q: "¿Máximo goleador histórico?", options: ["Hugo Sánchez", "Chicharito", "Borgetti"], correct: 1 },
-            { q: "¿Cuándo ganaron el Oro Olímpico?", options: ["2008", "2016", "2012"], correct: 2 },
-            { q: "¿Apodo de la selección?", options: ["El Tri", "Los Aztecas", "Los Verdes"], correct: 0 },
-            { q: "¿Primer jugador en 5 mundiales?", options: ["Rafa Márquez", "Tota Carbajal", "Ochoa"], correct: 1 },
-            { q: "¿Rival del 'No era penal'?", options: ["Argentina", "Holanda", "Alemania"], correct: 1 }
-        ],
-        video: 'assets/videos/mexico.mp4' 
+        facts: [ 'El Estadio Azteca es el único en el mundo que ha albergado dos finales de Copa del Mundo.', 'México fue el primer país en organizar una Copa del Mundo dos veces.', 'La selección mexicana es la que más veces ha participado en un Mundial sin haberlo ganado nunca.' ],
+        trivia: [ { q: "¿Máximo goleador histórico?", options: ["Hugo Sánchez", "Chicharito", "Borgetti"], correct: 1 }, { q: "¿Cuándo ganaron el Oro Olímpico?", options: ["2008", "2016", "2012"], correct: 2 }, { q: "¿Apodo de la selección?", options: ["El Tri", "Los Aztecas", "Los Verdes"], correct: 0 }, { q: "¿Primer jugador en 5 mundiales?", options: ["Rafa Márquez", "Tota Carbajal", "Ochoa"], correct: 1 }, { q: "¿Rival del 'No era penal'?", options: ["Argentina", "Holanda", "Alemania"], correct: 1 } ],
+        // ARRAY DE VIDEOS (ACERVO)
+        videos: [
+            { title: "Gol Histórico '86", src: "assets/videos/mexico1.mp4" },
+            { title: "Afición Azteca", src: "assets/videos/mexico2.mp4" }, // Usando el mismo video como placeholder
+            { title: "Himno Nacional", src: "assets/videos/mexico3.mp4" },
+            { title: "Resumen 2018", src: "assets/videos/mexico4.mp4" }
+        ]
     },
     { 
         id: 'colombia', index: 1, name: 'COLOMBIA', color: '#FCD116', 
         stats: { titulos: '1 Copa América', copas: '6' }, 
-        facts: [
-            'El único "Gol Olímpico" (directo de córner) en la historia de los mundiales lo anotó el colombiano Marcos Coll en 1962.',
-            'James Rodríguez ganó la Bota de Oro en el Mundial de Brasil 2014 con 6 goles.',
-            'La selección de 1994 llegó al Mundial con un invicto de 30 partidos, incluyendo el famoso 5-0 a Argentina.'
-        ],
-        trivia: [
-            { q: "¿Quién es 'El Tigre'?", options: ["Falcao", "James", "Valderrama"], correct: 0 },
-            { q: "¿Bota de Oro Mundial 2014?", options: ["Cuadrado", "Bacca", "James Rodríguez"], correct: 2 },
-            { q: "¿Color principal de camiseta?", options: ["Rojo", "Azul", "Amarillo"], correct: 2 },
-            { q: "¿Ícono del pelo rizado?", options: ["Higuita", "Pibe Valderrama", "Asprilla"], correct: 1 },
-            { q: "¿Año de su Copa América?", options: ["2001", "2011", "1990"], correct: 0 }
-        ],
-        video: 'assets/videos/colombia.mp4' 
+        facts: [ 'El único "Gol Olímpico" en la historia de los mundiales lo anotó Marcos Coll.', 'James Rodríguez ganó la Bota de Oro en Brasil 2014.', 'La selección de 1994 llegó al Mundial con un invicto de 30 partidos.' ],
+        trivia: [ { q: "¿Quién es 'El Tigre'?", options: ["Falcao", "James", "Valderrama"], correct: 0 }, { q: "¿Bota de Oro Mundial 2014?", options: ["Cuadrado", "Bacca", "James Rodríguez"], correct: 2 }, { q: "¿Color principal de camiseta?", options: ["Rojo", "Azul", "Amarillo"], correct: 2 }, { q: "¿Ícono del pelo rizado?", options: ["Higuita", "Pibe Valderrama", "Asprilla"], correct: 1 }, { q: "¿Año de su Copa América?", options: ["2001", "2011", "1990"], correct: 0 } ],
+        videos: [
+            { title: "El Gol de James", src: "assets/videos/colombia1.mp4" },
+            { title: "Baile del equipo", src: "assets/videos/colombia2.mp4" },
+            { title: "Higuita Escorpión", src: "assets/videos/colombia3.mp4" },
+            { title: "Copa América 2001", src: "assets/videos/colombia4.mp4" }
+        ]
     },
     { 
         id: 'irlanda', index: 2, name: 'IRLANDA', color: '#169B62', 
         stats: { titulos: '-', copas: '3' }, 
-        facts: [
-            'En su debut mundialista en Italia 90, llegaron a cuartos de final sin ganar un solo partido en tiempo reglamentario.',
-            'La afición irlandesa ("Green Army") es famosa mundialmente por su alegría y cantar "Fields of Athenry" incluso perdiendo.',
-            'Jack Charlton, campeón del mundo con Inglaterra, es considerado un héroe nacional en Irlanda por dirigirlos en sus mejores años.'
-        ],
-        trivia: [
-            { q: "¿Color de camiseta local?", options: ["Verde", "Blanca", "Naranja"], correct: 0 },
-            { q: "¿Leyenda del Man. United?", options: ["Robbie Keane", "Roy Keane", "Duff"], correct: 1 },
-            { q: "¿Símbolo en el escudo?", options: ["Arpa", "Trébol", "Cruz"], correct: 1 },
-            { q: "¿Apodo del equipo?", options: ["Green Army", "Boys in Green", "The Celts"], correct: 1 },
-            { q: "¿Mayor rival histórico?", options: ["Escocia", "Gales", "Inglaterra"], correct: 2 }
-        ],
-        video: 'assets/videos/irlanda.mp4' 
+        facts: [ 'En Italia 90, llegaron a cuartos sin ganar un solo partido.', 'La afición "Green Army" es famosa por su alegría.', 'Jack Charlton es considerado un héroe nacional.' ],
+        trivia: [ { q: "¿Color de camiseta local?", options: ["Verde", "Blanca", "Naranja"], correct: 0 }, { q: "¿Leyenda del Man. United?", options: ["Robbie Keane", "Roy Keane", "Duff"], correct: 1 }, { q: "¿Símbolo en el escudo?", options: ["Arpa", "Trébol", "Cruz"], correct: 1 }, { q: "¿Apodo del equipo?", options: ["Green Army", "Boys in Green", "The Celts"], correct: 1 }, { q: "¿Mayor rival histórico?", options: ["Escocia", "Gales", "Inglaterra"], correct: 2 } ],
+        videos: [
+            { title: "Italia 90 Heroico", src: "assets/videos/irlanda1.mp4" },
+            { title: "Fans Cantando", src: "assets/videos/irlanda2.mp4" },
+            { title: "Gol de Keane", src: "assets/videos/irlanda3.mp4" },
+            { title: "Green Army", src: "assets/videos/irlanda4.mp4" }
+        ]
     },
     { 
         id: 'espana', index: 3, name: 'ESPAÑA', color: '#AA151B', 
         stats: { titulos: '1 Mundial / 4 Euros', copas: '16' }, 
-        facts: [
-            'Es la única selección de la historia en ganar tres torneos grandes consecutivos: Euro 2008, Mundial 2010 y Euro 2012.',
-            'En el Mundial de Sudáfrica 2010, se convirtieron en campeones habiendo perdido su primer partido (contra Suiza).',
-            'El famoso estilo de juego "Tiki-Taka" se basaba en la posesión y pases rápidos, perfeccionado por jugadores del FC Barcelona.'
-        ],
-        trivia: [
-            { q: "¿Autor del gol final 2010?", options: ["Torres", "Villa", "Iniesta"], correct: 2 },
-            { q: "¿Apodo de la selección?", options: ["La Furia", "La Roja", "Los Toros"], correct: 1 },
-            { q: "¿Capitán que levantó la copa?", options: ["Casillas", "Puyol", "Xavi"], correct: 0 },
-            { q: "¿Estilo de juego famoso?", options: ["Catenaccio", "Tiki-Taka", "Jogo Bonito"], correct: 1 },
-            { q: "¿Cuántas Eurocopas tienen?", options: ["2", "3", "4"], correct: 2 }
-        ],
-        video: 'assets/videos/espana.mp4' 
+        facts: [ 'Única selección en ganar tres torneos grandes consecutivos.', 'Campeones 2010 perdiendo el primer partido.', 'El estilo "Tiki-Taka" revolucionó el fútbol.' ],
+        trivia: [ { q: "¿Autor del gol final 2010?", options: ["Torres", "Villa", "Iniesta"], correct: 2 }, { q: "¿Apodo de la selección?", options: ["La Furia", "La Roja", "Los Toros"], correct: 1 }, { q: "¿Capitán que levantó la copa?", options: ["Casillas", "Puyol", "Xavi"], correct: 0 }, { q: "¿Estilo de juego famoso?", options: ["Catenaccio", "Tiki-Taka", "Jogo Bonito"], correct: 1 }, { q: "¿Cuántas Eurocopas tienen?", options: ["2", "3", "4"], correct: 2 } ],
+        videos: [
+            { title: "Gol de Iniesta", src: "assets/videos/espana1.mp4" },
+            { title: "Tiki Taka", src: "assets/videos/espana2.mp4" },
+            { title: "Campeones 2010", src: "assets/videos/espana3.mp4" },
+            { title: "Casillas Parada", src: "assets/videos/espana4.mp4" }
+        ]
     },
     { 
         id: 'corea', index: 4, name: 'COREA DEL SUR', color: '#0047A0', 
         stats: { titulos: '2 Copas Asia', copas: '11' }, 
-        facts: [
-            'Son el equipo asiático con más participaciones consecutivas en la Copa del Mundo (desde 1986).',
-            'En 2002, como co-organizadores, llegaron a semifinales, el mejor resultado de un país no europeo ni sudamericano en la historia.',
-            'Sus aficionados, los "Red Devils", son conocidos por sus cánticos masivos y coordinados usando camisetas rojas.'
-        ],
-        trivia: [
-            { q: "¿Estrella del Tottenham?", options: ["Park Ji-sung", "Son Heung-min", "Kim Min-jae"], correct: 1 },
-            { q: "¿Apodo de los fans?", options: ["Red Devils", "Tigers", "Warriors"], correct: 0 },
-            { q: "¿Año del mundial Corea-Japón?", options: ["1998", "2006", "2002"], correct: 2 },
-            { q: "¿Color uniforme principal?", options: ["Blanco", "Rojo", "Azul"], correct: 1 },
-            { q: "¿A quién eliminaron en 2018?", options: ["Brasil", "Alemania", "México"], correct: 1 }
-        ],
-        video: 'assets/videos/corea.mp4' 
+        facts: [ 'Equipo asiático con más participaciones consecutivas.', 'Llegaron a semifinales en 2002.', 'Aficionados "Red Devils" famosos por cánticos masivos.' ],
+        trivia: [ { q: "¿Estrella del Tottenham?", options: ["Park Ji-sung", "Son Heung-min", "Kim Min-jae"], correct: 1 }, { q: "¿Apodo de los fans?", options: ["Red Devils", "Tigers", "Warriors"], correct: 0 }, { q: "¿Año del mundial Corea-Japón?", options: ["1998", "2006", "2002"], correct: 2 }, { q: "¿Color uniforme principal?", options: ["Blanco", "Rojo", "Azul"], correct: 1 }, { q: "¿A quién eliminaron en 2018?", options: ["Brasil", "Alemania", "México"], correct: 1 } ],
+        videos: [
+            { title: "Milagro 2002", src: "assets/videos/corea1.mp4" },
+            { title: "Son Heung-min", src: "assets/videos/corea2.mp4" },
+            { title: "Red Devils", src: "assets/videos/corea3.mp4" },
+            { title: "Gol a Alemania", src: "assets/videos/corea4.mp4" }
+        ]
     },
     { 
         id: 'japon', index: 5, name: 'JAPÓN', color: '#BC002D', 
         stats: { titulos: '4 Copas Asia', copas: '7' }, 
-        facts: [
-            'La selección es conocida como "Samurai Blue" por el color azul de su uniforme, elegido en los años 30.',
-            'Muchos jugadores japoneses profesionales y aficionados se inspiraron en el famoso anime y manga "Capitán Tsubasa" (Súper Campeones).',
-            'Son famosos por limpiar impecablemente los vestidores y estadios después de cada partido, ganándose el respeto mundial.'
-        ],
-        trivia: [
-            { q: "¿Apodo de la selección?", options: ["Samurai Blue", "Rising Sun", "Ninjas"], correct: 0 },
-            { q: "¿Anime de fútbol famoso?", options: ["Dragon Ball", "Súper Campeones", "Naruto"], correct: 1 },
-            { q: "¿Mayor rival asiático?", options: ["China", "Corea del Sur", "Australia"], correct: 1 },
-            { q: "¿Han ganado un Mundial?", options: ["Sí", "No", "Casi"], correct: 1 },
-            { q: "¿Color de camiseta?", options: ["Roja", "Blanca", "Azul"], correct: 2 }
-        ],
-        video: 'assets/videos/japon.mp4' 
+        facts: [ 'Conocidos como "Samurai Blue".', 'Inspirados en "Súper Campeones".', 'Famosos por limpiar vestidores y estadios.' ],
+        trivia: [ { q: "¿Apodo de la selección?", options: ["Samurai Blue", "Rising Sun", "Ninjas"], correct: 0 }, { q: "¿Anime de fútbol famoso?", options: ["Dragon Ball", "Súper Campeones", "Naruto"], correct: 1 }, { q: "¿Mayor rival asiático?", options: ["China", "Corea del Sur", "Australia"], correct: 1 }, { q: "¿Han ganado un Mundial?", options: ["Sí", "No", "Casi"], correct: 1 }, { q: "¿Color de camiseta?", options: ["Roja", "Blanca", "Azul"], correct: 2 } ],
+        videos: [
+            { title: "Samurai Blue", src: "assets/videos/japon1.mp4" },
+            { title: "Golazo Japón", src: "assets/videos/japon2.mp4" },
+            { title: "Limpieza Estadio", src: "assets/videos/japon3.mp4" },
+            { title: "Super Campeones", src: "assets/videos/japon4.mp4" }
+        ]
     }
 ];
 
@@ -283,17 +241,15 @@ window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
     buttons.forEach(b => b.disabled = true);
     
     if (optIndex === correctIndex) {
-        // RESPUESTA CORRECTA
         btn.classList.remove('bg-black/40'); 
         btn.classList.add('bg-green-600', 'text-white', 'font-bold', 'border-green-400'); 
         btn.innerHTML += ' ✅';
-        playSfx(sfxCorrect); // Solo sonido de éxito
+        playSfx(sfxCorrect); 
     } else {
-        // RESPUESTA INCORRECTA
         btn.classList.remove('bg-black/40'); 
         btn.classList.add('bg-red-600', 'text-white', 'border-red-400'); 
         btn.innerHTML += ' ❌';
-        playSfx(sfxWrong); // Solo sonido de error
+        playSfx(sfxWrong); 
         
         const correctBtn = buttons[correctIndex];
         correctBtn.classList.remove('bg-black/40'); 
@@ -401,24 +357,87 @@ window.volverAlHome = () => {
     document.getElementById('screen-home').classList.remove('hidden');
     if(window.detenerAR) window.detenerAR();
 };
+
+// --- NUEVA LÓGICA DE GALERÍA (ACERVO) ---
+
+// 1. Mostrar la Galería
 window.verHighlights = () => {
     if (!currentCountry) return;
+    
+    // Ocultar AR e interfaz previa
     window.ocultarBottomSheetCompleto(); 
     document.getElementById('screen-ar').classList.add('hidden');
-    document.getElementById('screen-highlights').classList.remove('hidden');
-    const video = document.getElementById('highlight-video');
-    document.getElementById('hl-title').innerText = currentCountry.name;
-    video.src = currentCountry.video;
-    video.play();
-    window.aplicarFiltroVideo('none');
+    
+    // Mostrar Galería
+    const galleryScreen = document.getElementById('screen-gallery');
+    galleryScreen.classList.remove('hidden');
+    
+    document.getElementById('gallery-title').innerText = currentCountry.name;
+    
+    // Llenar Grid
+    const grid = document.getElementById('gallery-grid');
+    grid.innerHTML = '';
+    
+    currentCountry.videos.forEach((vid, index) => {
+        const item = document.createElement('div');
+        item.className = 'bg-white/5 border border-white/10 rounded-xl overflow-hidden active:scale-95 transition-transform cursor-pointer group';
+        item.onclick = () => window.reproducirVideoDesdeGaleria(index);
+        
+        // Simulación de thumbnail con un div gris y el título
+        item.innerHTML = `
+            <div class="h-32 bg-gray-800 relative flex items-center justify-center group-hover:bg-gray-700 transition-colors">
+                <span class="text-4xl opacity-80 group-hover:scale-110 transition-transform">▶️</span>
+                </div>
+            <div class="p-3">
+                <p class="font-sans text-sm font-bold text-white truncate">${vid.title}</p>
+                <p class="font-sans text-xs text-green-400 uppercase tracking-wider mt-1">Ver video</p>
+            </div>
+        `;
+        grid.appendChild(item);
+    });
 };
-window.cerrarHighlights = () => {
-    const video = document.getElementById('highlight-video');
-    video.pause(); video.src = "";
-    document.getElementById('screen-highlights').classList.add('hidden');
+
+// 2. Cerrar Galería (Volver a AR)
+window.cerrarGaleria = () => {
+    document.getElementById('screen-gallery').classList.add('hidden');
     document.getElementById('screen-ar').classList.remove('hidden');
     document.getElementById('scan-guide').classList.remove('hidden');
 };
+
+// 3. Reproducir Video (Ir al Player)
+window.reproducirVideoDesdeGaleria = (index) => {
+    if (!currentCountry || !currentCountry.videos[index]) return;
+    
+    const videoData = currentCountry.videos[index];
+    
+    document.getElementById('screen-gallery').classList.add('hidden');
+    document.getElementById('screen-highlights').classList.remove('hidden');
+    
+    const video = document.getElementById('highlight-video');
+    document.getElementById('hl-title').innerText = videoData.title;
+    video.src = videoData.src;
+    video.play();
+    
+    // Resetear filtros
+    window.aplicarFiltroVideo('none');
+};
+
+// 4. Volver a Galería (Desde el Player)
+window.volverAGaleria = () => {
+    const video = document.getElementById('highlight-video');
+    video.pause(); 
+    video.src = ""; // Liberar recurso
+    
+    document.getElementById('screen-highlights').classList.add('hidden');
+    document.getElementById('screen-gallery').classList.remove('hidden');
+};
+
+window.cerrarHighlights = () => {
+    // Esta función ya no se usa directamente desde el botón "Volver" del player
+    // pero la mantenemos por compatibilidad o seguridad.
+    window.volverAGaleria();
+};
+
 window.aplicarFiltroVideo = (filtro) => {
     const video = document.getElementById('highlight-video');
     const botones = document.querySelectorAll('.filter-btn');

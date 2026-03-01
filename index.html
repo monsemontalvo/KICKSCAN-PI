@@ -73,17 +73,9 @@
         <button onclick="window.volverAlHome()" class="absolute top-6 left-6 z-20 w-10 h-10 bg-black/50 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/20 active:scale-90 transition-transform shadow-lg">✕</button>
 
         <div id="audio-controls" class="hidden absolute top-20 left-6 z-20 flex flex-col gap-3">
-            <button onclick="window.ajustarVolumen(0.1)" class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-green-600/50">
-                ➕
-            </button>
-            
-            <button id="btn-mute" onclick="window.alternarMute()" class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-white/20">
-                🔊
-            </button>
-
-            <button onclick="window.ajustarVolumen(-0.1)" class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-red-600/50">
-                ➖
-            </button>
+            <button onclick="window.ajustarVolumen(0.1)" class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-green-600/50">➕</button>
+            <button id="btn-mute" onclick="window.alternarMute()" class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-white/20">🔊</button>
+            <button onclick="window.ajustarVolumen(-0.1)" class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-red-600/50">➖</button>
         </div>
 
         <button id="btn-confetti" onclick="window.lanzarConfettiManual()" class="hidden fixed top-6 right-6 z-[60] bg-yellow-400 text-black font-display text-lg tracking-wider py-2 px-6 rounded-full shadow-[0_0_20px_rgba(255,215,0,0.6)] hover:scale-105 transition-transform active:scale-95 border-2 border-white/50 animate-bounce">
@@ -135,12 +127,10 @@
                         </div>
                     </div>
                 </div>
-
                 <div id="content-facts" class="content-container hidden space-y-5">
                     <h3 class="font-display text-2xl text-green-400 mb-4 uppercase tracking-wider">Datos Curiosos</h3>
                     <div id="facts-items-container" class="space-y-4"></div>
                 </div>
-
                 <div id="content-trivia" class="content-container hidden space-y-6">
                     <h3 class="font-display text-2xl text-green-400 mb-4 uppercase tracking-wider">Trivia</h3>
                     <div id="trivia-items-container" class="space-y-6"></div>
@@ -149,10 +139,22 @@
         </div>
     </section>
 
-    <section id="screen-highlights" class="hidden fixed inset-0 z-50 bg-black flex flex-col">
+    <section id="screen-gallery" class="hidden fixed inset-0 z-[60] bg-gray-900 flex flex-col">
+        <div class="p-4 flex items-center justify-between bg-black/80 backdrop-blur-md border-b border-white/10">
+            <button onclick="window.cerrarGaleria()" class="text-white font-display text-xl tracking-wide flex items-center gap-2 hover:text-green-400 transition-colors">← VOLVER</button>
+            <span id="gallery-title" class="font-display text-2xl text-green-400 tracking-wider">ACERVO HISTÓRICO</span>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-6">
+            <div id="gallery-grid" class="grid grid-cols-2 gap-4 pb-10">
+                </div>
+        </div>
+    </section>
+
+    <section id="screen-highlights" class="hidden fixed inset-0 z-[70] bg-black flex flex-col">
         <div class="p-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent absolute top-0 w-full z-10">
-            <button onclick="window.cerrarHighlights()" class="text-white font-display text-lg tracking-wide flex items-center gap-2">← VOLVER</button>
-            <span id="hl-title" class="font-display text-xl text-green-400">HIGHLIGHTS</span>
+            <button onclick="window.volverAGaleria()" class="text-white font-display text-lg tracking-wide flex items-center gap-2 hover:text-green-400 transition-colors">← GALERÍA</button>
+            <span id="hl-title" class="font-display text-xl text-green-400">VIDEO</span>
         </div>
         <div class="relative flex-1 flex items-center justify-center bg-gray-900">
             <video id="highlight-video" class="w-full max-h-screen object-contain" loop playsinline controls></video>
