@@ -62,11 +62,71 @@ let currentModel = null;
 let currentAnchor = null;  
 let allLoadedModels = []; 
 
-// Audio
+// Audio y Volumen
 let audioListener = null;
 let currentSound = null;
+let globalVolume = 0.5; // Volumen inicial
+let isMuted = false;
+let preMuteVolume = 0.5;
 
-// --- SISTEMA DE CONFETI 2D (PANTALLA COMPLETA) ---
+// --- SISTEMA DE AUDIO UI ---
+window.ajustarVolumen = (delta) => {
+    // Si estaba muteado y subimos volumen, desmutear
+    if (isMuted && delta > 0) {
+        isMuted = false;
+        actualizarIconoMute();
+    }
+
+    globalVolume += delta;
+    
+    // Limitar entre 0 y 1
+    if (globalVolume > 1) globalVolume = 1;
+    if (globalVolume < 0) globalVolume = 0;
+
+    // Si baja a 0, marcar como mute
+    if (globalVolume === 0) {
+        isMuted = true;
+        actualizarIconoMute();
+    }
+
+    aplicarVolumen();
+};
+
+window.alternarMute = () => {
+    isMuted = !isMuted;
+    
+    if (isMuted) {
+        preMuteVolume = globalVolume > 0 ? globalVolume : 0.5;
+        globalVolume = 0;
+    } else {
+        globalVolume = preMuteVolume;
+    }
+    
+    actualizarIconoMute();
+    aplicarVolumen();
+};
+
+function aplicarVolumen() {
+    if (currentSound) {
+        currentSound.setVolume(globalVolume);
+    }
+}
+
+function actualizarIconoMute() {
+    const btn = document.getElementById('btn-mute');
+    if (btn) {
+        if (isMuted || globalVolume === 0) {
+            btn.innerText = '🔇';
+            btn.classList.add('bg-red-600/40'); // Indicador visual rojo
+        } else {
+            btn.innerText = '🔊';
+            btn.classList.remove('bg-red-600/40');
+        }
+    }
+}
+
+
+// --- SISTEMA DE CONFETI 2D ---
 let confettiCanvas = null;
 let confettiCtx = null;
 let confettiParticles = [];
@@ -75,24 +135,21 @@ let confettiActive = false;
 let confettiTimeout = null;
 
 function initConfettiSystem() {
-    // Si ya existe, no lo creamos de nuevo
     if (document.getElementById('confetti-overlay')) return;
 
     confettiCanvas = document.createElement('canvas');
     confettiCanvas.id = 'confetti-overlay';
-    // Estilos para asegurar que esté SIEMPRE encima de todo
     confettiCanvas.style.position = 'fixed';
     confettiCanvas.style.top = '0';
     confettiCanvas.style.left = '0';
     confettiCanvas.style.width = '100%';
     confettiCanvas.style.height = '100%';
-    confettiCanvas.style.pointerEvents = 'none'; // Permitir clicks a través
-    confettiCanvas.style.zIndex = '9999'; // Encima de todo
+    confettiCanvas.style.pointerEvents = 'none'; 
+    confettiCanvas.style.zIndex = '9999'; 
     document.body.appendChild(confettiCanvas);
 
     confettiCtx = confettiCanvas.getContext('2d');
     
-    // Ajustar tamaño al redimensionar
     window.addEventListener('resize', resizeConfetti);
     resizeConfetti();
 }
@@ -107,12 +164,12 @@ function resizeConfetti() {
 function createParticle() {
     const colors = ['#22c55e', '#ef4444', '#fbbf24', '#3b82f6', '#ffffff'];
     return {
-        x: Math.random() * window.innerWidth, // Posición horizontal aleatoria
-        y: -20, // Empieza arriba fuera de pantalla
-        size: Math.random() * 10 + 5, // Tamaño variado
+        x: Math.random() * window.innerWidth, 
+        y: -20, 
+        size: Math.random() * 10 + 5, 
         color: colors[Math.floor(Math.random() * colors.length)],
-        speedY: Math.random() * 3 + 2, // Velocidad de caída
-        speedX: Math.random() * 2 - 1, // Oscilación lateral
+        speedY: Math.random() * 3 + 2, 
+        speedX: Math.random() * 2 - 1, 
         rotation: Math.random() * 360,
         rotationSpeed: Math.random() * 10 - 5
     };
@@ -123,15 +180,12 @@ function updateConfetti() {
 
     confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
 
-    // Si está activo, generamos nuevas partículas constantemente
     if (confettiActive && confettiParticles.length < 150) {
         confettiParticles.push(createParticle());
     }
 
-    // Actualizar y dibujar partículas existentes
     for (let i = 0; i < confettiParticles.length; i++) {
         const p = confettiParticles[i];
-        
         p.y += p.speedY;
         p.x += p.speedX;
         p.rotation += p.rotationSpeed;
@@ -143,42 +197,31 @@ function updateConfetti() {
         confettiCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
         confettiCtx.restore();
 
-        // Eliminar si sale de pantalla
         if (p.y > window.innerHeight) {
             confettiParticles.splice(i, 1);
             i--;
         }
     }
 
-    // Loop de animación
     if (confettiActive || confettiParticles.length > 0) {
         confettiAnimationId = requestAnimationFrame(updateConfetti);
     } else {
-        // Si no está activo y no hay partículas, paramos el loop completamente
         confettiAnimationId = null;
         confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
     }
 }
 
-// Función global para el botón
 window.lanzarConfettiManual = () => {
-    lanzarConfetti(10000); // 10 Segundos
+    lanzarConfetti(10000); 
 };
 
 function lanzarConfetti(duracion = 10000) {
     initConfettiSystem();
-    
-    // Reiniciar si ya estaba corriendo
     if (confettiTimeout) clearTimeout(confettiTimeout);
-    
     confettiActive = true;
-    
-    // Si el loop no estaba corriendo, iniciarlo
     if (!confettiAnimationId) {
         updateConfetti();
     }
-
-    // Detener generación tras X segundos
     confettiTimeout = setTimeout(() => {
         confettiActive = false;
     }, duracion);
@@ -187,13 +230,10 @@ function lanzarConfetti(duracion = 10000) {
 function detenerConfetiInmediato() {
     confettiActive = false;
     confettiParticles = []; 
-    
-    // MATA el loop de animación anterior para que no interfiera al re-iniciar
     if (confettiAnimationId) {
         cancelAnimationFrame(confettiAnimationId);
         confettiAnimationId = null;
     }
-    
     if (confettiCtx && confettiCanvas) {
         confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
     }
@@ -202,15 +242,10 @@ function detenerConfetiInmediato() {
 
 // --- FUNCIÓN DE LIMPIEZA AR ---
 function resetearModeloAnterior() {
-    // 1. Limpiar Modelo 3D
     if (currentModel) {
         currentModel.visible = false;
-        
-        // Devolver a su anchor original
         if (currentAnchor) {
             currentAnchor.group.attach(currentModel);
-            
-            // Resetear transformaciones
             const index = currentModel.userData.countryIndex;
             const config = modelosPorPais[index];
             if (config) {
@@ -221,7 +256,6 @@ function resetearModeloAnterior() {
         }
     }
 
-    // 2. Detener Audio
     if (currentSound && currentSound.isPlaying) {
         currentSound.stop();
     }
@@ -244,7 +278,6 @@ window.iniciarAR = async () => {
     currentAnchor = null;
     currentSound = null;
     
-    // Inicializar sistema de confeti y limpiar cualquier rastro anterior
     initConfettiSystem();
     detenerConfetiInmediato();
 
@@ -263,11 +296,9 @@ window.iniciarAR = async () => {
 
         const {renderer, scene, camera} = mindarThree;
 
-        // Audio Listener
         audioListener = new THREE.AudioListener();
         camera.add(audioListener);
 
-        // Luces
         const hemiLight = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
         scene.add(hemiLight);
         const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
@@ -281,7 +312,6 @@ window.iniciarAR = async () => {
             const anchor = mindarThree.addAnchor(i);
             const infoModelo = modelosPorPais[i];
 
-            // Cargar Modelo
             if (infoModelo && infoModelo.archivo) {
                 loader.load(infoModelo.archivo, (gltf) => {
                     const model = gltf.scene;
@@ -304,27 +334,26 @@ window.iniciarAR = async () => {
                 }, undefined, (e) => console.warn("Error modelo " + i));
             }
 
-            // Cargar Audio
             if (infoModelo && infoModelo.song) {
                 audioLoader.load(infoModelo.song, (buffer) => {
                     infoModelo.audioBuffer = buffer;
                 });
             }
             
-            // --- EVENTO DETECCIÓN ---
             anchor.onTargetFound = () => {
                 if (currentModel && currentModel.userData.countryIndex === i) return;
 
                 console.log(`¡Fiesta en ${i}!`);
 
-                // 1. Mostrar Botón de Confeti
                 const btn = document.getElementById('btn-confetti');
                 if(btn) btn.classList.remove('hidden');
+                
+                // Mostrar controles de audio
+                const audioControls = document.getElementById('audio-controls');
+                if(audioControls) audioControls.classList.remove('hidden');
 
-                // 2. Limpiar anterior
                 resetearModeloAnterior();
 
-                // 3. Activar Nuevo Modelo
                 const newModel = anchor.group.children.find(child => child.userData.countryIndex === i) || anchor.group.children[0];
 
                 if (newModel) {
@@ -332,18 +361,16 @@ window.iniciarAR = async () => {
                     newModel.visible = true;
                     currentModel = newModel;
                     currentAnchor = anchor;
-
-                    // 4. ACTIVAR CONFETI AUTOMÁTICO
                     lanzarConfetti(10000); 
                 }
 
-                // 5. MÚSICA
                 if (infoModelo.audioBuffer) {
                     if (currentSound && currentSound.isPlaying) currentSound.stop();
                     currentSound = new THREE.Audio(audioListener);
                     currentSound.setBuffer(infoModelo.audioBuffer);
                     currentSound.setLoop(true); 
-                    currentSound.setVolume(0.5);
+                    // Usar el volumen global configurado
+                    currentSound.setVolume(globalVolume);
                     currentSound.play();
                 }
 
@@ -366,7 +393,6 @@ window.iniciarAR = async () => {
     }
 }
 
-// --- LIMPIEZA TOTAL AL SALIR ---
 window.detenerAR = () => {
     if (mindarThree) {
         mindarThree.stop();
@@ -376,9 +402,12 @@ window.detenerAR = () => {
         resetearModeloAnterior();
         detenerConfetiInmediato(); 
         
-        // Ocultar Botón Confeti al salir
         const btn = document.getElementById('btn-confetti');
         if(btn) btn.classList.add('hidden');
+        
+        // Ocultar controles de audio
+        const audioControls = document.getElementById('audio-controls');
+        if(audioControls) audioControls.classList.add('hidden');
 
         allLoadedModels.forEach(m => {
             m.visible = false;
