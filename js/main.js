@@ -26,17 +26,16 @@ document.addEventListener('click', (e) => {
 });
 
 
-// --- BASE DE DATOS DE PAÍSES (AHORA CON 4 VIDEOS CADA UNO) ---
+// --- BASE DE DATOS DE PAÍSES ---
 const countriesData = [
     { 
         id: 'mexico', index: 0, name: 'MÉXICO', color: '#106337', 
         stats: { titulos: '1 Confed. / 11 Oro', copas: '17' }, 
         facts: [ 'El Estadio Azteca es el único en el mundo que ha albergado dos finales de Copa del Mundo.', 'México fue el primer país en organizar una Copa del Mundo dos veces.', 'La selección mexicana es la que más veces ha participado en un Mundial sin haberlo ganado nunca.' ],
         trivia: [ { q: "¿Máximo goleador histórico?", options: ["Hugo Sánchez", "Chicharito", "Borgetti"], correct: 1 }, { q: "¿Cuándo ganaron el Oro Olímpico?", options: ["2008", "2016", "2012"], correct: 2 }, { q: "¿Apodo de la selección?", options: ["El Tri", "Los Aztecas", "Los Verdes"], correct: 0 }, { q: "¿Primer jugador en 5 mundiales?", options: ["Rafa Márquez", "Tota Carbajal", "Ochoa"], correct: 1 }, { q: "¿Rival del 'No era penal'?", options: ["Argentina", "Holanda", "Alemania"], correct: 1 } ],
-        // ARRAY DE VIDEOS (ACERVO)
         videos: [
             { title: "Gol Histórico '86", src: "assets/videos/mexico1.mp4" },
-            { title: "Afición Azteca", src: "assets/videos/mexico2.mp4" }, // Usando el mismo video como placeholder
+            { title: "Afición Azteca", src: "assets/videos/mexico2.mp4" },
             { title: "Himno Nacional", src: "assets/videos/mexico3.mp4" },
             { title: "Resumen 2018", src: "assets/videos/mexico4.mp4" }
         ]
@@ -105,6 +104,7 @@ const countriesData = [
 
 let currentCountry = null;
 let homeRenderer, homeScene, homeCamera, homeBall, carouselGroup; 
+let homeAnimationId = null; 
 
 // --- INICIALIZACIÓN ---
 window.addEventListener('load', () => {
@@ -166,13 +166,21 @@ function initHome3D() {
         mesh.rotation.y = -angle + Math.PI/2;
         carouselGroup.add(mesh);
     });
+    
+    startHomeLoop();
+}
+
+function startHomeLoop() {
     const animate = () => {
-        if (!document.getElementById('screen-home').classList.contains('hidden')) {
-            requestAnimationFrame(animate);
-            if (homeBall) homeBall.rotation.y += 0.005;
-            if (carouselGroup) carouselGroup.rotation.y += 0.002;
-            homeRenderer.render(homeScene, homeCamera);
-        } else requestAnimationFrame(animate);
+        if (document.getElementById('screen-home').classList.contains('hidden')) {
+            homeAnimationId = null; 
+            return;
+        }
+
+        homeAnimationId = requestAnimationFrame(animate);
+        if (homeBall) homeBall.rotation.y += 0.005;
+        if (carouselGroup) carouselGroup.rotation.y += 0.002;
+        homeRenderer.render(homeScene, homeCamera);
     };
     animate();
 }
@@ -351,10 +359,15 @@ window.irAEscanear = async () => {
     document.getElementById('screen-ar').classList.remove('hidden');
     if (window.iniciarAR) await window.iniciarAR();
 };
+
 window.volverAlHome = () => {
     window.ocultarBottomSheetCompleto();
     document.getElementById('screen-ar').classList.add('hidden');
     document.getElementById('screen-home').classList.remove('hidden');
+    
+    // Reiniciar loop visual del Home
+    if (!homeAnimationId) startHomeLoop();
+
     if(window.detenerAR) window.detenerAR();
 };
 
@@ -364,17 +377,15 @@ window.volverAlHome = () => {
 window.verHighlights = () => {
     if (!currentCountry) return;
     
-    // Ocultar AR e interfaz previa
     window.ocultarBottomSheetCompleto(); 
+    
+    // --- CORRECCIÓN: DETENER AR AL SALIR ---
+    if (window.detenerAR) window.detenerAR(); 
+    
     document.getElementById('screen-ar').classList.add('hidden');
-    
-    // Mostrar Galería
-    const galleryScreen = document.getElementById('screen-gallery');
-    galleryScreen.classList.remove('hidden');
-    
+    document.getElementById('screen-gallery').classList.remove('hidden');
     document.getElementById('gallery-title').innerText = currentCountry.name;
     
-    // Llenar Grid
     const grid = document.getElementById('gallery-grid');
     grid.innerHTML = '';
     
@@ -383,11 +394,10 @@ window.verHighlights = () => {
         item.className = 'bg-white/5 border border-white/10 rounded-xl overflow-hidden active:scale-95 transition-transform cursor-pointer group';
         item.onclick = () => window.reproducirVideoDesdeGaleria(index);
         
-        // Simulación de thumbnail con un div gris y el título
         item.innerHTML = `
             <div class="h-32 bg-gray-800 relative flex items-center justify-center group-hover:bg-gray-700 transition-colors">
                 <span class="text-4xl opacity-80 group-hover:scale-110 transition-transform">▶️</span>
-                </div>
+            </div>
             <div class="p-3">
                 <p class="font-sans text-sm font-bold text-white truncate">${vid.title}</p>
                 <p class="font-sans text-xs text-green-400 uppercase tracking-wider mt-1">Ver video</p>
@@ -398,16 +408,17 @@ window.verHighlights = () => {
 };
 
 // 2. Cerrar Galería (Volver a AR)
-window.cerrarGaleria = () => {
+window.cerrarGaleria = async () => {
     document.getElementById('screen-gallery').classList.add('hidden');
     document.getElementById('screen-ar').classList.remove('hidden');
     document.getElementById('scan-guide').classList.remove('hidden');
+
+    // --- CORRECCIÓN: REINICIAR AR AL VOLVER ---
+    if (window.iniciarAR) await window.iniciarAR();
 };
 
-// 3. Reproducir Video (Ir al Player)
 window.reproducirVideoDesdeGaleria = (index) => {
     if (!currentCountry || !currentCountry.videos[index]) return;
-    
     const videoData = currentCountry.videos[index];
     
     document.getElementById('screen-gallery').classList.add('hidden');
@@ -417,24 +428,18 @@ window.reproducirVideoDesdeGaleria = (index) => {
     document.getElementById('hl-title').innerText = videoData.title;
     video.src = videoData.src;
     video.play();
-    
-    // Resetear filtros
     window.aplicarFiltroVideo('none');
 };
 
-// 4. Volver a Galería (Desde el Player)
 window.volverAGaleria = () => {
     const video = document.getElementById('highlight-video');
     video.pause(); 
-    video.src = ""; // Liberar recurso
-    
+    video.src = ""; 
     document.getElementById('screen-highlights').classList.add('hidden');
     document.getElementById('screen-gallery').classList.remove('hidden');
 };
 
 window.cerrarHighlights = () => {
-    // Esta función ya no se usa directamente desde el botón "Volver" del player
-    // pero la mantenemos por compatibilidad o seguridad.
     window.volverAGaleria();
 };
 
