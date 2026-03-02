@@ -90,3 +90,40 @@ body {
     /* Estilo Negativo / Futurista */
     filter: invert(0.9) hue-rotate(180deg); 
 }
+
+/* --- 6. FIX PARA CÁMARA AR (MINDAR) --- */
+
+/* Bloquear el rebote en móviles (scroll elástico) */
+html, body {
+    overscroll-behavior: none;
+    position: fixed; /* Ayuda a que la página no se mueva detrás */
+    width: 100%;
+    height: 100%;
+}
+
+/* Forzar que el contenedor AR sea fijo y no absoluto */
+#ar-container {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100dvh !important; /* 'dvh' se ajusta mejor a móviles que 'vh' */
+    overflow: hidden;
+    z-index: 0;
+}
+
+/* Reglas estrictas para el video y canvas que genera MindAR */
+#ar-container video, 
+#ar-container canvas {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    /* Esto evita que el video se estire raro, MindAR calcula el aspect ratio */
+    max-width: none !important;
+    max-height: none !important;
+    /* Aseguramos que cubra */
+    min-width: 100vw;
+    min-height: 100vh; 
+    object-fit: cover; 
+}
