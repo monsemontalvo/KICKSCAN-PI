@@ -15,7 +15,7 @@ const modelosPorPais = [
             patear: 'assets/models/MEX KICK.glb',
             correr: 'assets/models/MEX RUN.glb'
         },
-        song: 'assets/songs/Mexico-mariachiloco.mp3', 
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416620/Mexico-mariachiloco_qurccs.mp4', 
         scale: [0.5, 0.5, 0.5], 
         position: [0, -0.4, 0]
     },
@@ -27,7 +27,7 @@ const modelosPorPais = [
             patear: 'assets/models/low_poly_soccer_ball_or_football.glb', 
             correr: 'assets/models/low_poly_soccer_ball_or_football.glb'  
         },
-        song: 'assets/songs/Colombia-Caminosdelavida.mp3',
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416622/Colombia-Caminosdelavida_ejz6m3.mp4',
         scale: [0.5, 0.5, 0.5], 
         position: [0, 0, 0]
     },
@@ -39,7 +39,7 @@ const modelosPorPais = [
             patear: 'assets/models/irlanda_hat.glb',
             correr: 'assets/models/irlanda_hat.glb'
         },
-        song: 'assets/songs/Irlanda-pub.mp3',
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416625/Irlanda-pub_wv2bn4.mp4',
         scale: [0.5, 0.5, 0.5], 
         position: [0, 0, 0]
     },
@@ -51,7 +51,7 @@ const modelosPorPais = [
             patear: 'assets/models/espana_bull.glb',
             correr: 'assets/models/espana_bull.glb'
         },
-        song: 'assets/songs/Espana-Macarena.mp3',
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416617/Espana-Macarena_tqpzbm.mp4',
         scale: [0.5, 0.5, 0.5], 
         position: [0, 0, 0]
     },
@@ -63,19 +63,19 @@ const modelosPorPais = [
             patear: 'assets/models/corea_tiger.glb',
             correr: 'assets/models/corea_tiger.glb'
         },
-        song: 'assets/songs/Corea-Gangnamstyle.mp3',
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416620/Corea-Gangnamstyle_ucvonw.mp4',
         scale: [0.5, 0.5, 0.5], 
         position: [0, 0, 0]
     },
     {
         id: 'japon',
         acciones: {
-            idle: 'assets/models/japon_samurai.glb',
-            bailar: 'assets/models/japon_samurai.glb',
-            patear: 'assets/models/japon_samurai.glb',
-            correr: 'assets/models/japon_samurai.glb'
+            idle: 'assets/models/MIKU IDLE.glb',
+            bailar: 'assets/models/MIKU BAILE.glb',
+            patear: 'assets/models/MIKU KICK.glb',
+            correr: 'assets/models/MIKU RUN.glb'
         },
-        song: 'assets/songs/Japon-miku.mp3',
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416623/Japon-miku_soxajd.mp4',
         scale: [0.5, 0.5, 0.5], 
         position: [0, 0, 0]
     }

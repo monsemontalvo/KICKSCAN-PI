@@ -34,10 +34,10 @@ const countriesData = [
         facts: [ 'El Estadio Azteca es el único en el mundo que ha albergado dos finales de Copa del Mundo.', 'México fue el primer país en organizar una Copa del Mundo dos veces.', 'La selección mexicana es la que más veces ha participado en un Mundial sin haberlo ganado nunca.' ],
         trivia: [ { q: "¿Máximo goleador histórico?", options: ["Hugo Sánchez", "Chicharito", "Borgetti"], correct: 1 }, { q: "¿Cuándo ganaron el Oro Olímpico?", options: ["2008", "2016", "2012"], correct: 2 }, { q: "¿Apodo de la selección?", options: ["El Tri", "Los Aztecas", "Los Verdes"], correct: 0 }, { q: "¿Primer jugador en 5 mundiales?", options: ["Rafa Márquez", "Tota Carbajal", "Ochoa"], correct: 1 }, { q: "¿Rival del 'No era penal'?", options: ["Argentina", "Holanda", "Alemania"], correct: 1 } ],
         videos: [
-            { title: "Gol Histórico '86", src: "assets/videos/mexico1.mp4" },
-            { title: "Afición Azteca", src: "assets/videos/mexico2.mp4" },
-            { title: "Himno Nacional", src: "assets/videos/mexico3.mp4" },
-            { title: "Resumen 2018", src: "assets/videos/mexico4.mp4" }
+            { title: "Gol Histórico '86", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417899/mexico1_z6pkxn.mp4" },
+            { title: "Afición Azteca", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417621/mexico2_bgih6s.mp4" }, 
+            { title: "El cacahuatazo", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417592/mexico3_out1tt.mp4" },
+            { title: "Emos vs punks", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417637/mexico4_kpefn9.mp4" }
         ]
     },
     { 
@@ -46,10 +46,10 @@ const countriesData = [
         facts: [ 'El único "Gol Olímpico" en la historia de los mundiales lo anotó Marcos Coll.', 'James Rodríguez ganó la Bota de Oro en Brasil 2014.', 'La selección de 1994 llegó al Mundial con un invicto de 30 partidos.' ],
         trivia: [ { q: "¿Quién es 'El Tigre'?", options: ["Falcao", "James", "Valderrama"], correct: 0 }, { q: "¿Bota de Oro Mundial 2014?", options: ["Cuadrado", "Bacca", "James Rodríguez"], correct: 2 }, { q: "¿Color principal de camiseta?", options: ["Rojo", "Azul", "Amarillo"], correct: 2 }, { q: "¿Ícono del pelo rizado?", options: ["Higuita", "Pibe Valderrama", "Asprilla"], correct: 1 }, { q: "¿Año de su Copa América?", options: ["2001", "2011", "1990"], correct: 0 } ],
         videos: [
-            { title: "El Gol de James", src: "assets/videos/colombia1.mp4" },
-            { title: "Baile del equipo", src: "assets/videos/colombia2.mp4" },
-            { title: "Higuita Escorpión", src: "assets/videos/colombia3.mp4" },
-            { title: "Copa América 2001", src: "assets/videos/colombia4.mp4" }
+            { title: "El Gol de James", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420835/colombia1_hjx62k.mp4" },
+            { title: "Baile del equipo", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420830/colombia2_lsp112.mp4" },
+            { title: "Higuita Escorpión", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420857/colombia3_pzvp0m.mp4" },
+            { title: "Copa América 2001", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772416681/colombia4_weemr1.mp4" }
         ]
     },
     { 
@@ -58,10 +58,10 @@ const countriesData = [
         facts: [ 'En Italia 90, llegaron a cuartos sin ganar un solo partido.', 'La afición "Green Army" es famosa por su alegría.', 'Jack Charlton es considerado un héroe nacional.' ],
         trivia: [ { q: "¿Color de camiseta local?", options: ["Verde", "Blanca", "Naranja"], correct: 0 }, { q: "¿Leyenda del Man. United?", options: ["Robbie Keane", "Roy Keane", "Duff"], correct: 1 }, { q: "¿Símbolo en el escudo?", options: ["Arpa", "Trébol", "Cruz"], correct: 1 }, { q: "¿Apodo del equipo?", options: ["Green Army", "Boys in Green", "The Celts"], correct: 1 }, { q: "¿Mayor rival histórico?", options: ["Escocia", "Gales", "Inglaterra"], correct: 2 } ],
         videos: [
-            { title: "Italia 90 Heroico", src: "assets/videos/irlanda1.mp4" },
-            { title: "Fans Cantando", src: "assets/videos/irlanda2.mp4" },
-            { title: "Gol de Keane", src: "assets/videos/irlanda3.mp4" },
-            { title: "Green Army", src: "assets/videos/irlanda4.mp4" }
+            { title: "Italia 90 Heroico", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418887/irlanda1_knqykh.mp4" },
+            { title: "Fans Cantando", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418912/irlanda2_yyn5ba.mp4" },
+            { title: "Gol de Keane", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418985/irlanda3_osozcc.mp4" },
+            { title: "Green Army", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418845/irlanda4_wbissm.mp4" }
         ]
     },
     { 
@@ -70,10 +70,10 @@ const countriesData = [
         facts: [ 'Única selección en ganar tres torneos grandes consecutivos.', 'Campeones 2010 perdiendo el primer partido.', 'El estilo "Tiki-Taka" revolucionó el fútbol.' ],
         trivia: [ { q: "¿Autor del gol final 2010?", options: ["Torres", "Villa", "Iniesta"], correct: 2 }, { q: "¿Apodo de la selección?", options: ["La Furia", "La Roja", "Los Toros"], correct: 1 }, { q: "¿Capitán que levantó la copa?", options: ["Casillas", "Puyol", "Xavi"], correct: 0 }, { q: "¿Estilo de juego famoso?", options: ["Catenaccio", "Tiki-Taka", "Jogo Bonito"], correct: 1 }, { q: "¿Cuántas Eurocopas tienen?", options: ["2", "3", "4"], correct: 2 } ],
         videos: [
-            { title: "Gol de Iniesta", src: "assets/videos/espana1.mp4" },
-            { title: "Tiki Taka", src: "assets/videos/espana2.mp4" },
-            { title: "Campeones 2010", src: "assets/videos/espana3.mp4" },
-            { title: "Casillas Parada", src: "assets/videos/espana4.mp4" }
+            { title: "Gol de Iniesta", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419133/espana1_zsmmeu.mp4" },
+            { title: "Tiki Taka", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419143/espana2_w91dpu.mp4" },
+            { title: "Campeones 2010", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419053/espana3_cegma1.mp4" },
+            { title: "Casillas Parada", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419143/espana4_e8ccg6.mp4" }
         ]
     },
     { 
@@ -82,10 +82,10 @@ const countriesData = [
         facts: [ 'Equipo asiático con más participaciones consecutivas.', 'Llegaron a semifinales en 2002.', 'Aficionados "Red Devils" famosos por cánticos masivos.' ],
         trivia: [ { q: "¿Estrella del Tottenham?", options: ["Park Ji-sung", "Son Heung-min", "Kim Min-jae"], correct: 1 }, { q: "¿Apodo de los fans?", options: ["Red Devils", "Tigers", "Warriors"], correct: 0 }, { q: "¿Año del mundial Corea-Japón?", options: ["1998", "2006", "2002"], correct: 2 }, { q: "¿Color uniforme principal?", options: ["Blanco", "Rojo", "Azul"], correct: 1 }, { q: "¿A quién eliminaron en 2018?", options: ["Brasil", "Alemania", "México"], correct: 1 } ],
         videos: [
-            { title: "Milagro 2002", src: "assets/videos/corea1.mp4" },
-            { title: "Son Heung-min", src: "assets/videos/corea2.mp4" },
-            { title: "Red Devils", src: "assets/videos/corea3.mp4" },
-            { title: "Gol a Alemania", src: "assets/videos/corea4.mp4" }
+            { title: "Milagro 2002", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419925/corea1_nxd8vz.mp4" },
+            { title: "Son Heung-min", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420022/corea2_j3enwj.mp4" },
+            { title: "Red Devils", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420043/corea3_j6f3ih.mp4" },
+            { title: "Gol a Alemania", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420074/corea4_oklizi.mp4" }
         ]
     },
     { 
@@ -94,10 +94,10 @@ const countriesData = [
         facts: [ 'Conocidos como "Samurai Blue".', 'Inspirados en "Súper Campeones".', 'Famosos por limpiar vestidores y estadios.' ],
         trivia: [ { q: "¿Apodo de la selección?", options: ["Samurai Blue", "Rising Sun", "Ninjas"], correct: 0 }, { q: "¿Anime de fútbol famoso?", options: ["Dragon Ball", "Súper Campeones", "Naruto"], correct: 1 }, { q: "¿Mayor rival asiático?", options: ["China", "Corea del Sur", "Australia"], correct: 1 }, { q: "¿Han ganado un Mundial?", options: ["Sí", "No", "Casi"], correct: 1 }, { q: "¿Color de camiseta?", options: ["Roja", "Blanca", "Azul"], correct: 2 } ],
         videos: [
-            { title: "Samurai Blue", src: "assets/videos/japon1.mp4" },
-            { title: "Golazo Japón", src: "assets/videos/japon2.mp4" },
-            { title: "Limpieza Estadio", src: "assets/videos/japon3.mp4" },
-            { title: "Super Campeones", src: "assets/videos/japon4.mp4" }
+            { title: "Samurai Blue", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418496/japon1_zvydtq.mp4" },
+            { title: "Golazo Japón", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418482/japon2_autc7p.mp4" },
+            { title: "Limpieza Estadio", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418421/japon3_tk0tna.mp4" },
+            { title: "Super Campeones", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418473/japon4_zdifav.mp4" }
         ]
     }
 ];
