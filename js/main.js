@@ -2,9 +2,9 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // --- SISTEMA DE EFECTOS DE SONIDO (SFX) ---
-const sfxClick = new Audio('assets/sounds/click.mp3');
-const sfxCorrect = new Audio('assets/sounds/correct.mp3');
-const sfxWrong = new Audio('assets/sounds/wrong.mp3');
+const sfxClick = new Audio('https://res.cloudinary.com/duonndfih/video/upload/v1772416650/click_r4g9sr.mp3');
+const sfxCorrect = new Audio('https://res.cloudinary.com/duonndfih/video/upload/v1772416651/correct_uwj0fr.mp3');
+const sfxWrong = new Audio('https://res.cloudinary.com/duonndfih/video/upload/v1772416650/wrong_jqs4sk.mp3');
 
 // Helper para reproducir con volumen seguro
 const playSfx = (sound) => {
