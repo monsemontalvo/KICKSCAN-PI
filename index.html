@@ -99,10 +99,45 @@
             <div class="mt-10 text-center">
                 <h1 class="font-display text-7xl md:text-9xl text-transparent bg-clip-text bg-gradient-to-b from-white to-transparent opacity-80" style="-webkit-text-stroke: 1px white;">KICKSCAN</h1>
             </div>
-            <div class="w-full flex justify-center pb-16 pointer-events-auto">
+            <div class="w-full flex flex-col items-center gap-4 pb-4 pointer-events-auto">
                 <button onclick="window.irAEscanear()" class="group relative px-10 py-4 bg-white text-black font-display text-2xl tracking-widest hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
                     INICIAR ESCANEO
                 </button>
+                <button onclick="window.abrirManual()" class="px-6 py-2 bg-transparent text-white border border-white/30 rounded-full font-sans text-sm tracking-widest hover:bg-white/10 transition-colors">
+                    MANUAL DE USUARIO
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="screen-manual" class="hidden fixed inset-0 z-[80] bg-black flex flex-col overflow-y-auto">
+        <div class="p-6 flex items-center justify-between bg-black/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-10">
+            <button onclick="window.cerrarManual()" class="text-white font-display text-xl tracking-wide flex items-center gap-2 hover:text-green-400 transition-colors">← VOLVER AL INICIO</button>
+            <span class="font-display text-2xl text-green-400 tracking-wider">MANUAL DE USUARIO</span>
+        </div>
+        
+        <div class="flex-1 p-6 md:p-12 space-y-6 max-w-4xl mx-auto w-full pb-20">
+            <p class="text-center text-gray-400 font-sans mb-8">Sigue estos pasos para disfrutar al máximo de la experiencia KICKSCAN - Mundial 2026.</p>
+            
+            <div class="liquid-glass p-6 rounded-3xl">
+                <h2 class="font-display text-3xl text-white mb-2"><span class="text-green-500">1.</span> INICIAR ESCANEO</h2>
+                <p class="font-sans text-gray-300 text-sm leading-relaxed">Presiona "INICIAR ESCANEO" en la pantalla principal y permite el acceso a la cámara de tu dispositivo web o móvil.</p>
+            </div>
+            <div class="liquid-glass p-6 rounded-3xl">
+                <h2 class="font-display text-3xl text-white mb-2"><span class="text-green-500">2.</span> ESCANEAR LOGOS</h2>
+                <p class="font-sans text-gray-300 text-sm leading-relaxed">Encuentra los logos de los países participantes (México, Colombia, Irlanda, España, Corea del Sur, Japón) y apunta tu cámara hacia ellos para desplegar la experiencia en Realidad Aumentada.</p>
+            </div>
+            <div class="liquid-glass p-6 rounded-3xl">
+                <h2 class="font-display text-3xl text-white mb-2"><span class="text-green-500">3.</span> INTERACTUAR CON AR</h2>
+                <p class="font-sans text-gray-300 text-sm leading-relaxed">Utiliza los botones flotantes a la derecha de la pantalla (🏃, ⚽, 💃) para hacer que el personaje 3D corra, patee o baile directamente sobre el logo.</p>
+            </div>
+            <div class="liquid-glass p-6 rounded-3xl">
+                <h2 class="font-display text-3xl text-white mb-2"><span class="text-green-500">4.</span> EXPLORAR DATOS Y TRIVIA</h2>
+                <p class="font-sans text-gray-300 text-sm leading-relaxed">Toca o desliza la pestaña inferior hacia arriba para consultar las estadísticas del equipo, datos curiosos y poner a prueba tu conocimiento mundialista en la sección de Trivia.</p>
+            </div>
+            <div class="liquid-glass p-6 rounded-3xl">
+                <h2 class="font-display text-3xl text-white mb-2"><span class="text-green-500">5.</span> ACERVO HISTÓRICO</h2>
+                <p class="font-sans text-gray-300 text-sm leading-relaxed">En el menú inferior, presiona el ícono de video (🎬) para entrar a la galería y ver los mejores momentos de la selección. Puedes aplicar filtros creativos a los videos mientras los reproduces.</p>
             </div>
         </div>
     </section>

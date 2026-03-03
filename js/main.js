@@ -53,7 +53,7 @@ const countriesData = [
         ]
     },
     { 
-        id: 'irlanda', index: 2, name: 'IRLANDA', color: '#169B62', 
+        id: 'irlanda', index: 3, name: 'IRLANDA', color: '#169B62', 
         stats: { titulos: '-', copas: '3' }, 
         facts: [ 'En Italia 90, llegaron a cuartos sin ganar un solo partido.', 'La afición "Green Army" es famosa por su alegría.', 'Jack Charlton es considerado un héroe nacional.' ],
         trivia: [ { q: "¿Color de camiseta local?", options: ["Verde", "Blanca", "Naranja"], correct: 0 }, { q: "¿Leyenda del Man. United?", options: ["Robbie Keane", "Roy Keane", "Duff"], correct: 1 }, { q: "¿Símbolo en el escudo?", options: ["Arpa", "Trébol", "Cruz"], correct: 1 }, { q: "¿Apodo del equipo?", options: ["Green Army", "Boys in Green", "The Celts"], correct: 1 }, { q: "¿Mayor rival histórico?", options: ["Escocia", "Gales", "Inglaterra"], correct: 2 } ],
@@ -65,7 +65,7 @@ const countriesData = [
         ]
     },
     { 
-        id: 'espana', index: 3, name: 'ESPAÑA', color: '#AA151B', 
+        id: 'espana', index: 2, name: 'ESPAÑA', color: '#AA151B', 
         stats: { titulos: '1 Mundial / 4 Euros', copas: '16' }, 
         facts: [ 'Única selección en ganar tres torneos grandes consecutivos.', 'Campeones 2010 perdiendo el primer partido.', 'El estilo "Tiki-Taka" revolucionó el fútbol.' ],
         trivia: [ { q: "¿Autor del gol final 2010?", options: ["Torres", "Villa", "Iniesta"], correct: 2 }, { q: "¿Apodo de la selección?", options: ["La Furia", "La Roja", "Los Toros"], correct: 1 }, { q: "¿Capitán que levantó la copa?", options: ["Casillas", "Puyol", "Xavi"], correct: 0 }, { q: "¿Estilo de juego famoso?", options: ["Catenaccio", "Tiki-Taka", "Jogo Bonito"], correct: 1 }, { q: "¿Cuántas Eurocopas tienen?", options: ["2", "3", "4"], correct: 2 } ],
@@ -386,6 +386,17 @@ window.volverAlHome = () => {
     
     if (!homeAnimationId) startHomeLoop();
     if(window.detenerAR) window.detenerAR(); 
+};
+
+// --- MANUAL DE USUARIO ---
+window.abrirManual = () => {
+    document.getElementById('screen-home').classList.add('hidden');
+    document.getElementById('screen-manual').classList.remove('hidden');
+};
+
+window.cerrarManual = () => {
+    document.getElementById('screen-manual').classList.add('hidden');
+    document.getElementById('screen-home').classList.remove('hidden');
 };
 
 // --- NUEVA LÓGICA DE GALERÍA (ACERVO) ---
