@@ -399,7 +399,7 @@ window.cerrarManual = () => {
     document.getElementById('screen-home').classList.remove('hidden');
 };
 
-// --- NUEVA LÓGICA DE GALERÍA (ACERVO) ---
+// --- GALERÍA (ACERVO) ---
 
 // 1. Mostrar la Galería
 window.verHighlights = () => {

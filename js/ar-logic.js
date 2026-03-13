@@ -137,7 +137,7 @@ function actualizarIconoMute() {
     }
 }
 
-// NUEVO: Funciones para detener/renudar audio desde fuera
+// Funciones para detener/renudar audio desde fuera
 window.detenerAudioAR = () => {
     if (currentSound && currentSound.isPlaying) {
         currentSound.pause();
