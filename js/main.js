@@ -369,7 +369,7 @@ window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
     buttons.forEach(b => b.disabled = true);
     if (optIndex === correctIndex) {
         btn.classList.remove('bg-black/40'); btn.classList.add('bg-green-600', 'text-white', 'font-bold', 'border-green-400'); 
-        btn.innerHTML += ' ✅'; playSfx(sfxCorrect); 
+        btn.innerHTML += ' <img src="assets/icons/correct.png" class="w-5 h-5 inline-block ml-2">'; playSfx(sfxCorrect); 
         currentScore++;
         const scoreText = document.getElementById('trivia-score-text');
         if (scoreText && currentCountry) {
@@ -379,7 +379,7 @@ window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
         }
     } else {
         btn.classList.remove('bg-black/40'); btn.classList.add('bg-red-600', 'text-white', 'border-red-400'); 
-        btn.innerHTML += ' ❌'; playSfx(sfxWrong); 
+        btn.innerHTML += ' <img src="assets/icons/wrong.png" class="w-5 h-5 inline-block ml-2">'; playSfx(sfxWrong); 
         const correctBtn = buttons[correctIndex];
         correctBtn.classList.remove('bg-black/40'); correctBtn.classList.add('bg-green-600/50', 'text-white', 'border-green-400/50');
     }
@@ -500,7 +500,7 @@ window.verHighlights = () => {
             <div class="h-32 bg-black relative flex items-center justify-center overflow-hidden group-hover:bg-white/5 transition-colors">
                 <img src="${thumbnailSrc}" alt="${vid.title}" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-30 transition-opacity">
                 
-                <span class="relative z-10 text-4xl opacity-80 group-hover:scale-110 transition-transform drop-shadow-lg">▶️</span>
+                <img src="assets/icons/start.png" class="relative z-10 w-12 h-12 opacity-80 group-hover:scale-110 transition-transform drop-shadow-lg">
             </div>
             <div class="p-3 relative z-10 bg-black/40 backdrop-blur-sm">
                 <p class="font-sans text-sm font-bold text-white truncate">${vid.title}</p>

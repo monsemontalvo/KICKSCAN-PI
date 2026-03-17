@@ -204,10 +204,12 @@ function actualizarIconoMute() {
     const btn = document.getElementById('btn-mute');
     if (btn) {
         if (isMuted || globalVolume === 0) {
-            btn.innerText = '🔇';
+            // Cuando está silenciado (Mute)
+            btn.innerHTML = '<img src="assets/icons/mute.png" alt="Mute" class="w-5 h-5 object-contain">';
             btn.classList.add('bg-red-600/40');
         } else {
-            btn.innerText = '🔊';
+            // Cuando tiene sonido
+            btn.innerHTML = '<img src="assets/icons/play.png" alt="Volumen" class="w-5 h-5 object-contain">';
             btn.classList.remove('bg-red-600/40');
         }
     }
