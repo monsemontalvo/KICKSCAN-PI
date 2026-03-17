@@ -34,8 +34,8 @@ const countriesData = [
         facts: [ 'El Estadio Azteca es el único en el mundo que ha albergado dos finales de Copa del Mundo.', 'México fue el primer país en organizar una Copa del Mundo dos veces.', 'La selección mexicana es la que más veces ha participado en un Mundial sin haberlo ganado nunca.' ],
         trivia: [ { q: "¿Máximo goleador histórico?", options: ["Hugo Sánchez", "Chicharito", "Borgetti"], correct: 1 }, { q: "¿Cuándo ganaron el Oro Olímpico?", options: ["2008", "2016", "2012"], correct: 2 }, { q: "¿Apodo de la selección?", options: ["El Tri", "Los Aztecas", "Los Verdes"], correct: 0 }, { q: "¿Primer jugador en 5 mundiales?", options: ["Rafa Márquez", "Tota Carbajal", "Ochoa"], correct: 1 }, { q: "¿Rival del 'No era penal'?", options: ["Argentina", "Holanda", "Alemania"], correct: 1 } ],
         videos: [
-            { title: "Gol Histórico '86", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417899/mexico1_z6pkxn.mp4" },
-            { title: "Afición Azteca", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417621/mexico2_bgih6s.mp4" }, 
+            { title: "Holanda vs México, Brasil 2014", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417899/mexico1_z6pkxn.mp4" },
+            { title: "Cuando Memo Ochoa abusa de sus reflejos", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417621/mexico2_bgih6s.mp4" }, 
             { title: "El cacahuatazo", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417592/mexico3_out1tt.mp4" },
             { title: "Emos vs punks", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417637/mexico4_kpefn9.mp4" }
         ]
@@ -46,10 +46,10 @@ const countriesData = [
         facts: [ 'El único "Gol Olímpico" en la historia de los mundiales lo anotó Marcos Coll.', 'James Rodríguez ganó la Bota de Oro en Brasil 2014.', 'La selección de 1994 llegó al Mundial con un invicto de 30 partidos.' ],
         trivia: [ { q: "¿Quién es 'El Tigre'?", options: ["Falcao", "James", "Valderrama"], correct: 0 }, { q: "¿Bota de Oro Mundial 2014?", options: ["Cuadrado", "Bacca", "James Rodríguez"], correct: 2 }, { q: "¿Color principal de camiseta?", options: ["Rojo", "Azul", "Amarillo"], correct: 2 }, { q: "¿Ícono del pelo rizado?", options: ["Higuita", "Pibe Valderrama", "Asprilla"], correct: 1 }, { q: "¿Año de su Copa América?", options: ["2001", "2011", "1990"], correct: 0 } ],
         videos: [
-            { title: "El Gol de James", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420835/colombia1_hjx62k.mp4" },
-            { title: "Baile del equipo", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420830/colombia2_lsp112.mp4" },
-            { title: "Higuita Escorpión", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420857/colombia3_pzvp0m.mp4" },
-            { title: "Copa América 2001", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772416681/colombia4_weemr1.mp4" }
+            { title: "7 goles de James Rodríguez", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420835/colombia1_hjx62k.mp4" },
+            { title: "Colombia vs Australia", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420830/colombia2_lsp112.mp4" },
+            { title: "Goles de Colombia Mundial Brasil 2014", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420857/colombia3_pzvp0m.mp4" },
+            { title: "Entrenamiento selección colombiana", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772416681/colombia4_weemr1.mp4" }
         ]
     },
     { 
@@ -58,10 +58,10 @@ const countriesData = [
         facts: [ 'En Italia 90, llegaron a cuartos sin ganar un solo partido.', 'La afición "Green Army" es famosa por su alegría.', 'Jack Charlton es considerado un héroe nacional.' ],
         trivia: [ { q: "¿Color de camiseta local?", options: ["Verde", "Blanca", "Naranja"], correct: 0 }, { q: "¿Leyenda del Man. United?", options: ["Robbie Keane", "Roy Keane", "Duff"], correct: 1 }, { q: "¿Símbolo en el escudo?", options: ["Arpa", "Trébol", "Cruz"], correct: 1 }, { q: "¿Apodo del equipo?", options: ["Green Army", "Boys in Green", "The Celts"], correct: 1 }, { q: "¿Mayor rival histórico?", options: ["Escocia", "Gales", "Inglaterra"], correct: 2 } ],
         videos: [
-            { title: "Italia 90 Heroico", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418887/irlanda1_knqykh.mp4" },
-            { title: "Fans Cantando", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418912/irlanda2_yyn5ba.mp4" },
-            { title: "Gol de Keane", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418985/irlanda3_osozcc.mp4" },
-            { title: "Green Army", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418845/irlanda4_wbissm.mp4" }
+            { title: "Estadios de Irlanda", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418887/irlanda1_knqykh.mp4" },
+            { title: "Fans irlandeses", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418912/irlanda2_yyn5ba.mp4" },
+            { title: "Lo mejor de los fans irlandeses Euro 2016", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418985/irlanda3_osozcc.mp4" },
+            { title: "Curiosidades de Irlanda", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418845/irlanda4_wbissm.mp4" }
         ]
     },
     { 
@@ -70,10 +70,10 @@ const countriesData = [
         facts: [ 'Única selección en ganar tres torneos grandes consecutivos.', 'Campeones 2010 perdiendo el primer partido.', 'El estilo "Tiki-Taka" revolucionó el fútbol.' ],
         trivia: [ { q: "¿Autor del gol final 2010?", options: ["Torres", "Villa", "Iniesta"], correct: 2 }, { q: "¿Apodo de la selección?", options: ["La Furia", "La Roja", "Los Toros"], correct: 1 }, { q: "¿Capitán que levantó la copa?", options: ["Casillas", "Puyol", "Xavi"], correct: 0 }, { q: "¿Estilo de juego famoso?", options: ["Catenaccio", "Tiki-Taka", "Jogo Bonito"], correct: 1 }, { q: "¿Cuántas Eurocopas tienen?", options: ["2", "3", "4"], correct: 2 } ],
         videos: [
-            { title: "Gol de Iniesta", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419133/espana1_zsmmeu.mp4" },
-            { title: "Tiki Taka", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419143/espana2_w91dpu.mp4" },
-            { title: "Campeones 2010", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419053/espana3_cegma1.mp4" },
-            { title: "Casillas Parada", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419143/espana4_e8ccg6.mp4" }
+            { title: "España vs Holanda, final Mundial Sudafrica 2010", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419133/espana1_zsmmeu.mp4" },
+            { title: "Los mejores goles de la selección Española", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419143/espana2_w91dpu.mp4" },
+            { title: "Gol de Iniesta vs Holanda 2010", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419053/espana3_cegma1.mp4" },
+            { title: "Todo sobre España", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419143/espana4_e8ccg6.mp4" }
         ]
     },
     { 
@@ -82,10 +82,10 @@ const countriesData = [
         facts: [ 'Equipo asiático con más participaciones consecutivas.', 'Llegaron a semifinales en 2002.', 'Aficionados "Red Devils" famosos por cánticos masivos.' ],
         trivia: [ { q: "¿Estrella del Tottenham?", options: ["Park Ji-sung", "Son Heung-min", "Kim Min-jae"], correct: 1 }, { q: "¿Apodo de los fans?", options: ["Red Devils", "Tigers", "Warriors"], correct: 0 }, { q: "¿Año del mundial Corea-Japón?", options: ["1998", "2006", "2002"], correct: 2 }, { q: "¿Color uniforme principal?", options: ["Blanco", "Rojo", "Azul"], correct: 1 }, { q: "¿A quién eliminaron en 2018?", options: ["Brasil", "Alemania", "México"], correct: 1 } ],
         videos: [
-            { title: "Milagro 2002", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419925/corea1_nxd8vz.mp4" },
-            { title: "Son Heung-min", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420022/corea2_j3enwj.mp4" },
-            { title: "Red Devils", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420043/corea3_j6f3ih.mp4" },
-            { title: "Gol a Alemania", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420074/corea4_oklizi.mp4" }
+            { title: "Evolución del uniforme de Corea del Sur", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772419925/corea1_nxd8vz.mp4" },
+            { title: "Corea del Sur vs Bolivia", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420022/corea2_j3enwj.mp4" },
+            { title: "Cuando Corea del Sur hizo historia en 2022", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420043/corea3_j6f3ih.mp4" },
+            { title: "México vs Corea del Sur", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420074/corea4_oklizi.mp4" }
         ]
     },
     { 
@@ -94,10 +94,10 @@ const countriesData = [
         facts: [ 'Conocidos como "Samurai Blue".', 'Inspirados en "Súper Campeones".', 'Famosos por limpiar vestidores y estadios.' ],
         trivia: [ { q: "¿Apodo de la selección?", options: ["Samurai Blue", "Rising Sun", "Ninjas"], correct: 0 }, { q: "¿Anime de fútbol famoso?", options: ["Dragon Ball", "Súper Campeones", "Naruto"], correct: 1 }, { q: "¿Mayor rival asiático?", options: ["China", "Corea del Sur", "Australia"], correct: 1 }, { q: "¿Han ganado un Mundial?", options: ["Sí", "No", "Casi"], correct: 1 }, { q: "¿Color de camiseta?", options: ["Roja", "Blanca", "Azul"], correct: 2 } ],
         videos: [
-            { title: "Samurai Blue", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418496/japon1_zvydtq.mp4" },
-            { title: "Golazo Japón", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418482/japon2_autc7p.mp4" },
-            { title: "Limpieza Estadio", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418421/japon3_tk0tna.mp4" },
-            { title: "Super Campeones", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418473/japon4_zdifav.mp4" }
+            { title: "Japón vs Alemania, Qatar 2022", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418496/japon1_zvydtq.mp4" },
+            { title: "Todas las participaciones de Japón en el Mundial", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418482/japon2_autc7p.mp4" },
+            { title: "Evolución del anime", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418421/japon3_tk0tna.mp4" },
+            { title: "Japón vs Croacia, Qatar 2022", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418473/japon4_zdifav.mp4" }
         ]
     },
     { 
@@ -106,22 +106,22 @@ const countriesData = [
         facts: [ 'Fueron los primeros campeones del mundo en 1930.', 'Protagonistas del histórico "Maracanazo" en 1950.', 'Son conocidos por su famosa "Garra Charrúa".' ],
         trivia: [ { q: "¿Apodo de la selección?", options: ["La Celeste", "Los Andes", "El Sol"], correct: 0 }, { q: "¿Máximo goleador histórico?", options: ["Cavani", "Forlán", "Luis Suárez"], correct: 2 }, { q: "¿A quién vencieron en el Maracanazo?", options: ["Argentina", "Brasil", "Italia"], correct: 1 }, { q: "¿Cuántos Mundiales han ganado?", options: ["1", "2", "3"], correct: 1 }, { q: "¿Qué animal aparece en su escudo?", options: ["Un sol", "No hay escudo", "Un león"], correct: 1 } ],
         videos: [
-            { title: "Maracanazo", src: "" },
-            { title: "Gol de Forlán", src: "" },
-            { title: "Garra Charrúa", src: "" },
-            { title: "Campeones de América", src: "" }
+            { title: "Uruguay vs Republica Dominicana", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711924/Uruguay_1-0_Rep%C3%BAblica_Dominicana_Amistoso_Internacional_Fecha_FIFA_AUFTV_-_AUFTV_720p_h264_youtube_haecxi.mp4" },
+            { title: "Uruguay a Qatar 2022", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711966/Uruguay_a_Qatar_2022_Cuando_juega_Uruguay_-_Francis_Andreu_-_AUFTV_720p_h264_youtube_t5b9v8.mp4" },
+            { title: "Uruguay vs Ghana Highlights", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773712022/Uruguay_v_Ghana_2010_FIFA_World_Cup_Match_Highlights_-_FIFA_480p_h264_youtube_glatim.mp4" },
+            { title: "Uruguay vs Ghana Penalty", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773712073/Uruguay_v_Ghana_Full_Penalty_Shoot-out_2010_FIFAWorldCup_Quarter-Finals_-_FIFA_720p_h264_youtube_wdjf2d.mp4" }
         ]
-    },
+    }, 
     { 
         id: 'tunez', index: 7, name: 'TÚNEZ', color: '#E70013', 
         stats: { titulos: '1 Copa Africana', copas: '6' }, 
         facts: [ 'Primera selección africana en ganar un partido en un Mundial (1978).', 'Han clasificado a 6 Copas del Mundo en su historia.', 'Su escudo lleva un águila inspirada en su apodo.' ],
         trivia: [ { q: "¿Apodo de la selección?", options: ["Leones", "Faraones", "Águilas de Cartago"], correct: 2 }, { q: "¿En qué año ganaron su Copa Africana?", options: ["2004", "1998", "2010"], correct: 0 }, { q: "¿Color principal de su uniforme?", options: ["Verde", "Blanco y Rojo", "Amarillo"], correct: 1 }, { q: "¿A qué continente pertenecen?", options: ["Asia", "África", "Europa"], correct: 1 }, { q: "¿Último mundial jugado?", options: ["2014", "2018", "2022"], correct: 2 } ],
         videos: [
-            { title: "Victoria histórica '78", src: "" },
-            { title: "Águilas de Cartago", src: "" },
-            { title: "Gol Mundial 2022", src: "" },
-            { title: "Afición tunecina", src: "" }
+            { title: "Argentina vs Túnez, Atlanta 1996", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711891/Argentina_1_vs_Tunez_1_Atlanta_1996_FUTBOL_RETRO_TV_-_futbolretrocba_480p_h264_youtube_oznp2e.mp4" },
+            { title: "Tunez vs Francia, Qatar 2022", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711931/Famous_win_not_quite_enough_Tunisa_v_France_FIFA_World_Cup_Qatar_2022_-_FIFA_720p_h264_youtube_d4rwg4.mp4" },
+            { title: "Belgica vs Tunez, Rusia 2018", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711955/Belgium_v_Tunisia_2018_FIFA_World_Cup_Match_Highlights_-_FIFA_720p_h264_youtube_y7zzj0.mp4" },
+            { title: "Mexico vs Túnez", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773712084/La_DESASTROSA_presentaci%C3%B3n_de_M%C3%89XICO_vs_T%C3%9ANEZ_en_el_MUNDIAL_de_Argentina_1978_-_Joyitas_del_Futbol_Mexicano_720p_h264_youtube_jgzsv8.mp4" }
         ]
     },
     { 
@@ -130,10 +130,10 @@ const countriesData = [
         facts: [ 'Única nación africana en organizar una Copa del Mundo (2010).', 'El primer gol del Mundial 2010 lo anotó Siphiwe Tshabalala.', 'Ganaron la Copa Africana en 1996 siendo anfitriones.' ],
         trivia: [ { q: "¿Apodo de la selección?", options: ["Bafana Bafana", "Súper Águilas", "Estrellas Negras"], correct: 0 }, { q: "¿Año en que organizaron el Mundial?", options: ["2006", "2010", "2014"], correct: 1 }, { q: "¿Autor del primer gol en 2010?", options: ["Pienaar", "McCarthy", "Tshabalala"], correct: 2 }, { q: "¿Mascota de su Mundial?", options: ["Fuleco", "Zakumi", "Pique"], correct: 1 }, { q: "¿Instrumento famoso de los fans?", options: ["Tambor", "Vuvuzela", "Maraca"], correct: 1 } ],
         videos: [
-            { title: "Golazo de Tshabalala", src: "" },
-            { title: "Sonido Vuvuzelas", src: "" },
-            { title: "Bafana Bafana", src: "" },
-            { title: "Inauguración 2010", src: "" }
+            { title: "Vuvuzela en el estadio Cape Town", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711882/Vuvuzela_sound_at_Cape_Town_Stadium-_world_cup_2010_-_SW17Chelsea_480p_h264_youtube_huqwrb.mp4" },
+            { title: "Sudafrica Macarena", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711886/South_Africa-Mexico_Macarena_goal_celebration_Tshabalala_-_paradoxx7_720p_h264_youtube_wb1vxl.mp4" },
+            { title: "Pepsi comercial, Sudafrica 2010", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711981/PEPSI_FOOTBALL_AFRICA_2010_COMMERCIAL_FEATURING_MESSI_KAKA_DROGBA_LAMPARD_HENRY_AND_AKON_-_PepsiFootball_720p_h264_youtube_vxfbll.mp4" },
+            { title: "Sudafrica 2010 highlights", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773712037/Brazil_v_Chile_2010_FIFA_World_Cup_Match_Highlights_-_FIFA_480p_h264_youtube_xzxhl5.mp4" }
         ]
     },
     { 
@@ -142,10 +142,10 @@ const countriesData = [
         facts: [ 'Ganaron la medalla de oro en los Juegos Asiáticos de 1994.', 'Son una de las potencias emergentes del fútbol juvenil centroasiático.', 'Pertenecen a la confederación asiática (AFC).' ],
         trivia: [ { q: "¿Apodo del equipo?", options: ["Lobos Blancos", "Dragones", "Tigres"], correct: 0 }, { q: "¿Han jugado un Mundial mayor?", options: ["Sí", "No", "Solo una vez"], correct: 1 }, { q: "¿En qué confederación juegan?", options: ["UEFA", "CAF", "AFC"], correct: 2 }, { q: "¿Color de su uniforme local?", options: ["Azul y blanco", "Rojo puro", "Verde y amarillo"], correct: 0 }, { q: "¿Año en que ganaron Oro Asiático?", options: ["1994", "2002", "2010"], correct: 0 } ],
         videos: [
-            { title: "Lobos Blancos", src: "" },
-            { title: "Juegos Asiáticos '94", src: "" },
-            { title: "Fútbol Centroasiático", src: "" },
-            { title: "Jóvenes promesas", src: "" }
+            { title: "Uzbekistan ingresa por primera vez a la copa del mundo", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711760/UZBEKISTAN_REACH_FIRST-EVER_WORLD_CUP_UAE_-_Uzbekistan_Highlights_AsianQualifiers_-_Road_To_26_-_AFC_Asian_Cup_720p_h264_youtube_w1ege8.mp4" },
+            { title: "Qatar highlights", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711771/BLAZING_Uzbekistan_crown_historic_campaign_Uzbekistan_-_Qatar_Highlights_AsianQualifiers_RT_26_-_AFC_Asian_Cup_720p_h264_youtube_idaek4.mp4" },
+            { title: "Uzbekistan vs Uruguay", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711773/Uzbekist%C3%A1n_1-2_Uruguay_Amistoso_Internacional_Fecha_FIFA_octubre_AUFTV_-_AUFTV_720p_h264_youtube_tmpcg1.mp4" },
+            { title: "Uzbekistan vs Egipto", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711810/EGYPT_UZBEKISTAN_INTERNATIONAL_FRIENDLY_TOURNAMENT_HIGHLIGHTS_14.11.2025_-_FUTBOL_TIME_720p_h264_youtube_peutey.mp4" }
         ]
     },
     { 
@@ -154,10 +154,10 @@ const countriesData = [
         facts: [ 'Consiguieron el tercer lugar en los Mundiales de 1974 y 1982.', 'Robert Lewandowski es su máximo goleador y leyenda histórica.', 'Ganaron el oro olímpico en los juegos de Múnich 1972.' ],
         trivia: [ { q: "¿Máximo goleador histórico?", options: ["Milik", "Boniek", "Lewandowski"], correct: 2 }, { q: "¿Mejor puesto en un Mundial?", options: ["Subcampeón", "Tercer lugar", "Cuartos"], correct: 1 }, { q: "¿Apodo de la selección?", options: ["Las Águilas", "Los Osos", "Los Leones"], correct: 0 }, { q: "¿Color principal de su uniforme?", options: ["Azul", "Blanco y Rojo", "Verde"], correct: 1 }, { q: "¿En qué año ganaron el Oro Olímpico?", options: ["1972", "1980", "1996"], correct: 0 } ],
         videos: [
-            { title: "Goles de Lewandowski", src: "" },
-            { title: "Mundial 1974", src: "" },
-            { title: "Oro Olímpico '72", src: "" },
-            { title: "Afición Polaca", src: "" }
+            { title: "Japon vs Polonia", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711637/Japan_v_Poland_2018_FIFA_World_Cup_Match_Highlights_-_FIFA_720p_h264_youtube_qubqtz.mp4" },
+            { title: "Lewandowski Polonia vs Arabia Saudita", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711706/Lewandowski_gets_his_goal_Poland_v_Saudi_Arabia_FIFA_World_Cup_Qatar_2022_-_FIFA_720p_h264_youtube_mbutma.mp4" },
+            { title: "Mexico vs Polonia", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711740/Ochoa_HEROICS_deny_Lewandowski_Mexico_v_Poland_highlights_FIFA_World_Cup_Qatar_2022_-_FIFA_720p_h264_youtube_ikgpvu.mp4" },
+            { title: "Selección de Futbol", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711834/Selecci%C3%B3n_de_F%C3%BAtbol_de_Polonia_-_32_Ilusiones_-_Televisi%C3%B3n_P%C3%BAblica_480p_h264_youtube_cqiyr9.mp4" }
         ]
     },
     { 
@@ -166,13 +166,13 @@ const countriesData = [
         facts: [ 'Clasificaron a su único Mundial en Francia 1998.', 'Han sido subcampeones de la Copa Oro de la Concacaf en dos ocasiones.', 'Tienen una fuerte rivalidad deportiva con Estados Unidos y México.' ],
         trivia: [ { q: "¿Apodo de la selección?", options: ["Reggae Boyz", "Calypso", "Caribeños"], correct: 0 }, { q: "¿Único Mundial que han jugado?", options: ["1994", "1998", "2002"], correct: 1 }, { q: "¿A qué confederación pertenecen?", options: ["CONMEBOL", "UEFA", "CONCACAF"], correct: 2 }, { q: "¿Colores de su camiseta?", options: ["Amarillo, Verde y Negro", "Rojo y Blanco", "Azul y Amarillo"], correct: 0 }, { q: "¿Mejor puesto en Copa Oro?", options: ["Tercero", "Subcampeón", "Campeón"], correct: 1 } ],
         videos: [
-            { title: "Reggae Boyz en Francia '98", src: "" },
-            { title: "Copa Oro", src: "" },
-            { title: "Goles históricos", src: "" },
-            { title: "Ambiente Jamaiquino", src: "" }
+            { title: "Jamaica vs Bermudas Concacaf", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711897/Jamaica_vs_Bermuda_Concacaf_Qualifiers_2026_World_Cup_-_Concacaf_720p_h264_youtube_uvoumk.mp4" },
+            { title: "Jamaica vs Venezuela, Copa América 2024", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773712009/JAMAICA_0-3_VENEZUELA_HIGHLIGHTS_CONMEBOL_COPA_AM%C3%89RICA_USA_2024_-_Copa_Am%C3%A9rica_720p_h264_youtube_wkgw6o.mp4" },
+            { title: "Jamaica vs México, Copa Oro 2017", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773712115/Futbol_Retro_El_d%C3%ADa_que_Jamaica_ech%C3%B3_a_M%C3%A9xico_de_la_Copa_Oro_2017_M%C3%A9xico_0_-_1_Jamaica_TUDN_-_TUDN_M%C3%A9xico_720p_h264_youtube_sn3gqd.mp4" },
+            { title: "Jamaica vs Curacao, Concacaf", src: "https://res.cloudinary.com/duonndfih/video/upload/v1773712135/Jamaica_vs._Curacao_Extended_Highlights_CONCACAF_World_Cup_Qualifiers_CBS_Sports_Golazo_-_CBS_Sports_Golazo_America_720p_h264_youtube_gjlcmq.mp4" }
         ]
     }
-];
+]; 
 
 let currentCountry = null;
 let homeRenderer, homeScene, homeCamera, homeBall, carouselGroup; 
