@@ -15,55 +15,55 @@ const modelosPorPais = [
             patear: 'assets/models/MEX KICK.glb',
             correr: 'assets/models/MEX RUN.glb'
         },
-        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416620/Mexico-mariachiloco_qurccs.mp4',
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416620/Mexico-mariachiloco_qurccs.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, -0.4, 0]
     },
     {
         id: 'colombia',
         acciones: {
-            idle: 'assets/models/low_poly_soccer_ball_or_football.glb',
-            bailar: 'assets/models/low_poly_soccer_ball_or_football.glb',
-            patear: 'assets/models/low_poly_soccer_ball_or_football.glb',
-            correr: 'assets/models/low_poly_soccer_ball_or_football.glb'
+            idle: 'assets/models/IDLE COL.glb',
+            bailar: 'assets/models/DANCE COL.glb',
+            patear: 'assets/models/KICK COL.glb',
+            correr: 'assets/models/RUN COL.glb'
         },
-        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416622/Colombia-Caminosdelavida_ejz6m3.mp4',
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416622/Colombia-Caminosdelavida_ejz6m3.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     },
     {
         id: 'espana',
         acciones: {
-            idle: 'assets/models/espana_bull.glb',
-            bailar: 'assets/models/espana_bull.glb',
-            patear: 'assets/models/espana_bull.glb',
-            correr: 'assets/models/espana_bull.glb'
+            idle: 'assets/models/IDLE ESP.glb',
+            bailar: 'assets/models/DANCE ESP.glb',
+            patear: 'assets/models/KICK ESP.glb',
+            correr: 'assets/models/RUN ESP.glb'
         },
-        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416617/Espana-Macarena_tqpzbm.mp4',
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416617/Espana-Macarena_tqpzbm.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     },
     {
         id: 'irlanda',
         acciones: {
-            idle: 'assets/models/irlanda_hat.glb',
-            bailar: 'assets/models/irlanda_hat.glb',
-            patear: 'assets/models/irlanda_hat.glb',
-            correr: 'assets/models/irlanda_hat.glb'
+            idle: 'assets/models/IDLE IRL.glb',
+            bailar: 'assets/models/DANCE IRL.glb',
+            patear: 'assets/models/KICK IRL.glb',
+            correr: 'assets/models/RUN IRL.glb'
         },
-        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416625/Irlanda-pub_wv2bn4.mp4',
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416625/Irlanda-pub_wv2bn4.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     },
     {
         id: 'corea',
         acciones: {
-            idle: 'assets/models/corea_tiger.glb',
-            bailar: 'assets/models/corea_tiger.glb',
-            patear: 'assets/models/corea_tiger.glb',
-            correr: 'assets/models/corea_tiger.glb'
+            idle: 'assets/models/IDLE COR.glb',
+            bailar: 'assets/models/DANCE COR.glb',
+            patear: 'assets/models/KICK COR.glb',
+            correr: 'assets/models/RUN COR.glb'
         },
-        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416620/Corea-Gangnamstyle_ucvonw.mp4',
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416620/Corea-Gangnamstyle_ucvonw.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     },
@@ -75,7 +75,79 @@ const modelosPorPais = [
             patear: 'assets/models/MIKU KICK.glb',
             correr: 'assets/models/MIKU RUN.glb'
         },
-        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416623/Japon-miku_soxajd.mp4',
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416623/Japon-miku_soxajd.mp3',
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        id: 'uruguay',
+        acciones: {
+            idle: 'assets/models/IDLE URU.glb',
+            bailar: 'assets/models/DANCE URU.glb',
+            patear: 'assets/models/KICK URU.glb',
+            correr: 'assets/models/RUN URU.glb'
+        },
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470414/Uruguay-Cuarteto_iz2rrr.mp3', 
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        id: 'tunez',
+        acciones: {
+            idle: 'assets/models/IDLE TUN.glb',
+            bailar: 'assets/models/DANCE TUN.glb',
+            patear: 'assets/models/KICK TUN.glb',
+            correr: 'assets/models/RUN TUN.glb'
+        },
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470424/Tunez-idk_h7lbkk.mp3',
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        id: 'sudafrica',
+        acciones: {
+            idle: 'assets/models/IDLE SUD.glb',
+            bailar: 'assets/models/DANCE SUD.glb',
+            patear: 'assets/models/KICK SUD.glb',
+            correr: 'assets/models/RUN SUD.glb'
+        },
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470422/Sudafrica-Wakawaka_oh6txy.mp3',
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        id: 'uzbekistan',
+        acciones: {
+            idle: 'assets/models/IDLE UZB.glb',
+            bailar: 'assets/models/DANCE UZB.glb',
+            patear: 'assets/models/KICK UZB.glb',
+            correr: 'assets/models/RUN UZB.glb'
+        },
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470425/Ubezkistan-idk_q2a3cs.mp3',
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        id: 'polonia',
+        acciones: {
+            idle: 'assets/models/IDLE POL.glb',
+            bailar: 'assets/models/DANCE POL.glb',
+            patear: 'assets/models/KICK POL.glb',
+            correr: 'assets/models/RUN POL.glb'
+        },
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470425/Polonia-idk_ephn72.mp3',
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
+    {
+        id: 'jamaica',
+        acciones: {
+            idle: 'assets/models/IDLE JAM.glb',
+            bailar: 'assets/models/DANCE JAM.glb',
+            patear: 'assets/models/KICK JAM.glb',
+            correr: 'assets/models/RUN JAM.glb'
+        },
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470417/Jamaica-Bob_Marley_cuwzkf.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     }
@@ -91,6 +163,7 @@ let clock = new THREE.Clock();
 let currentAnchorIndex = -1;
 let currentSound = null;
 let currentVisibleModel = null;
+let globalCurrentAction = 'idle'; // <-- ¡NUEVA VARIABLE: Recuerda qué animación pidió el usuario!
 let globalVolume = 0.5;
 let isMuted = false;
 let preMuteVolume = 0.5;
@@ -230,20 +303,6 @@ function detenerConfetiInmediato() {
 function resetearModeloAnterior() {
     if (currentVisibleModel) {
         currentVisibleModel.visible = false;
-
-        // Devolver el modelo a su Anchor original
-        if (currentVisibleModel.userData.originalAnchor) {
-            currentVisibleModel.userData.originalAnchor.group.attach(currentVisibleModel);
-        }
-
-        // Restaurar posición original
-        const index = currentVisibleModel.userData.paisIndex;
-        const config = modelosPorPais[index];
-        if (config) {
-            currentVisibleModel.position.set(...config.position);
-            currentVisibleModel.scale.set(...config.scale);
-            currentVisibleModel.rotation.set(0, 0, 0);
-        }
     }
 
     if (currentSound && currentSound.isPlaying) {
@@ -256,36 +315,26 @@ function resetearModeloAnterior() {
 
 // --- CAMBIAR ANIMACIÓN ---
 window.cambiarAnimacionAR = (tipoAccion) => {
+    globalCurrentAction = tipoAccion; // <-- Guardamos la instrucción para cuando los modelos terminen de cargar
+
     if (currentAnchorIndex === -1 || !mindarThree) return;
 
     const anchor = mindarThree.anchors[currentAnchorIndex];
     if (!anchor) return;
 
-    let positionRef = currentVisibleModel ? currentVisibleModel.position.clone() : null;
-    let rotationRef = currentVisibleModel ? currentVisibleModel.rotation.clone() : null;
-
+    // Ocultar modelo actual
     if (currentVisibleModel) {
         currentVisibleModel.visible = false;
-        if (currentVisibleModel.userData.originalAnchor) {
-            currentVisibleModel.userData.originalAnchor.group.attach(currentVisibleModel);
-        }
+        currentVisibleModel = null; // Limpiamos la variable
     }
 
-    // Buscar el nuevo modelo deseado
+    // Buscar el nuevo modelo deseado dentro del grupo del logo
     const nuevoModelo = anchor.group.children.find(
         child => child.userData.esModelo && child.userData.accion === tipoAccion
     );
 
     if (nuevoModelo) {
-        nuevoModelo.visible = true;
-
-        // PERSISTENCIA: Pegar a la escena principal
-        mindarThree.scene.attach(nuevoModelo);
-
-        if (positionRef) {
-            nuevoModelo.position.copy(positionRef);
-            nuevoModelo.rotation.copy(rotationRef);
-        }
+        nuevoModelo.visible = true; // Al hacerlo visible, se queda pegado al logo automáticamente
 
         const mixer = mixers.find(m => m.getRoot() === nuevoModelo);
         if (mixer) {
@@ -313,6 +362,7 @@ window.iniciarAR = async () => {
     currentAnchorIndex = -1;
     currentVisibleModel = null;
     currentSound = null;
+    globalCurrentAction = 'idle';
 
     initConfettiSystem();
     detenerConfetiInmediato();
@@ -328,8 +378,8 @@ window.iniciarAR = async () => {
             imageTargetSrc: "assets/targets/targets.mind",
             maxTrack: 1,
             uiLoading: "no", uiScanning: "no", uiError: "yes",
-            filterMinCF: 0.0001, //Reduce el temblor (jitter)
-            filterBeta: 0.001    //Suaviza el movimiento
+            filterMinCF: 0.0001, 
+            filterBeta: 0.001    
         });
 
         const { renderer, scene, camera } = mindarThree;
@@ -376,21 +426,50 @@ window.iniciarAR = async () => {
                     }
                     anchor.group.add(model);
 
+                    // --- ¡EL SALVAVIDAS!: Si el usuario ya detectó este logo y estaba esperando esta animación ---
+                    if (currentAnchorIndex === i && accion === globalCurrentAction) {
+                        if (currentVisibleModel) {
+                            currentVisibleModel.visible = false;
+                        }
+                        model.visible = true;
+                        currentVisibleModel = model;
+                    }
+
                 }, undefined, (e) => console.warn(`Error cargando ${accion} de país ${i}`));
             }
 
-            // --- DETECCIÓN DEL PAÍS ---
+            // --- DETECCIÓN DEL PAÍS (Target Encontrado) ---
             anchor.onTargetFound = () => {
-                if (currentAnchorIndex === i) return; // Si es el mismo país, ignorar.
-
                 console.log(`Detectado: ${infoPais.id}`);
 
-                // 1. Limpiar el país anterior (modelo y audio)
-                resetearModeloAnterior();
+                if (currentAnchorIndex !== i) {
+                    // Si es un país nuevo, limpiamos lo anterior
+                    resetearModeloAnterior();
+                    currentAnchorIndex = i;
+                    globalCurrentAction = 'idle'; // Reiniciar a la instrucción por defecto
+                    
+                    // Activar modelo IDLE pegado al logo
+                    window.cambiarAnimacionAR('idle');
 
-                currentAnchorIndex = i;
+                    // Iniciar audio nuevo
+                    if (infoPais.audioBuffer) {
+                        currentSound = new THREE.Audio(audioListener);
+                        currentSound.setBuffer(infoPais.audioBuffer);
+                        currentSound.setLoop(true);
+                        currentSound.setVolume(globalVolume);
+                        currentSound.play();
+                    }
+                } else {
+                    // Si es el mismo país que ya estábamos viendo, solo reanudamos el audio
+                    if (currentSound && !currentSound.isPlaying) {
+                        currentSound.play();
+                    }
+                }
 
-                // 2. Mostrar Controles UI
+                // Se lanza cada vez que la cámara detecta el logo (durante 8 segundos)
+                lanzarConfetti(8000);
+
+                // Mostrar Controles UI en pantalla
                 const btnConfetti = document.getElementById('btn-confetti');
                 const audioControls = document.getElementById('audio-controls');
                 const animControls = document.getElementById('anim-controls');
@@ -399,22 +478,35 @@ window.iniciarAR = async () => {
                 if (audioControls) audioControls.classList.remove('hidden');
                 if (animControls) animControls.classList.remove('hidden');
 
-                // 3. Activar modelo IDLE
-                window.cambiarAnimacionAR('idle');
-
-                // 4. Audio
-                if (infoPais.audioBuffer) {
-                    currentSound = new THREE.Audio(audioListener);
-                    currentSound.setBuffer(infoPais.audioBuffer);
-                    currentSound.setLoop(true);
-                    currentSound.setVolume(globalVolume);
-                    currentSound.play();
-                }
-
-                if (window.lanzarConfettiManual) window.lanzarConfettiManual();
-
-                // 5. Actualizar interfaz de datos (Main.js)
+                // Mostrar la pestaña inferior de info
                 if (window.mostrarInfoPais) window.mostrarInfoPais(i);
+            };
+
+            // --- PÉRDIDA DEL PAÍS (Target Perdido) ---
+            anchor.onTargetLost = () => {
+                if (currentAnchorIndex === i) {
+                    console.log(`Perdido: ${infoPais.id}`);
+                    
+                    // Ocultar UI de botones
+                    document.getElementById('btn-confetti').classList.add('hidden');
+                    document.getElementById('audio-controls').classList.add('hidden');
+                    document.getElementById('anim-controls').classList.add('hidden');
+                    
+                    // Ocultar información (Bottom sheet)
+                    if (window.ocultarBottomSheetCompleto) {
+                        window.ocultarBottomSheetCompleto();
+                    }
+
+                    // Pausar la música
+                    if (currentSound && currentSound.isPlaying) {
+                        currentSound.pause();
+                    }
+
+                    // Detener confeti si está cayendo
+                    if (typeof detenerConfetiInmediato === 'function') {
+                        detenerConfetiInmediato();
+                    }
+                }
             };
         }
 

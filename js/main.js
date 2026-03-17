@@ -99,6 +99,78 @@ const countriesData = [
             { title: "Limpieza Estadio", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418421/japon3_tk0tna.mp4" },
             { title: "Super Campeones", src: "https://res.cloudinary.com/duonndfih/video/upload/v1772418473/japon4_zdifav.mp4" }
         ]
+    },
+    { 
+        id: 'uruguay', index: 6, name: 'URUGUAY', color: '#0038A8', 
+        stats: { titulos: '2 Mundiales / 15 Copas América', copas: '14' }, 
+        facts: [ 'Fueron los primeros campeones del mundo en 1930.', 'Protagonistas del histórico "Maracanazo" en 1950.', 'Son conocidos por su famosa "Garra Charrúa".' ],
+        trivia: [ { q: "¿Apodo de la selección?", options: ["La Celeste", "Los Andes", "El Sol"], correct: 0 }, { q: "¿Máximo goleador histórico?", options: ["Cavani", "Forlán", "Luis Suárez"], correct: 2 }, { q: "¿A quién vencieron en el Maracanazo?", options: ["Argentina", "Brasil", "Italia"], correct: 1 }, { q: "¿Cuántos Mundiales han ganado?", options: ["1", "2", "3"], correct: 1 }, { q: "¿Qué animal aparece en su escudo?", options: ["Un sol", "No hay escudo", "Un león"], correct: 1 } ],
+        videos: [
+            { title: "Maracanazo", src: "" },
+            { title: "Gol de Forlán", src: "" },
+            { title: "Garra Charrúa", src: "" },
+            { title: "Campeones de América", src: "" }
+        ]
+    },
+    { 
+        id: 'tunez', index: 7, name: 'TÚNEZ', color: '#E70013', 
+        stats: { titulos: '1 Copa Africana', copas: '6' }, 
+        facts: [ 'Primera selección africana en ganar un partido en un Mundial (1978).', 'Han clasificado a 6 Copas del Mundo en su historia.', 'Su escudo lleva un águila inspirada en su apodo.' ],
+        trivia: [ { q: "¿Apodo de la selección?", options: ["Leones", "Faraones", "Águilas de Cartago"], correct: 2 }, { q: "¿En qué año ganaron su Copa Africana?", options: ["2004", "1998", "2010"], correct: 0 }, { q: "¿Color principal de su uniforme?", options: ["Verde", "Blanco y Rojo", "Amarillo"], correct: 1 }, { q: "¿A qué continente pertenecen?", options: ["Asia", "África", "Europa"], correct: 1 }, { q: "¿Último mundial jugado?", options: ["2014", "2018", "2022"], correct: 2 } ],
+        videos: [
+            { title: "Victoria histórica '78", src: "" },
+            { title: "Águilas de Cartago", src: "" },
+            { title: "Gol Mundial 2022", src: "" },
+            { title: "Afición tunecina", src: "" }
+        ]
+    },
+    { 
+        id: 'sudafrica', index: 8, name: 'SUDÁFRICA', color: '#007749', 
+        stats: { titulos: '1 Copa Africana', copas: '3' }, 
+        facts: [ 'Única nación africana en organizar una Copa del Mundo (2010).', 'El primer gol del Mundial 2010 lo anotó Siphiwe Tshabalala.', 'Ganaron la Copa Africana en 1996 siendo anfitriones.' ],
+        trivia: [ { q: "¿Apodo de la selección?", options: ["Bafana Bafana", "Súper Águilas", "Estrellas Negras"], correct: 0 }, { q: "¿Año en que organizaron el Mundial?", options: ["2006", "2010", "2014"], correct: 1 }, { q: "¿Autor del primer gol en 2010?", options: ["Pienaar", "McCarthy", "Tshabalala"], correct: 2 }, { q: "¿Mascota de su Mundial?", options: ["Fuleco", "Zakumi", "Pique"], correct: 1 }, { q: "¿Instrumento famoso de los fans?", options: ["Tambor", "Vuvuzela", "Maraca"], correct: 1 } ],
+        videos: [
+            { title: "Golazo de Tshabalala", src: "" },
+            { title: "Sonido Vuvuzelas", src: "" },
+            { title: "Bafana Bafana", src: "" },
+            { title: "Inauguración 2010", src: "" }
+        ]
+    },
+    { 
+        id: 'uzbekistan', index: 9, name: 'UZBEKISTÁN', color: '#0099B5', 
+        stats: { titulos: '1 Juegos Asiáticos', copas: '0' }, 
+        facts: [ 'Ganaron la medalla de oro en los Juegos Asiáticos de 1994.', 'Son una de las potencias emergentes del fútbol juvenil centroasiático.', 'Pertenecen a la confederación asiática (AFC).' ],
+        trivia: [ { q: "¿Apodo del equipo?", options: ["Lobos Blancos", "Dragones", "Tigres"], correct: 0 }, { q: "¿Han jugado un Mundial mayor?", options: ["Sí", "No", "Solo una vez"], correct: 1 }, { q: "¿En qué confederación juegan?", options: ["UEFA", "CAF", "AFC"], correct: 2 }, { q: "¿Color de su uniforme local?", options: ["Azul y blanco", "Rojo puro", "Verde y amarillo"], correct: 0 }, { q: "¿Año en que ganaron Oro Asiático?", options: ["1994", "2002", "2010"], correct: 0 } ],
+        videos: [
+            { title: "Lobos Blancos", src: "" },
+            { title: "Juegos Asiáticos '94", src: "" },
+            { title: "Fútbol Centroasiático", src: "" },
+            { title: "Jóvenes promesas", src: "" }
+        ]
+    },
+    { 
+        id: 'polonia', index: 10, name: 'POLONIA', color: '#DC143C', 
+        stats: { titulos: '1 Oro Olímpico', copas: '9' }, 
+        facts: [ 'Consiguieron el tercer lugar en los Mundiales de 1974 y 1982.', 'Robert Lewandowski es su máximo goleador y leyenda histórica.', 'Ganaron el oro olímpico en los juegos de Múnich 1972.' ],
+        trivia: [ { q: "¿Máximo goleador histórico?", options: ["Milik", "Boniek", "Lewandowski"], correct: 2 }, { q: "¿Mejor puesto en un Mundial?", options: ["Subcampeón", "Tercer lugar", "Cuartos"], correct: 1 }, { q: "¿Apodo de la selección?", options: ["Las Águilas", "Los Osos", "Los Leones"], correct: 0 }, { q: "¿Color principal de su uniforme?", options: ["Azul", "Blanco y Rojo", "Verde"], correct: 1 }, { q: "¿En qué año ganaron el Oro Olímpico?", options: ["1972", "1980", "1996"], correct: 0 } ],
+        videos: [
+            { title: "Goles de Lewandowski", src: "" },
+            { title: "Mundial 1974", src: "" },
+            { title: "Oro Olímpico '72", src: "" },
+            { title: "Afición Polaca", src: "" }
+        ]
+    },
+    { 
+        id: 'jamaica', index: 11, name: 'JAMAICA', color: '#009B3A', 
+        stats: { titulos: '6 Copas del Caribe', copas: '1' }, 
+        facts: [ 'Clasificaron a su único Mundial en Francia 1998.', 'Han sido subcampeones de la Copa Oro de la Concacaf en dos ocasiones.', 'Tienen una fuerte rivalidad deportiva con Estados Unidos y México.' ],
+        trivia: [ { q: "¿Apodo de la selección?", options: ["Reggae Boyz", "Calypso", "Caribeños"], correct: 0 }, { q: "¿Único Mundial que han jugado?", options: ["1994", "1998", "2002"], correct: 1 }, { q: "¿A qué confederación pertenecen?", options: ["CONMEBOL", "UEFA", "CONCACAF"], correct: 2 }, { q: "¿Colores de su camiseta?", options: ["Amarillo, Verde y Negro", "Rojo y Blanco", "Azul y Amarillo"], correct: 0 }, { q: "¿Mejor puesto en Copa Oro?", options: ["Tercero", "Subcampeón", "Campeón"], correct: 1 } ],
+        videos: [
+            { title: "Reggae Boyz en Francia '98", src: "" },
+            { title: "Copa Oro", src: "" },
+            { title: "Goles históricos", src: "" },
+            { title: "Ambiente Jamaiquino", src: "" }
+        ]
     }
 ];
 
