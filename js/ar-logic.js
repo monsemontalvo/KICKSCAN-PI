@@ -31,6 +31,18 @@ const modelosPorPais = [
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     },
+        {
+        id: 'irlanda',
+        acciones: {
+            idle: 'assets/models/IDLE IRL.glb',
+            bailar: 'assets/models/DANCE IRL.glb',
+            patear: 'assets/models/KICK IRL.glb',
+            correr: 'assets/models/RUN IRL.glb'
+        },
+        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416625/Irlanda-pub_wv2bn4.mp3',
+        scale: [0.5, 0.5, 0.5],
+        position: [0, 0, 0]
+    },
     {
         id: 'espana',
         acciones: {
@@ -40,18 +52,6 @@ const modelosPorPais = [
             correr: 'assets/models/RUN ESP.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416617/Espana-Macarena_tqpzbm.mp3',
-        scale: [0.5, 0.5, 0.5],
-        position: [0, 0, 0]
-    },
-    {
-        id: 'irlanda',
-        acciones: {
-            idle: 'assets/models/IDLE IRL.glb',
-            bailar: 'assets/models/DANCE IRL.glb',
-            patear: 'assets/models/KICK IRL.glb',
-            correr: 'assets/models/RUN IRL.glb'
-        },
-        song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416625/Irlanda-pub_wv2bn4.mp3',
         scale: [0.5, 0.5, 0.5],
         position: [0, 0, 0]
     },
