@@ -58,10 +58,10 @@ const modelosPorPais = [
     {
         id: 'corea',
         acciones: {
-            idle: 'assets/models/IDLE COREA.glb',
-            bailar: 'assets/models/DANCE COREA.glb',
-            patear: 'assets/models/KICK COREA.glb',
-            correr: 'assets/models/RUN COREA.glb'
+            idle: 'assets/models/IDLE COR.glb',
+            bailar: 'assets/models/DANCE COR.glb',
+            patear: 'assets/models/KICK COR.glb',
+            correr: 'assets/models/RUN COR.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416620/Corea-Gangnamstyle_ucvonw.mp3',
         scale: [0.5, 0.5, 0.5],
