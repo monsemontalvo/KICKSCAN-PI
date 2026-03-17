@@ -492,11 +492,17 @@ window.verHighlights = () => {
         const item = document.createElement('div');
         item.className = 'bg-black/40 border border-white/10 rounded-xl overflow-hidden active:scale-95 transition-transform cursor-pointer group';
         item.onclick = () => window.reproducirVideoDesdeGaleria(index);
+        
+        // Magia de Cloudinary: Cambiamos .mp4 a .jpg para la miniatura
+        const thumbnailSrc = vid.src.replace('.mp4', '.jpg');
+
         item.innerHTML = `
-            <div class="h-32 bg-black/60 relative flex items-center justify-center group-hover:bg-white/5 transition-colors">
-                <span class="text-4xl opacity-80 group-hover:scale-110 transition-transform">▶️</span>
+            <div class="h-32 bg-black relative flex items-center justify-center overflow-hidden group-hover:bg-white/5 transition-colors">
+                <img src="${thumbnailSrc}" alt="${vid.title}" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-30 transition-opacity">
+                
+                <span class="relative z-10 text-4xl opacity-80 group-hover:scale-110 transition-transform drop-shadow-lg">▶️</span>
             </div>
-            <div class="p-3">
+            <div class="p-3 relative z-10 bg-black/40 backdrop-blur-sm">
                 <p class="font-sans text-sm font-bold text-white truncate">${vid.title}</p>
                 <p class="font-sans text-xs text-green-400 uppercase tracking-wider mt-1">Ver video</p>
             </div>
