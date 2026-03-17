@@ -22,10 +22,10 @@ const modelosPorPais = [
     {
         id: 'colombia',
         acciones: {
-            idle: 'assets/models/low_poly_soccer_ball_or_football.glb',
-            bailar: 'assets/models/low_poly_soccer_ball_or_football.glb',
-            patear: 'assets/models/low_poly_soccer_ball_or_football.glb',
-            correr: 'assets/models/low_poly_soccer_ball_or_football.glb'
+            idle: 'assets/models/IDLE COL.glb',
+            bailar: 'assets/models/DANCE COL.glb',
+            patear: 'assets/models/KICK COL.glb',
+            correr: 'assets/models/RUN COL.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416622/Colombia-Caminosdelavida_ejz6m3.mp3',
         scale: [0.5, 0.5, 0.5],
@@ -34,10 +34,10 @@ const modelosPorPais = [
     {
         id: 'irlanda',
         acciones: {
-            idle: 'assets/models/irlanda_hat.glb',
-            bailar: 'assets/models/irlanda_hat.glb',
-            patear: 'assets/models/irlanda_hat.glb',
-            correr: 'assets/models/irlanda_hat.glb'
+            idle: 'assets/models/IDLE IRL.glb',
+            bailar: 'assets/models/DANCE IRL.glb',
+            patear: 'assets/models/KICK IRL.glb',
+            correr: 'assets/models/RUN IRL.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416625/Irlanda-pub_wv2bn4.mp3',
         scale: [0.5, 0.5, 0.5],
@@ -46,10 +46,10 @@ const modelosPorPais = [
     {
         id: 'espana',
         acciones: {
-            idle: 'assets/models/espana_bull.glb',
-            bailar: 'assets/models/espana_bull.glb',
-            patear: 'assets/models/espana_bull.glb',
-            correr: 'assets/models/espana_bull.glb'
+            idle: 'assets/models/IDLE ESP.glb',
+            bailar: 'assets/models/DANCE ESP.glb',
+            patear: 'assets/models/KICK ESP.glb',
+            correr: 'assets/models/RUN ESP.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416617/Espana-Macarena_tqpzbm.mp3',
         scale: [0.5, 0.5, 0.5],
@@ -58,10 +58,10 @@ const modelosPorPais = [
     {
         id: 'corea',
         acciones: {
-            idle: 'assets/models/corea_tiger.glb',
-            bailar: 'assets/models/corea_tiger.glb',
-            patear: 'assets/models/corea_tiger.glb',
-            correr: 'assets/models/corea_tiger.glb'
+            idle: 'assets/models/IDLE COREA.glb',
+            bailar: 'assets/models/DANCE COREA.glb',
+            patear: 'assets/models/KICK COREA.glb',
+            correr: 'assets/models/RUN COREA.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1772416620/Corea-Gangnamstyle_ucvonw.mp3',
         scale: [0.5, 0.5, 0.5],
@@ -82,10 +82,10 @@ const modelosPorPais = [
     {
         id: 'uruguay',
         acciones: {
-            idle: 'assets/models/URU_IDLE.glb',
-            bailar: 'assets/models/URU_BAILE.glb',
-            patear: 'assets/models/URU_KICK.glb',
-            correr: 'assets/models/URU_RUN.glb'
+            idle: 'assets/models/IDLE URU.glb',
+            bailar: 'assets/models/DANCE URU.glb',
+            patear: 'assets/models/KICK URU.glb',
+            correr: 'assets/models/RUN URU.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470414/Uruguay-Cuarteto_iz2rrr.mp3', 
         scale: [0.5, 0.5, 0.5],
@@ -94,10 +94,10 @@ const modelosPorPais = [
     {
         id: 'tunez',
         acciones: {
-            idle: 'assets/models/TUN_IDLE.glb',
-            bailar: 'assets/models/TUN_BAILE.glb',
-            patear: 'assets/models/TUN_KICK.glb',
-            correr: 'assets/models/TUN_RUN.glb'
+            idle: 'assets/models/IDLE TUN.glb',
+            bailar: 'assets/models/DANCE TUN.glb',
+            patear: 'assets/models/KICK TUN.glb',
+            correr: 'assets/models/RUN TUN.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470424/Tunez-idk_h7lbkk.mp3',
         scale: [0.5, 0.5, 0.5],
@@ -106,10 +106,10 @@ const modelosPorPais = [
     {
         id: 'sudafrica',
         acciones: {
-            idle: 'assets/models/SUD_IDLE.glb',
-            bailar: 'assets/models/SUD_BAILE.glb',
-            patear: 'assets/models/SUD_KICK.glb',
-            correr: 'assets/models/SUD_RUN.glb'
+            idle: 'assets/models/IDLE SUD.glb',
+            bailar: 'assets/models/DANCE SUD.glb',
+            patear: 'assets/models/KICK SUD.glb',
+            correr: 'assets/models/RUN SUD.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470422/Sudafrica-Wakawaka_oh6txy.mp3',
         scale: [0.5, 0.5, 0.5],
@@ -118,10 +118,10 @@ const modelosPorPais = [
     {
         id: 'uzbekistan',
         acciones: {
-            idle: 'assets/models/UZB_IDLE.glb',
-            bailar: 'assets/models/UZB_BAILE.glb',
-            patear: 'assets/models/UZB_KICK.glb',
-            correr: 'assets/models/UZB_RUN.glb'
+            idle: 'assets/models/IDLE UZB.glb',
+            bailar: 'assets/models/DANCE UZB.glb',
+            patear: 'assets/models/KICK UZB.glb',
+            correr: 'assets/models/RUN UZB.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470425/Ubezkistan-idk_q2a3cs.mp3',
         scale: [0.5, 0.5, 0.5],
@@ -130,10 +130,10 @@ const modelosPorPais = [
     {
         id: 'polonia',
         acciones: {
-            idle: 'assets/models/POL_IDLE.glb',
-            bailar: 'assets/models/POL_BAILE.glb',
-            patear: 'assets/models/POL_KICK.glb',
-            correr: 'assets/models/POL_RUN.glb'
+            idle: 'assets/models/IDLE POL.glb',
+            bailar: 'assets/models/DANCE POL.glb',
+            patear: 'assets/models/KICK POL.glb',
+            correr: 'assets/models/RUN POL.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470425/Polonia-idk_ephn72.mp3',
         scale: [0.5, 0.5, 0.5],
@@ -142,10 +142,10 @@ const modelosPorPais = [
     {
         id: 'jamaica',
         acciones: {
-            idle: 'assets/models/JAM_IDLE.glb',
-            bailar: 'assets/models/JAM_BAILE.glb',
-            patear: 'assets/models/JAM_KICK.glb',
-            correr: 'assets/models/JAM_RUN.glb'
+            idle: 'assets/models/IDLE JAM.glb',
+            bailar: 'assets/models/DANCE JAM.glb',
+            patear: 'assets/models/KICK JAM.glb',
+            correr: 'assets/models/RUN JAM.glb'
         },
         song: 'https://res.cloudinary.com/duonndfih/video/upload/v1773470417/Jamaica-Bob_Marley_cuwzkf.mp3',
         scale: [0.5, 0.5, 0.5],
@@ -380,7 +380,7 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
             model.position.set(...infoPais.position);
 
             model.rotation.x = Math.PI / 2;
-            
+
             model.visible = false;
 
             model.userData.esModelo = true;
