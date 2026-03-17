@@ -378,6 +378,9 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
             const model = gltf.scene;
             model.scale.set(...infoPais.scale);
             model.position.set(...infoPais.position);
+
+            model.rotation.x = Math.PI / 2;
+            
             model.visible = false;
 
             model.userData.esModelo = true;
