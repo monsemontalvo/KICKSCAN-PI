@@ -169,7 +169,6 @@ let isMuted = false;
 let preMuteVolume = 0.5;
 let audioListener = null;
 
-// ¡NUEVO!: Rastreador para saber qué países ya descargamos
 let paisesCargados = {}; 
 
 // --- AUDIO UI ---
@@ -204,18 +203,15 @@ function actualizarIconoMute() {
     const btn = document.getElementById('btn-mute');
     if (btn) {
         if (isMuted || globalVolume === 0) {
-            // Cuando está silenciado (Mute)
             btn.innerHTML = '<img src="assets/icons/mute.png" alt="Mute" class="w-5 h-5 object-contain">';
             btn.classList.add('bg-red-600/40');
         } else {
-            // Cuando tiene sonido
             btn.innerHTML = '<img src="assets/icons/play.png" alt="Volumen" class="w-5 h-5 object-contain">';
             btn.classList.remove('bg-red-600/40');
         }
     }
 }
 
-// Funciones para detener/renudar audio desde fuera
 window.detenerAudioAR = () => {
     if (currentSound && currentSound.isPlaying) {
         currentSound.pause();
@@ -304,10 +300,52 @@ function detenerConfetiInmediato() {
     if (confettiTimeout) clearTimeout(confettiTimeout);
 }
 
-// --- FUNCIÓN LIMPIEZA / RESET ---
+// --- FUNCIONES DE LIMPIEZA DE MEMORIA (DISPOSE) ---
+function liberarMemoriaModelo(modelo) {
+    if (!modelo) return;
+    modelo.traverse((child) => {
+        if (child.isMesh) {
+            // Liberar geometría
+            if (child.geometry) child.geometry.dispose();
+            
+            // Liberar materiales y texturas
+            if (child.material) {
+                if (Array.isArray(child.material)) {
+                    child.material.forEach(mat => {
+                        if (mat.map) mat.map.dispose();
+                        mat.dispose();
+                    });
+                } else {
+                    if (child.material.map) child.material.map.dispose();
+                    child.material.dispose();
+                }
+            }
+        }
+    });
+}
+
 function resetearModeloAnterior() {
-    if (currentVisibleModel) {
-        currentVisibleModel.visible = false;
+    if (currentAnchorIndex !== -1 && mindarThree) {
+        const anchorAnterior = mindarThree.anchors[currentAnchorIndex];
+        
+        if (anchorAnterior && anchorAnterior.group) {
+            // Buscar todos los modelos cargados en este ancla
+            const modelosDelPais = anchorAnterior.group.children.filter(child => child.userData.esModelo);
+            
+            modelosDelPais.forEach(modelo => {
+                // 1. Limpiamos memoria VRAM
+                liberarMemoriaModelo(modelo);
+                
+                // 2. Lo quitamos de la escena de Three.js
+                anchorAnterior.group.remove(modelo);
+                
+                // 3. Lo quitamos del arreglo de animaciones
+                mixers = mixers.filter(m => m.getRoot() !== modelo);
+            });
+        }
+        
+        // Marcamos como "no descargado" para que lo vuelva a pedir si lo escanean de nuevo
+        paisesCargados[currentAnchorIndex] = false;
     }
 
     if (currentSound && currentSound.isPlaying) {
@@ -327,18 +365,15 @@ window.cambiarAnimacionAR = (tipoAccion) => {
     const anchor = mindarThree.anchors[currentAnchorIndex];
     if (!anchor) return;
 
-    // Ocultar modelo actual
-    if (currentVisibleModel) {
-        currentVisibleModel.visible = false;
-        currentVisibleModel = null; 
-    }
-
-    // Buscar el nuevo modelo deseado dentro del grupo del logo
     const nuevoModelo = anchor.group.children.find(
         child => child.userData.esModelo && child.userData.accion === tipoAccion
     );
 
     if (nuevoModelo) {
+        if (currentVisibleModel) {
+            currentVisibleModel.visible = false;
+        }
+
         nuevoModelo.visible = true; 
 
         const mixer = mixers.find(m => m.getRoot() === nuevoModelo);
@@ -359,11 +394,9 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
     const loader = new GLTFLoader();
     const audioLoader = new THREE.AudioLoader();
 
-    // 1. Cargar Audio bajo demanda
     if (infoPais.song && !infoPais.audioBuffer) {
         audioLoader.load(infoPais.song, (buffer) => { 
             infoPais.audioBuffer = buffer; 
-            // Si al terminar de descargar la canción, el usuario sigue viendo este mismo país, dale play
             if (currentAnchorIndex === index) {
                 currentSound = new THREE.Audio(audioListener);
                 currentSound.setBuffer(buffer);
@@ -374,7 +407,6 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
         });
     }
 
-    // 2. Cargar Modelos 3D bajo demanda
     for (const [accion, rutaArchivo] of Object.entries(infoPais.acciones)) {
         loader.load(rutaArchivo, (gltf) => {
             const model = gltf.scene;
@@ -382,7 +414,6 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
             model.position.set(...infoPais.position);
 
             model.rotation.x = Math.PI / 2;
-
             model.visible = false;
 
             model.userData.esModelo = true;
@@ -398,7 +429,6 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
             }
             anchor.group.add(model);
 
-            // Si al terminar de descargar, el usuario sigue viendo este logo y estaba esperando esta acción
             if (currentAnchorIndex === index && accion === globalCurrentAction) {
                 if (currentVisibleModel) {
                     currentVisibleModel.visible = false;
@@ -406,7 +436,6 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
                 model.visible = true;
                 currentVisibleModel = model;
 
-                // Reproducimos su animación inmediatamente
                 const mixer = mixers.find(m => m.getRoot() === model);
                 if (mixer && model.userData.clip) {
                     mixer.stopAllAction();
@@ -417,7 +446,6 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
         }, undefined, (e) => console.warn(`Error cargando ${accion} de país ${index}`));
     }
 }
-
 
 // --- INICIO DE AR ---
 window.iniciarAR = async () => {
@@ -469,30 +497,20 @@ window.iniciarAR = async () => {
             const anchor = mindarThree.addAnchor(i);
             const infoPais = modelosPorPais[i];
 
-            // --- DETECCIÓN DEL PAÍS (Target Encontrado) ---
             anchor.onTargetFound = () => {
                 console.log(`Detectado: ${infoPais.id}`);
 
                 if (currentAnchorIndex !== i) {
-                    // Si es un país nuevo, limpiamos lo anterior
                     resetearModeloAnterior();
                     currentAnchorIndex = i;
                     globalCurrentAction = 'idle'; 
 
-                    // --- LA MAGIA CONTRA EL CRASHEO DEL CELULAR ---
                     if (!paisesCargados[i]) {
-                        console.log(`Descargando modelos de ${infoPais.id} por primera vez...`);
+                        console.log(`Descargando modelos de ${infoPais.id}...`);
                         cargarRecursosDelPais(i, anchor, infoPais);
-                        paisesCargados[i] = true; // Lo marcamos como descargado
-                    } else {
-                        // Si ya lo habíamos escaneado antes, la memoria RAM ya lo tiene, solo lo mostramos
-                        window.cambiarAnimacionAR('idle');
-                        if (currentSound && !currentSound.isPlaying) {
-                            currentSound.play();
-                        }
-                    }
+                        paisesCargados[i] = true;
+                    } 
                 } else {
-                    // Si es el mismo país que ya estábamos viendo, solo reanudamos el audio
                     if (currentSound && !currentSound.isPlaying) {
                         currentSound.play();
                     }
@@ -500,7 +518,6 @@ window.iniciarAR = async () => {
 
                 lanzarConfetti(8000); 
 
-                // Mostrar Controles UI en pantalla
                 const btnConfetti = document.getElementById('btn-confetti');
                 const audioControls = document.getElementById('audio-controls');
                 const animControls = document.getElementById('anim-controls');
@@ -509,31 +526,25 @@ window.iniciarAR = async () => {
                 if (audioControls) audioControls.classList.remove('hidden');
                 if (animControls) animControls.classList.remove('hidden');
 
-                // Mostrar la pestaña inferior de info
                 if (window.mostrarInfoPais) window.mostrarInfoPais(i);
             };
 
-            // --- PÉRDIDA DEL PAÍS (Target Perdido) ---
             anchor.onTargetLost = () => {
                 if (currentAnchorIndex === i) {
                     console.log(`Perdido: ${infoPais.id}`);
                     
-                    // Ocultar UI de botones
                     document.getElementById('btn-confetti').classList.add('hidden');
                     document.getElementById('audio-controls').classList.add('hidden');
                     document.getElementById('anim-controls').classList.add('hidden');
                     
-                    // Ocultar información (Bottom sheet)
                     if (window.ocultarBottomSheetCompleto) {
                         window.ocultarBottomSheetCompleto();
                     }
 
-                    // Pausar la música
                     if (currentSound && currentSound.isPlaying) {
                         currentSound.pause();
                     }
 
-                    // Detener confeti si está cayendo
                     if (typeof detenerConfetiInmediato === 'function') {
                         detenerConfetiInmediato();
                     }
@@ -557,11 +568,13 @@ window.iniciarAR = async () => {
 
 window.detenerAR = () => {
     if (mindarThree) {
+        // Limpiamos la RAM antes de apagar todo
+        resetearModeloAnterior();
+
         mindarThree.stop();
         mindarThree.renderer.setAnimationLoop(null);
         isARRunning = false;
 
-        resetearModeloAnterior();
         detenerConfetiInmediato();
 
         document.getElementById('btn-confetti').classList.add('hidden');
@@ -569,8 +582,10 @@ window.detenerAR = () => {
         document.getElementById('anim-controls').classList.add('hidden');
 
         mixers = [];
+        paisesCargados = {};
+        
         const container = document.querySelector("#ar-container");
         if (container) container.innerHTML = '';
-        console.log("AR Detenido.");
+        console.log("AR Detenido. Memoria liberada.");
     }
 };
