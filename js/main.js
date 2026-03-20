@@ -86,8 +86,8 @@ function createCardTexture(text, colorHex) {
     canvas.width = 256; canvas.height = 350; 
     const ctx = canvas.getContext('2d');
     const gradient = ctx.createLinearGradient(0, 0, 0, 350);
-    gradient.addColorStop(0, colorHex); 
-    gradient.addColorStop(1, 'rgba(0,0,0,0.9)');
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.25)'); 
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0.02)');
     ctx.fillStyle = gradient; 
     ctx.beginPath();
     ctx.moveTo(20, 0); ctx.lineTo(236, 0); ctx.quadraticCurveTo(256, 0, 256, 20);

@@ -32,13 +32,33 @@
     <link rel="stylesheet" href="css/styles.css">
 
     <style>
-        .filter-blur { filter: blur(4px); }
-        .filter-pixel { filter: url(#svg-pixel); }
-        .filter-thermal { filter: url(#svg-thermal) contrast(1.2); }
-        .filter-hue { filter: hue-rotate(90deg) contrast(1.2); }
-        .filter-pastel { filter: brightness(1.1) contrast(0.8) saturate(1.4) sepia(0.2); }
-        .filter-saturate { filter: saturate(3); }
-        .filter-none { filter: none; }
+        .filter-blur {
+            filter: blur(4px);
+        }
+
+        .filter-pixel {
+            filter: url(#svg-pixel);
+        }
+
+        .filter-thermal {
+            filter: url(#svg-thermal) contrast(1.2);
+        }
+
+        .filter-hue {
+            filter: hue-rotate(90deg) contrast(1.2);
+        }
+
+        .filter-pastel {
+            filter: brightness(1.1) contrast(0.8) saturate(1.4) sepia(0.2);
+        }
+
+        .filter-saturate {
+            filter: saturate(3);
+        }
+
+        .filter-none {
+            filter: none;
+        }
     </style>
 
     <script type="importmap">
@@ -55,7 +75,7 @@
     <script type="module" src="js/ar-logic.js"></script>
 </head>
 
-<body class="bg-black text-white overflow-hidden selection:bg-green-500">
+<body class="bg-black text-white overflow-hidden selection:bg-green-500 h-dvh">
 
     <svg style="display: none;">
         <defs>
@@ -73,18 +93,22 @@
         class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black transition-opacity duration-700">
         <div class="relative mb-8">
             <div class="absolute inset-0 bg-green-500/20 blur-3xl rounded-full animate-pulse"></div>
-            <img src="assets/img/soccer.png" alt="Logo" class="logo-animado relative z-10 w-32 h-32 object-contain drop-shadow-[0_0_15px_rgba(34,197,94,0.5)]">
+            <img src="assets/img/soccer.png" alt="Logo"
+                class="logo-animado relative z-10 w-32 h-32 object-contain drop-shadow-[0_0_15px_rgba(34,197,94,0.5)]">
         </div>
-        <h1 class="font-display text-6xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600 mb-2 animate-bounce">
+        <h1
+            class="font-display text-6xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600 mb-2 animate-bounce">
             KICKSCAN</h1>
-        <p data-i18n="splash_subtitle" class="font-sans text-gray-400 tracking-[0.3em] text-sm uppercase">Experiencia Mundial 2026</p>
+        <p data-i18n="splash_subtitle" class="font-sans text-gray-400 tracking-[0.3em] text-sm uppercase">Experiencia
+            Mundial 2026</p>
     </div>
 
-    <section id="screen-home" class="hidden relative w-full h-screen overflow-hidden font-display"
-        style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('assets/img/cancha.jpg'); background-size: cover; background-position: center;">
-        
+    <section id="screen-home" class="hidden relative w-full h-dvh overflow-hidden font-display"
+        style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('assets/img/canchaB.jpg'); background-size: cover; background-position: center;">
+
         <div class="absolute top-6 right-6 z-20 pointer-events-auto">
-            <select id="lang-selector" onchange="window.cambiarIdioma(this.value)" class="bg-black/50 text-white font-sans text-sm border border-white/20 rounded-xl px-3 py-2 outline-none backdrop-blur-md cursor-pointer hover:bg-white/10 transition-colors">
+            <select id="lang-selector" onchange="window.cambiarIdioma(this.value)"
+                class="bg-black/50 text-white font-sans text-sm border border-white/20 rounded-xl px-3 py-2 outline-none backdrop-blur-md cursor-pointer hover:bg-white/10 transition-colors">
                 <option value="es">🇪🇸 Español</option>
                 <option value="en">🇺🇸 English</option>
             </select>
@@ -98,7 +122,7 @@
             </div>
             <div class="w-full flex flex-col items-center gap-4 pb-4 pointer-events-auto">
                 <button onclick="window.irAEscanear()" data-i18n="btn_start"
-                    class="group relative px-10 py-4 bg-white text-black font-display text-2xl tracking-widest hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                    class="group relative px-10 py-4 liquid-glass rounded-full text-white font-display text-2xl tracking-widest hover:bg-green-600/40 hover:border-green-400 transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-[0_0_30px_rgba(34,197,94,0.4)]">
                     INICIAR ESCANEO
                 </button>
                 <button onclick="window.abrirManual()" data-i18n="btn_manual"
@@ -110,34 +134,51 @@
     </section>
 
     <section id="screen-manual" class="hidden fixed inset-0 z-[80] bg-black flex flex-col overflow-y-auto">
-        <div class="p-6 flex items-center justify-between bg-black/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-10">
+        <div
+            class="p-6 flex items-center justify-between bg-black/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-10">
             <button onclick="window.cerrarManual()" data-i18n="back_home"
-                class="text-white font-display text-xl tracking-wide flex items-center gap-2 hover:text-green-400 transition-colors">← VOLVER AL INICIO</button>
-            <span data-i18n="manual_title" class="font-display text-2xl text-green-400 tracking-wider">MANUAL DE USUARIO</span>
+                class="text-white font-display text-xl tracking-wide flex items-center gap-2 hover:text-green-400 transition-colors">←
+                VOLVER AL INICIO</button>
+            <span data-i18n="manual_title" class="font-display text-2xl text-green-400 tracking-wider">MANUAL DE
+                USUARIO</span>
         </div>
 
         <div class="flex-1 p-6 md:p-12 space-y-6 max-w-4xl mx-auto w-full pb-20">
-            <p data-i18n="manual_desc" class="text-center text-gray-400 font-sans mb-8">Sigue estos pasos para disfrutar al máximo de la experiencia KICKSCAN - Mundial 2026.</p>
+            <p data-i18n="manual_desc" class="text-center text-gray-400 font-sans mb-8">Sigue estos pasos para disfrutar
+                al máximo de la experiencia KICKSCAN - Mundial 2026.</p>
 
             <div class="liquid-glass p-6 rounded-3xl">
-                <h2 data-i18n="step1_title" class="font-display text-3xl text-white mb-2"><span class="text-green-500">1.</span> INICIAR ESCANEO</h2>
-                <p data-i18n="step1_desc" class="font-sans text-gray-300 text-sm leading-relaxed">Presiona "INICIAR ESCANEO" en la pantalla principal y permite el acceso a la cámara de tu dispositivo web o móvil.</p>
+                <h2 data-i18n="step1_title" class="font-display text-3xl text-white mb-2"><span
+                        class="text-green-500">1.</span> INICIAR ESCANEO</h2>
+                <p data-i18n="step1_desc" class="font-sans text-gray-300 text-sm leading-relaxed">Presiona "INICIAR
+                    ESCANEO" en la pantalla principal y permite el acceso a la cámara de tu dispositivo web o móvil.</p>
             </div>
             <div class="liquid-glass p-6 rounded-3xl">
-                <h2 data-i18n="step2_title" class="font-display text-3xl text-white mb-2"><span class="text-green-500">2.</span> ESCANEAR LOGOS</h2>
-                <p data-i18n="step2_desc" class="font-sans text-gray-300 text-sm leading-relaxed">Encuentra los logos de los países participantes y apunta tu cámara hacia ellos para desplegar la experiencia en Realidad Aumentada.</p>
+                <h2 data-i18n="step2_title" class="font-display text-3xl text-white mb-2"><span
+                        class="text-green-500">2.</span> ESCANEAR LOGOS</h2>
+                <p data-i18n="step2_desc" class="font-sans text-gray-300 text-sm leading-relaxed">Encuentra los logos de
+                    los países participantes y apunta tu cámara hacia ellos para desplegar la experiencia en Realidad
+                    Aumentada.</p>
             </div>
             <div class="liquid-glass p-6 rounded-3xl">
-                <h2 data-i18n="step3_title" class="font-display text-3xl text-white mb-2"><span class="text-green-500">3.</span> INTERACTUAR CON AR</h2>
-                <p data-i18n="step3_desc" class="font-sans text-gray-300 text-sm leading-relaxed">Utiliza los botones flotantes a la derecha de la pantalla para hacer que el personaje 3D corra, patee o baile.</p>
+                <h2 data-i18n="step3_title" class="font-display text-3xl text-white mb-2"><span
+                        class="text-green-500">3.</span> INTERACTUAR CON AR</h2>
+                <p data-i18n="step3_desc" class="font-sans text-gray-300 text-sm leading-relaxed">Utiliza los botones
+                    flotantes a la derecha de la pantalla para hacer que el personaje 3D corra, patee o baile.</p>
             </div>
             <div class="liquid-glass p-6 rounded-3xl">
-                <h2 data-i18n="step4_title" class="font-display text-3xl text-white mb-2"><span class="text-green-500">4.</span> EXPLORAR DATOS Y TRIVIA</h2>
-                <p data-i18n="step4_desc" class="font-sans text-gray-300 text-sm leading-relaxed">Toca o desliza la pestaña inferior hacia arriba para consultar las estadísticas del equipo, datos curiosos y la Trivia.</p>
+                <h2 data-i18n="step4_title" class="font-display text-3xl text-white mb-2"><span
+                        class="text-green-500">4.</span> EXPLORAR DATOS Y TRIVIA</h2>
+                <p data-i18n="step4_desc" class="font-sans text-gray-300 text-sm leading-relaxed">Toca o desliza la
+                    pestaña inferior hacia arriba para consultar las estadísticas del equipo, datos curiosos y la
+                    Trivia.</p>
             </div>
             <div class="liquid-glass p-6 rounded-3xl">
-                <h2 data-i18n="step5_title" class="font-display text-3xl text-white mb-2"><span class="text-green-500">5.</span> ACERVO HISTÓRICO</h2>
-                <p data-i18n="step5_desc" class="font-sans text-gray-300 text-sm leading-relaxed">En el menú inferior, presiona el ícono de video para entrar a la galería y ver los mejores momentos. Puedes aplicar filtros creativos.</p>
+                <h2 data-i18n="step5_title" class="font-display text-3xl text-white mb-2"><span
+                        class="text-green-500">5.</span> ACERVO HISTÓRICO</h2>
+                <p data-i18n="step5_desc" class="font-sans text-gray-300 text-sm leading-relaxed">En el menú inferior,
+                    presiona el ícono de video para entrar a la galería y ver los mejores momentos. Puedes aplicar
+                    filtros creativos.</p>
             </div>
         </div>
     </section>
@@ -149,36 +190,48 @@
             class="absolute top-6 left-6 z-20 w-10 h-10 bg-black/50 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/20 active:scale-90 transition-transform shadow-lg">✕</button>
 
         <div id="audio-controls" class="hidden absolute top-20 left-6 z-20 flex flex-col gap-3">
-            <button onclick="window.ajustarVolumen(0.1)" class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-green-600/50">
+            <button onclick="window.ajustarVolumen(0.1)"
+                class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-green-600/50">
                 <img src="assets/icons/plus.png" alt="Subir volumen" class="w-5 h-5 object-contain">
             </button>
-            <button id="btn-mute" onclick="window.alternarMute()" class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-white/20">
+            <button id="btn-mute" onclick="window.alternarMute()"
+                class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-white/20">
                 <img src="assets/icons/play.png" alt="Volumen" class="w-5 h-5 object-contain">
             </button>
-            <button onclick="window.ajustarVolumen(-0.1)" class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-red-600/50">
+            <button onclick="window.ajustarVolumen(-0.1)"
+                class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-red-600/50">
                 <img src="assets/icons/minus.png" alt="Bajar volumen" class="w-5 h-5 object-contain">
             </button>
         </div>
 
-        <div id="anim-controls" class="hidden absolute top-24 md:top-20 right-4 md:right-8 z-50 flex flex-col gap-3 origin-top-right scale-90 md:scale-100">
-            <button onclick="window.cambiarAnimacion('bailar')" class="anim-btn group relative w-16 h-16 bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center active:scale-90 transition-all shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:bg-green-600">
+        <div id="anim-controls"
+            class="hidden absolute top-24 md:top-20 right-4 md:right-8 z-50 flex flex-col gap-3 origin-top-right scale-90 md:scale-100">
+            <button onclick="window.cambiarAnimacion('bailar')"
+                class="anim-btn group relative w-16 h-16 bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center active:scale-90 transition-all shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:bg-green-600">
                 <img src="assets/icons/dance.png" alt="Bailar" class="w-8 h-8 mb-1 object-contain drop-shadow-md">
-                <span data-i18n="anim_dance" class="text-[0.6rem] font-bold uppercase tracking-wider text-white">Bailar</span>
+                <span data-i18n="anim_dance"
+                    class="text-[0.6rem] font-bold uppercase tracking-wider text-white">Bailar</span>
             </button>
-            <button onclick="window.cambiarAnimacion('patear')" class="anim-btn group relative w-16 h-16 bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center active:scale-90 transition-all shadow-lg hover:bg-green-600">
+            <button onclick="window.cambiarAnimacion('patear')"
+                class="anim-btn group relative w-16 h-16 bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center active:scale-90 transition-all shadow-lg hover:bg-green-600">
                 <img src="assets/icons/kick.png" alt="Patear" class="w-8 h-8 mb-1 object-contain drop-shadow-md">
-                <span data-i18n="anim_kick" class="text-[0.6rem] font-bold uppercase tracking-wider text-white">Patear</span>
+                <span data-i18n="anim_kick"
+                    class="text-[0.6rem] font-bold uppercase tracking-wider text-white">Patear</span>
             </button>
-            <button onclick="window.cambiarAnimacion('correr')" class="anim-btn group relative w-16 h-16 bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center active:scale-90 transition-all shadow-lg hover:bg-green-600">
+            <button onclick="window.cambiarAnimacion('correr')"
+                class="anim-btn group relative w-16 h-16 bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center active:scale-90 transition-all shadow-lg hover:bg-green-600">
                 <img src="assets/icons/run.png" alt="Correr" class="w-8 h-8 mb-1 object-contain drop-shadow-md">
-                <span data-i18n="anim_run" class="text-[0.6rem] font-bold uppercase tracking-wider text-white">Correr</span>
+                <span data-i18n="anim_run"
+                    class="text-[0.6rem] font-bold uppercase tracking-wider text-white">Correr</span>
             </button>
-            <button onclick="window.cambiarAnimacion('idle')" class="anim-btn w-12 h-12 self-center bg-white/10 rounded-full border border-white/10 flex items-center justify-center mt-2 hover:bg-white/20">
+            <button onclick="window.cambiarAnimacion('idle')"
+                class="anim-btn w-12 h-12 self-center bg-white/10 rounded-full border border-white/10 flex items-center justify-center mt-2 hover:bg-white/20">
                 <span class="text-xs">↺</span>
             </button>
         </div>
 
-        <button id="btn-confetti" onclick="window.lanzarConfettiManual()" class="hidden fixed top-6 right-6 z-[60] flex items-center gap-2 bg-yellow-400 text-black font-display text-lg tracking-wider py-2 px-6 rounded-full shadow-[0_0_20px_rgba(255,215,0,0.6)] hover:scale-105 transition-transform active:scale-95 border-2 border-white/50 animate-bounce">
+        <button id="btn-confetti" onclick="window.lanzarConfettiManual()"
+            class="hidden fixed top-6 right-6 z-[60] flex items-center gap-2 bg-yellow-400 text-black font-display text-lg tracking-wider py-2 px-6 rounded-full shadow-[0_0_20px_rgba(255,215,0,0.6)] hover:scale-105 transition-transform active:scale-95 border-2 border-white/50 animate-bounce">
             <img src="assets/icons/confetti.png" alt="Confeti" class="w-6 h-6 object-contain">
             <span data-i18n="btn_confetti">CONFETI</span>
         </button>
@@ -189,52 +242,68 @@
                 <div class="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-green-500 -mt-1 -mr-1"></div>
                 <div class="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-green-500 -mb-1 -ml-1"></div>
                 <div class="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-green-500 -mb-1 -mr-1"></div>
-                <p data-i18n="scan_guide" class="absolute -bottom-12 w-full text-center font-sans text-sm font-bold text-white/80">Apunta al logo del país</p>
+                <p data-i18n="scan_guide"
+                    class="absolute -bottom-12 w-full text-center font-sans text-sm font-bold text-white/80">Apunta al
+                    logo del país</p>
             </div>
         </div>
 
-        <div id="bottom-sheet" class="liquid-glass fixed bottom-0 left-0 w-full h-[60vh] rounded-t-[3rem] transform translate-y-full transition-transform duration-300 ease-out z-30 flex flex-col overflow-hidden">
+        <div id="bottom-sheet"
+            class="liquid-glass fixed bottom-0 left-0 w-full h-[60vh] rounded-t-[3rem] transform translate-y-full transition-transform duration-300 ease-out z-30 flex flex-col overflow-hidden">
             <div id="sheet-header" class="flex-shrink-0 border-b border-white/5">
-                <div id="drag-handle" class="w-full p-4 flex justify-center cursor-grab active:cursor-grabbing touch-none">
+                <div id="drag-handle"
+                    class="w-full p-4 flex justify-center cursor-grab active:cursor-grabbing touch-none">
                     <div class="w-12 h-1 bg-white/30 rounded-full"></div>
                 </div>
                 <div class="px-6 pt-2 pb-4 border-b border-white/5">
-                    <h2 id="country-name" class="font-display text-5xl text-white tracking-wide drop-shadow-lg">PAÍS</h2>
+                    <h2 id="country-name" class="font-display text-5xl text-white tracking-wide drop-shadow-lg">PAÍS
+                    </h2>
                 </div>
                 <div id="tab-navigation" class="flex justify-around items-center py-3 px-2 border-b border-white/5">
-                    <button onclick="window.switchTab(this, 'stats')" class="tab-btn active p-3 rounded-xl transition-all duration-300 bg-green-600 text-white border border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                    <button onclick="window.switchTab(this, 'stats')"
+                        class="tab-btn active p-3 rounded-xl transition-all duration-300 bg-green-600 text-white border border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.3)]">
                         <img src="assets/icons/chart.png" alt="Estadísticas" class="w-6 h-6 object-contain"></button>
-                    <button onclick="window.switchTab(this, 'facts')" class="tab-btn p-3 rounded-xl transition-all duration-300 bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10">
+                    <button onclick="window.switchTab(this, 'facts')"
+                        class="tab-btn p-3 rounded-xl transition-all duration-300 bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10">
                         <img src="assets/icons/data.png" alt="Datos Curiosos" class="w-6 h-6 object-contain"></button>
-                    <button onclick="window.switchTab(this, 'trivia')" class="tab-btn p-3 rounded-xl transition-all duration-300 bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10">
+                    <button onclick="window.switchTab(this, 'trivia')"
+                        class="tab-btn p-3 rounded-xl transition-all duration-300 bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10">
                         <img src="assets/icons/trivia.png" alt="Trivia" class="w-6 h-6 object-contain"></button>
-                    <button onclick="window.verHighlights()" class="p-3 rounded-xl transition-all duration-300 bg-white/5 text-gray-400 border border-white/10 hover:bg-green-900/50 hover:border-green-700">
+                    <button onclick="window.verHighlights()"
+                        class="p-3 rounded-xl transition-all duration-300 bg-white/5 text-gray-400 border border-white/10 hover:bg-green-900/50 hover:border-green-700">
                         <img src="assets/icons/video.png" alt="Highlights" class="w-6 h-6 object-contain"></button>
                 </div>
             </div>
 
             <div id="sheet-content-container" class="flex-1 overflow-y-auto px-6 py-6 pb-12">
                 <div id="content-stats" class="content-container space-y-6">
-                    <h3 data-i18n="tab_stats" class="font-display text-2xl text-green-400 mb-4 uppercase tracking-wider">Estadísticas</h3>
+                    <h3 data-i18n="tab_stats"
+                        class="font-display text-2xl text-green-400 mb-4 uppercase tracking-wider">Estadísticas</h3>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="liquid-glass-light p-5 rounded-2xl flex flex-col items-center">
                             <img src="assets/icons/trophy.png" alt="Trofeos" class="w-12 h-12 object-contain">
-                            <span id="stat-titulos" class="font-display text-2xl text-white text-center leading-none tracking-wide">0</span>
-                            <span data-i18n="stat_titles_label" class="text-xs text-gray-400 font-sans uppercase mt-1 tracking-widest">Títulos</span>
+                            <span id="stat-titulos"
+                                class="font-display text-2xl text-white text-center leading-none tracking-wide">0</span>
+                            <span data-i18n="stat_titles_label"
+                                class="text-xs text-gray-400 font-sans uppercase mt-1 tracking-widest">Títulos</span>
                         </div>
                         <div class="liquid-glass-light p-5 rounded-2xl flex flex-col items-center">
                             <img src="assets/icons/world.png" alt="Mundiales" class="w-12 h-12 object-contain">
-                            <span id="stat-participaciones" class="font-display text-2xl text-white text-center leading-none tracking-wide">0</span>
-                            <span data-i18n="stat_cups_label" class="text-xs text-gray-400 font-sans uppercase mt-1 tracking-widest">Mundiales</span>
+                            <span id="stat-participaciones"
+                                class="font-display text-2xl text-white text-center leading-none tracking-wide">0</span>
+                            <span data-i18n="stat_cups_label"
+                                class="text-xs text-gray-400 font-sans uppercase mt-1 tracking-widest">Mundiales</span>
                         </div>
                     </div>
                 </div>
                 <div id="content-facts" class="content-container hidden space-y-5">
-                    <h3 data-i18n="tab_facts" class="font-display text-2xl text-green-400 mb-4 uppercase tracking-wider">Datos Curiosos</h3>
+                    <h3 data-i18n="tab_facts"
+                        class="font-display text-2xl text-green-400 mb-4 uppercase tracking-wider">Datos Curiosos</h3>
                     <div id="facts-items-container" class="space-y-4"></div>
                 </div>
                 <div id="content-trivia" class="content-container hidden space-y-6">
-                    <h3 data-i18n="tab_trivia" class="font-display text-2xl text-green-400 mb-4 uppercase tracking-wider">Trivia</h3>
+                    <h3 data-i18n="tab_trivia"
+                        class="font-display text-2xl text-green-400 mb-4 uppercase tracking-wider">Trivia</h3>
                     <div id="trivia-items-container" class="space-y-6"></div>
                 </div>
             </div>
@@ -244,7 +313,8 @@
     <section id="screen-gallery" class="hidden fixed inset-0 z-[60] bg-black flex flex-col">
         <div class="p-4 flex items-center justify-between bg-black/80 backdrop-blur-md border-b border-white/10">
             <button onclick="window.cerrarGaleria()" data-i18n="back_gallery"
-                class="text-white font-display text-xl tracking-wide flex items-center gap-2 hover:text-green-400 transition-colors">← VOLVER</button>
+                class="text-white font-display text-xl tracking-wide flex items-center gap-2 hover:text-green-400 transition-colors">←
+                VOLVER</button>
             <span id="gallery-title" class="font-display text-2xl text-green-400 tracking-wider">ACERVO HISTÓRICO</span>
         </div>
         <div class="flex-1 overflow-y-auto p-6">
@@ -253,26 +323,52 @@
     </section>
 
     <section id="screen-highlights" class="hidden fixed inset-0 z-[70] bg-black flex flex-col">
-        <div class="p-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent absolute top-0 w-full z-10">
+        <div
+            class="p-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent absolute top-0 w-full z-10">
             <button onclick="window.volverAGaleria()" data-i18n="back_hl"
-                class="text-white font-display text-lg tracking-wide flex items-center gap-2 hover:text-green-400 transition-colors">← GALERÍA</button>
+                class="text-white font-display text-lg tracking-wide flex items-center gap-2 hover:text-green-400 transition-colors">←
+                GALERÍA</button>
             <span id="hl-title" class="font-display text-xl text-green-400">VIDEO</span>
         </div>
         <div class="relative flex-1 flex items-center justify-center bg-black">
             <video id="highlight-video" class="w-full max-h-screen object-contain" loop playsinline controls></video>
         </div>
-        <div class="absolute bottom-0 w-full bg-gradient-to-t from-transparent via-black/90 to-transparent p-6 pb-24 flex-shrink-0 z-10 pointer-events-none">
-            <p data-i18n="hl_edit" class="text-center font-sans text-xs text-gray-400 mb-4 uppercase tracking-widest pointer-events-auto">Edición de Video</p>
+        <div
+            class="absolute bottom-0 w-full bg-gradient-to-t from-transparent via-black/90 to-transparent p-6 pb-24 flex-shrink-0 z-10 pointer-events-none">
+            <p data-i18n="hl_edit"
+                class="text-center font-sans text-xs text-gray-400 mb-4 uppercase tracking-widest pointer-events-auto">
+                Edición de Video</p>
             <div class="flex justify-start gap-3 overflow-x-auto pb-4 pt-2 px-2 scrollbar-hide pointer-events-auto">
-                <button onclick="window.aplicarFiltroVideo('none')" class="filter-btn active flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-black text-xs font-bold font-sans flex-shrink-0 whitespace-nowrap"><span data-i18n="filter_normal">Normal</span></button>
-                <button onclick="window.aplicarFiltroVideo('blur')" class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img src="assets/icons/drop.png" class="w-4 h-4"><span data-i18n="filter_blur">Desenfoque</span></button>
-                <button onclick="window.aplicarFiltroVideo('pixel')" class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img src="assets/icons/pixel.png" class="w-4 h-4"><span data-i18n="filter_pixel">Pixelado</span></button>
-                <button onclick="window.aplicarFiltroVideo('thermal')" class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img src="assets/icons/temperature.png" class="w-4 h-4"><span data-i18n="filter_thermal">Térmica</span></button>
-                <button onclick="window.aplicarFiltroVideo('hue')" class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img src="assets/icons/color.png" class="w-4 h-4"><span data-i18n="filter_color">Color</span></button>
-                <button onclick="window.aplicarFiltroVideo('pastel')" class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img src="assets/icons/pastel.png" class="w-4 h-4"><span data-i18n="filter_pastel">Pastel</span></button>
-                <button onclick="window.aplicarFiltroVideo('saturate')" class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img src="assets/icons/fire.png" class="w-4 h-4"><span data-i18n="filter_intense">Intenso</span></button>
+                <button onclick="window.aplicarFiltroVideo('none')"
+                    class="filter-btn active flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-black text-xs font-bold font-sans flex-shrink-0 whitespace-nowrap"><span
+                        data-i18n="filter_normal">Normal</span></button>
+                <button onclick="window.aplicarFiltroVideo('blur')"
+                    class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
+                        src="assets/icons/drop.png" class="w-4 h-4"><span
+                        data-i18n="filter_blur">Desenfoque</span></button>
+                <button onclick="window.aplicarFiltroVideo('pixel')"
+                    class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
+                        src="assets/icons/pixel.png" class="w-4 h-4"><span
+                        data-i18n="filter_pixel">Pixelado</span></button>
+                <button onclick="window.aplicarFiltroVideo('thermal')"
+                    class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
+                        src="assets/icons/temperature.png" class="w-4 h-4"><span
+                        data-i18n="filter_thermal">Térmica</span></button>
+                <button onclick="window.aplicarFiltroVideo('hue')"
+                    class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
+                        src="assets/icons/color.png" class="w-4 h-4"><span
+                        data-i18n="filter_color">Color</span></button>
+                <button onclick="window.aplicarFiltroVideo('pastel')"
+                    class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
+                        src="assets/icons/pastel.png" class="w-4 h-4"><span
+                        data-i18n="filter_pastel">Pastel</span></button>
+                <button onclick="window.aplicarFiltroVideo('saturate')"
+                    class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
+                        src="assets/icons/fire.png" class="w-4 h-4"><span
+                        data-i18n="filter_intense">Intenso</span></button>
             </div>
         </div>
     </section>
 </body>
+
 </html>
