@@ -46,12 +46,18 @@ let homeRenderer, homeScene, homeCamera, homeBall, carouselGroup;
 let homeAnimationId = null; 
 let currentScore = 0; 
 
-// --- FUNCIÓN DE CAMBIO DE IDIOMA ---
+// --- [OPTIMIZACIÓN: Caché de Elementos DOM para Traducciones] ---
+let cachedI18nElements = null;
+
 window.cambiarIdioma = (lang) => {
     currentLang = lang;
     const ui = translations[currentLang].ui;
 
-    document.querySelectorAll('[data-i18n]').forEach(el => {
+    if (!cachedI18nElements) {
+        cachedI18nElements = document.querySelectorAll('[data-i18n]');
+    }
+
+    cachedI18nElements.forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (ui[key]) {
             el.innerHTML = ui[key];
@@ -112,6 +118,9 @@ function createCardTexture(text, colorHex) {
     return new THREE.CanvasTexture(canvas);
 }
 
+// --- [OPTIMIZACIÓN: Throttling en Resize] ---
+let resizeTimeoutHome;
+
 function initHome3D() {
     const canvas = document.getElementById('home-3d-canvas');
     if (!canvas) return;
@@ -141,7 +150,12 @@ function initHome3D() {
         mesh.rotation.y = -angle + Math.PI/2;
         carouselGroup.add(mesh);
     });
-    window.addEventListener('resize', onWindowResize, false);
+    
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeoutHome);
+        resizeTimeoutHome = setTimeout(onWindowResize, 200);
+    }, false);
+    
     startHomeLoop();
 }
 
@@ -154,9 +168,11 @@ function onWindowResize() {
     homeRenderer.setSize(width, height);
 }
 
+// --- [OPTIMIZACIÓN: Pausado de Loop de renderizado] ---
 function startHomeLoop() {
     const animate = () => {
         if (document.getElementById('screen-home').classList.contains('hidden')) {
+            if (homeAnimationId) cancelAnimationFrame(homeAnimationId);
             homeAnimationId = null; 
             return;
         }
@@ -169,7 +185,6 @@ function startHomeLoop() {
 }
 
 // --- LÓGICA DE INTERFAZ ---
-
 window.mostrarInfoPais = (index, soloActualizarTexto = false) => {
     const countryData = countriesData.find(c => c.index === index);
     if (!countryData) return;
@@ -245,7 +260,7 @@ window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
     buttons.forEach(b => b.disabled = true);
     if (optIndex === correctIndex) {
         btn.classList.remove('bg-black/40'); btn.classList.add('bg-green-600', 'text-white', 'font-bold', 'border-green-400'); 
-        btn.innerHTML += ' <img src="assets/icons/correct.png" class="w-5 h-5 inline-block ml-2">'; playSfx(sfxCorrect); 
+        btn.innerHTML += ' <img src="assets/icons/correct.png" loading="lazy" class="w-5 h-5 inline-block ml-2">'; playSfx(sfxCorrect); 
         currentScore++;
         const scoreText = document.getElementById('trivia-score-text');
         if (scoreText && currentCountry) {
@@ -257,7 +272,7 @@ window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
         }
     } else {
         btn.classList.remove('bg-black/40'); btn.classList.add('bg-red-600', 'text-white', 'border-red-400'); 
-        btn.innerHTML += ' <img src="assets/icons/wrong.png" class="w-5 h-5 inline-block ml-2">'; playSfx(sfxWrong); 
+        btn.innerHTML += ' <img src="assets/icons/wrong.png" loading="lazy" class="w-5 h-5 inline-block ml-2">'; playSfx(sfxWrong); 
         const correctBtn = buttons[correctIndex];
         correctBtn.classList.remove('bg-black/40'); correctBtn.classList.add('bg-green-600/50', 'text-white', 'border-green-400/50');
     }
@@ -265,7 +280,6 @@ window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
 
 window.isMinimized = false;
 
-// --- LOGICA SLIDE MINIMIZAR ---
 function initBottomSheet() {
     const sheet = document.getElementById('bottom-sheet');
     const handle = document.getElementById('drag-handle');
@@ -338,7 +352,6 @@ window.ocultarBottomSheetCompleto = () => {
     window.isMinimized = false; 
 };
 
-// --- NAVEGACIÓN ---
 window.irAEscanear = async () => {
     document.getElementById('screen-home').classList.add('hidden');
     document.getElementById('screen-ar').classList.remove('hidden');
@@ -365,11 +378,12 @@ window.cerrarManual = () => {
     document.getElementById('screen-home').classList.remove('hidden');
 };
 
-// --- GALERÍA (ACERVO) ---
 window.verHighlights = () => {
     if (!currentCountry) return;
     
     if(window.detenerAudioAR) window.detenerAudioAR();
+    if(window.detenerConfetiInmediato) window.detenerConfetiInmediato();
+    
     window.ocultarBottomSheetCompleto(); 
     
     document.getElementById('screen-ar').classList.add('hidden');
@@ -393,7 +407,7 @@ window.verHighlights = () => {
 
         item.innerHTML = `
             <div class="h-32 bg-black relative flex items-center justify-center overflow-hidden group-hover:bg-white/5 transition-colors">
-                <img src="${thumbnailSrc}" alt="${videoTitle}" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-30 transition-opacity">
+                <img src="${thumbnailSrc}" alt="${videoTitle}" loading="lazy" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-30 transition-opacity">
                 <span class="relative z-10 text-4xl opacity-80 group-hover:scale-110 transition-transform drop-shadow-lg">▶️</span>
             </div>
             <div class="p-3 relative z-10 bg-black/40 backdrop-blur-sm">

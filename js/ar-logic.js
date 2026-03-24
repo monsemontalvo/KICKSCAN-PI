@@ -5,6 +5,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 window.THREE = THREE;
 import 'mindar-image-three';
 
+// --- [OPTIMIZACIÓN: Instanciar Loaders globalmente para ahorrar memoria] ---
+const gltfLoaderGlobal = new GLTFLoader();
+const audioLoaderGlobal = new THREE.AudioLoader();
+
 // --- CONFIGURACIÓN DE MODELOS Y ACCIONES ---
 const modelosPorPais = [
     {
@@ -203,10 +207,10 @@ function actualizarIconoMute() {
     const btn = document.getElementById('btn-mute');
     if (btn) {
         if (isMuted || globalVolume === 0) {
-            btn.innerHTML = '<img src="assets/icons/mute.png" alt="Mute" class="w-5 h-5 object-contain">';
+            btn.innerHTML = '<img src="assets/icons/mute.png" alt="Mute" loading="lazy" class="w-5 h-5 object-contain">';
             btn.classList.add('bg-red-600/40');
         } else {
-            btn.innerHTML = '<img src="assets/icons/play.png" alt="Volumen" class="w-5 h-5 object-contain">';
+            btn.innerHTML = '<img src="assets/icons/play.png" alt="Volumen" loading="lazy" class="w-5 h-5 object-contain">';
             btn.classList.remove('bg-red-600/40');
         }
     }
@@ -232,6 +236,9 @@ let confettiAnimationId = null;
 let confettiActive = false;
 let confettiTimeout = null;
 
+// --- [OPTIMIZACIÓN: Throttling en el evento resize del confeti] ---
+let resizeTimeoutConfetti;
+
 function initConfettiSystem() {
     if (document.getElementById('confetti-overlay')) return;
     confettiCanvas = document.createElement('canvas');
@@ -245,7 +252,11 @@ function initConfettiSystem() {
     confettiCanvas.style.zIndex = '9999';
     document.body.appendChild(confettiCanvas);
     confettiCtx = confettiCanvas.getContext('2d');
-    window.addEventListener('resize', resizeConfetti);
+    
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeoutConfetti);
+        resizeTimeoutConfetti = setTimeout(resizeConfetti, 200);
+    });
     resizeConfetti();
 }
 
@@ -300,25 +311,24 @@ function detenerConfetiInmediato() {
     if (confettiTimeout) clearTimeout(confettiTimeout);
 }
 
+window.detenerConfetiInmediato = detenerConfetiInmediato;
 // --- FUNCIONES DE LIMPIEZA DE MEMORIA (DISPOSE) ---
+// --- [OPTIMIZACIÓN: Liberación profunda de memoria VRAM] ---
 function liberarMemoriaModelo(modelo) {
     if (!modelo) return;
     modelo.traverse((child) => {
         if (child.isMesh) {
-            // Liberar geometría
             if (child.geometry) child.geometry.dispose();
-            
-            // Liberar materiales y texturas
             if (child.material) {
-                if (Array.isArray(child.material)) {
-                    child.material.forEach(mat => {
-                        if (mat.map) mat.map.dispose();
-                        mat.dispose();
+                const materials = Array.isArray(child.material) ? child.material : [child.material];
+                materials.forEach(mat => {
+                    ["map", "lightMap", "bumpMap", "normalMap", "specularMap", "envMap", "alphaMap", "aoMap", "emissiveMap", "metalnessMap", "roughnessMap"].forEach(tex => {
+                        if (mat[tex]) {
+                            mat[tex].dispose();
+                        }
                     });
-                } else {
-                    if (child.material.map) child.material.map.dispose();
-                    child.material.dispose();
-                }
+                    mat.dispose();
+                });
             }
         }
     });
@@ -329,22 +339,15 @@ function resetearModeloAnterior() {
         const anchorAnterior = mindarThree.anchors[currentAnchorIndex];
         
         if (anchorAnterior && anchorAnterior.group) {
-            // Buscar todos los modelos cargados en este ancla
             const modelosDelPais = anchorAnterior.group.children.filter(child => child.userData.esModelo);
             
             modelosDelPais.forEach(modelo => {
-                // 1. Limpiamos memoria VRAM
                 liberarMemoriaModelo(modelo);
-                
-                // 2. Lo quitamos de la escena de Three.js
                 anchorAnterior.group.remove(modelo);
-                
-                // 3. Lo quitamos del arreglo de animaciones
                 mixers = mixers.filter(m => m.getRoot() !== modelo);
             });
         }
         
-        // Marcamos como "no descargado" para que lo vuelva a pedir si lo escanean de nuevo
         paisesCargados[currentAnchorIndex] = false;
     }
 
@@ -389,62 +392,89 @@ window.cambiarAnimacionAR = (tipoAccion) => {
     }
 };
 
-// --- FUNCIÓN DE CARGA DIFERIDA (LAZY LOAD) ---
-function cargarRecursosDelPais(index, anchor, infoPais) {
-    const loader = new GLTFLoader();
-    const audioLoader = new THREE.AudioLoader();
+// --- FUNCIÓN DE PROCESAMIENTO REUTILIZABLE ---
+// Función extra para no repetir código en la carga diferida
+function procesarModeloCargado(gltf, accion, index, anchor, infoPais) {
+    const model = gltf.scene;
+    model.scale.set(...infoPais.scale);
+    model.position.set(...infoPais.position);
 
-    if (infoPais.song && !infoPais.audioBuffer) {
-        audioLoader.load(infoPais.song, (buffer) => { 
-            infoPais.audioBuffer = buffer; 
+    model.rotation.x = Math.PI / 2;
+    model.visible = false;
+
+    model.userData.esModelo = true;
+    model.userData.paisIndex = index;
+    model.userData.accion = accion;
+    model.userData.originalAnchor = anchor;
+
+    if (gltf.animations && gltf.animations.length > 0) {
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = gltf.animations[0];
+        mixers.push(mixer);
+        model.userData.clip = clip;
+    }
+    anchor.group.add(model);
+
+    // Lo mostramos solo si es la acción requerida y seguimos viendo el mismo logo
+    if (currentAnchorIndex === index && accion === globalCurrentAction) {
+        if (currentVisibleModel) {
+            currentVisibleModel.visible = false;
+        }
+        model.visible = true;
+        currentVisibleModel = model;
+
+        const mixer = mixers.find(m => m.getRoot() === model);
+        if (mixer && model.userData.clip) {
+            mixer.stopAllAction();
+            mixer.clipAction(model.userData.clip).play();
+        }
+    }
+}
+
+// --- FUNCIÓN DE CARGA DIFERIDA (PRIORITY LOADING) ---
+function cargarRecursosDelPais(index, anchor, infoPais) {
+    // 1. Cargar o reutilizar el audio
+    if (infoPais.song) {
+        if (!infoPais.audioBuffer) {
+            // Si no existe, lo descargamos
+            audioLoaderGlobal.load(infoPais.song, (buffer) => { 
+                infoPais.audioBuffer = buffer; 
+                if (currentAnchorIndex === index) {
+                    currentSound = new THREE.Audio(audioListener);
+                    currentSound.setBuffer(buffer);
+                    currentSound.setLoop(true);
+                    currentSound.setVolume(globalVolume);
+                    currentSound.play();
+                }
+            });
+        } else {
+            // [SOLUCIÓN BUG 1] Si el buffer ya existe, lo instanciamos y reproducimos de nuevo
             if (currentAnchorIndex === index) {
                 currentSound = new THREE.Audio(audioListener);
-                currentSound.setBuffer(buffer);
+                currentSound.setBuffer(infoPais.audioBuffer);
                 currentSound.setLoop(true);
                 currentSound.setVolume(globalVolume);
                 currentSound.play();
             }
-        });
+        }
     }
 
-    for (const [accion, rutaArchivo] of Object.entries(infoPais.acciones)) {
-        loader.load(rutaArchivo, (gltf) => {
-            const model = gltf.scene;
-            model.scale.set(...infoPais.scale);
-            model.position.set(...infoPais.position);
+    // 2. Cargamos EXCLUSIVAMENTE el modelo 'idle' primero para dar respuesta rápida
+    const rutaIdle = infoPais.acciones['idle'];
+    
+    gltfLoaderGlobal.load(rutaIdle, (gltfIdle) => {
+        procesarModeloCargado(gltfIdle, 'idle', index, anchor, infoPais);
 
-            model.rotation.x = Math.PI / 2;
-            model.visible = false;
+        // 3. UNA VEZ QUE CARGÓ 'idle', empezamos a cargar los demás en segundo plano
+        for (const [accion, rutaArchivo] of Object.entries(infoPais.acciones)) {
+            if (accion === 'idle') continue; // Omitimos el idle que ya cargó
+            
+            gltfLoaderGlobal.load(rutaArchivo, (gltfSecundario) => {
+                procesarModeloCargado(gltfSecundario, accion, index, anchor, infoPais);
+            }, undefined, (e) => console.warn(`Error cargando ${accion} de país ${index}`));
+        }
 
-            model.userData.esModelo = true;
-            model.userData.paisIndex = index;
-            model.userData.accion = accion;
-            model.userData.originalAnchor = anchor;
-
-            if (gltf.animations && gltf.animations.length > 0) {
-                const mixer = new THREE.AnimationMixer(model);
-                const clip = gltf.animations[0];
-                mixers.push(mixer);
-                model.userData.clip = clip;
-            }
-            anchor.group.add(model);
-
-            if (currentAnchorIndex === index && accion === globalCurrentAction) {
-                if (currentVisibleModel) {
-                    currentVisibleModel.visible = false;
-                }
-                model.visible = true;
-                currentVisibleModel = model;
-
-                const mixer = mixers.find(m => m.getRoot() === model);
-                if (mixer && model.userData.clip) {
-                    mixer.stopAllAction();
-                    mixer.clipAction(model.userData.clip).play();
-                }
-            }
-
-        }, undefined, (e) => console.warn(`Error cargando ${accion} de país ${index}`));
-    }
+    }, undefined, (e) => console.warn(`Error cargando idle de país ${index}`));
 }
 
 // --- INICIO DE AR ---
@@ -461,7 +491,6 @@ window.iniciarAR = async () => {
     currentSound = null;
     globalCurrentAction = 'idle';
     
-    // Reiniciamos la memoria de cargas cada que se entra al AR
     paisesCargados = {}; 
 
     initConfettiSystem();
@@ -568,7 +597,6 @@ window.iniciarAR = async () => {
 
 window.detenerAR = () => {
     if (mindarThree) {
-        // Limpiamos la RAM antes de apagar todo
         resetearModeloAnterior();
 
         mindarThree.stop();

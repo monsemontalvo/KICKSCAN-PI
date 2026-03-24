@@ -192,15 +192,15 @@
         <div id="audio-controls" class="hidden absolute top-20 left-6 z-20 flex flex-col gap-3">
             <button onclick="window.ajustarVolumen(0.1)"
                 class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-green-600/50">
-                <img src="assets/icons/plus.png" alt="Subir volumen" class="w-5 h-5 object-contain">
+                <img src="assets/icons/plus.png" alt="Subir volumen" loading="lazy" class="w-5 h-5 object-contain">
             </button>
             <button id="btn-mute" onclick="window.alternarMute()"
                 class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-white/20">
-                <img src="assets/icons/play.png" alt="Volumen" class="w-5 h-5 object-contain">
+                <img src="assets/icons/play.png" alt="Volumen" loading="lazy" class="w-5 h-5 object-contain">
             </button>
             <button onclick="window.ajustarVolumen(-0.1)"
                 class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10 active:scale-90 transition-transform hover:bg-red-600/50">
-                <img src="assets/icons/minus.png" alt="Bajar volumen" class="w-5 h-5 object-contain">
+                <img src="assets/icons/minus.png" alt="Bajar volumen" loading="lazy" class="w-5 h-5 object-contain">
             </button>
         </div>
 
@@ -208,19 +208,19 @@
             class="hidden absolute top-24 md:top-20 right-4 md:right-8 z-50 flex flex-col gap-3 origin-top-right scale-90 md:scale-100">
             <button onclick="window.cambiarAnimacion('bailar')"
                 class="anim-btn group relative w-16 h-16 bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center active:scale-90 transition-all shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:bg-green-600">
-                <img src="assets/icons/dance.png" alt="Bailar" class="w-8 h-8 mb-1 object-contain drop-shadow-md">
+                <img src="assets/icons/dance.png" alt="Bailar" loading="lazy" class="w-8 h-8 mb-1 object-contain drop-shadow-md">
                 <span data-i18n="anim_dance"
                     class="text-[0.6rem] font-bold uppercase tracking-wider text-white">Bailar</span>
             </button>
             <button onclick="window.cambiarAnimacion('patear')"
                 class="anim-btn group relative w-16 h-16 bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center active:scale-90 transition-all shadow-lg hover:bg-green-600">
-                <img src="assets/icons/kick.png" alt="Patear" class="w-8 h-8 mb-1 object-contain drop-shadow-md">
+                <img src="assets/icons/kick.png" alt="Patear" loading="lazy" class="w-8 h-8 mb-1 object-contain drop-shadow-md">
                 <span data-i18n="anim_kick"
                     class="text-[0.6rem] font-bold uppercase tracking-wider text-white">Patear</span>
             </button>
             <button onclick="window.cambiarAnimacion('correr')"
                 class="anim-btn group relative w-16 h-16 bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center active:scale-90 transition-all shadow-lg hover:bg-green-600">
-                <img src="assets/icons/run.png" alt="Correr" class="w-8 h-8 mb-1 object-contain drop-shadow-md">
+                <img src="assets/icons/run.png" alt="Correr" loading="lazy" class="w-8 h-8 mb-1 object-contain drop-shadow-md">
                 <span data-i18n="anim_run"
                     class="text-[0.6rem] font-bold uppercase tracking-wider text-white">Correr</span>
             </button>
@@ -232,7 +232,7 @@
 
         <button id="btn-confetti" onclick="window.lanzarConfettiManual()"
             class="hidden fixed top-6 right-6 z-[60] flex items-center gap-2 bg-yellow-400 text-black font-display text-lg tracking-wider py-2 px-6 rounded-full shadow-[0_0_20px_rgba(255,215,0,0.6)] hover:scale-105 transition-transform active:scale-95 border-2 border-white/50 animate-bounce">
-            <img src="assets/icons/confetti.png" alt="Confeti" class="w-6 h-6 object-contain">
+            <img src="assets/icons/confetti.png" alt="Confeti" loading="lazy" class="w-6 h-6 object-contain">
             <span data-i18n="btn_confetti">CONFETI</span>
         </button>
 
@@ -262,16 +262,16 @@
                 <div id="tab-navigation" class="flex justify-around items-center py-3 px-2 border-b border-white/5">
                     <button onclick="window.switchTab(this, 'stats')"
                         class="tab-btn active p-3 rounded-xl transition-all duration-300 bg-green-600 text-white border border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                        <img src="assets/icons/chart.png" alt="Estadísticas" class="w-6 h-6 object-contain"></button>
+                        <img src="assets/icons/chart.png" alt="Estadísticas" loading="lazy" class="w-6 h-6 object-contain"></button>
                     <button onclick="window.switchTab(this, 'facts')"
                         class="tab-btn p-3 rounded-xl transition-all duration-300 bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10">
-                        <img src="assets/icons/data.png" alt="Datos Curiosos" class="w-6 h-6 object-contain"></button>
+                        <img src="assets/icons/data.png" alt="Datos Curiosos" loading="lazy" class="w-6 h-6 object-contain"></button>
                     <button onclick="window.switchTab(this, 'trivia')"
                         class="tab-btn p-3 rounded-xl transition-all duration-300 bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10">
-                        <img src="assets/icons/trivia.png" alt="Trivia" class="w-6 h-6 object-contain"></button>
+                        <img src="assets/icons/trivia.png" alt="Trivia" loading="lazy" class="w-6 h-6 object-contain"></button>
                     <button onclick="window.verHighlights()"
                         class="p-3 rounded-xl transition-all duration-300 bg-white/5 text-gray-400 border border-white/10 hover:bg-green-900/50 hover:border-green-700">
-                        <img src="assets/icons/video.png" alt="Highlights" class="w-6 h-6 object-contain"></button>
+                        <img src="assets/icons/video.png" alt="Highlights" loading="lazy" class="w-6 h-6 object-contain"></button>
                 </div>
             </div>
 
@@ -281,14 +281,14 @@
                         class="font-display text-2xl text-green-400 mb-4 uppercase tracking-wider">Estadísticas</h3>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="liquid-glass-light p-5 rounded-2xl flex flex-col items-center">
-                            <img src="assets/icons/trophy.png" alt="Trofeos" class="w-12 h-12 object-contain">
+                            <img src="assets/icons/trophy.png" alt="Trofeos" loading="lazy" class="w-12 h-12 object-contain">
                             <span id="stat-titulos"
                                 class="font-display text-2xl text-white text-center leading-none tracking-wide">0</span>
                             <span data-i18n="stat_titles_label"
                                 class="text-xs text-gray-400 font-sans uppercase mt-1 tracking-widest">Títulos</span>
                         </div>
                         <div class="liquid-glass-light p-5 rounded-2xl flex flex-col items-center">
-                            <img src="assets/icons/world.png" alt="Mundiales" class="w-12 h-12 object-contain">
+                            <img src="assets/icons/world.png" alt="Mundiales" loading="lazy" class="w-12 h-12 object-contain">
                             <span id="stat-participaciones"
                                 class="font-display text-2xl text-white text-center leading-none tracking-wide">0</span>
                             <span data-i18n="stat_cups_label"
@@ -344,27 +344,27 @@
                         data-i18n="filter_normal">Normal</span></button>
                 <button onclick="window.aplicarFiltroVideo('blur')"
                     class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
-                        src="assets/icons/drop.png" class="w-4 h-4"><span
+                        src="assets/icons/drop.png" loading="lazy" class="w-4 h-4"><span
                         data-i18n="filter_blur">Desenfoque</span></button>
                 <button onclick="window.aplicarFiltroVideo('pixel')"
                     class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
-                        src="assets/icons/pixel.png" class="w-4 h-4"><span
+                        src="assets/icons/pixel.png" loading="lazy" class="w-4 h-4"><span
                         data-i18n="filter_pixel">Pixelado</span></button>
                 <button onclick="window.aplicarFiltroVideo('thermal')"
                     class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
-                        src="assets/icons/temperature.png" class="w-4 h-4"><span
+                        src="assets/icons/temperature.png" loading="lazy" class="w-4 h-4"><span
                         data-i18n="filter_thermal">Térmica</span></button>
                 <button onclick="window.aplicarFiltroVideo('hue')"
                     class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
-                        src="assets/icons/color.png" class="w-4 h-4"><span
+                        src="assets/icons/color.png" loading="lazy" class="w-4 h-4"><span
                         data-i18n="filter_color">Color</span></button>
                 <button onclick="window.aplicarFiltroVideo('pastel')"
                     class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
-                        src="assets/icons/pastel.png" class="w-4 h-4"><span
+                        src="assets/icons/pastel.png" loading="lazy" class="w-4 h-4"><span
                         data-i18n="filter_pastel">Pastel</span></button>
                 <button onclick="window.aplicarFiltroVideo('saturate')"
                     class="filter-btn flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-bold font-sans border border-white/10 flex-shrink-0 whitespace-nowrap"><img
-                        src="assets/icons/fire.png" class="w-4 h-4"><span
+                        src="assets/icons/fire.png" loading="lazy" class="w-4 h-4"><span
                         data-i18n="filter_intense">Intenso</span></button>
             </div>
         </div>
