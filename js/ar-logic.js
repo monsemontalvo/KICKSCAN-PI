@@ -162,13 +162,16 @@ let clock = new THREE.Clock();
 
 // Control de Modelos y Estado
 let currentAnchorIndex = -1;
-let globalSound = null; // REEMPLAZADO: Instancia única de audio para evitar empalmes
+let globalSound = null; 
 let currentVisibleModel = null;
 let globalCurrentAction = 'idle'; 
 let globalVolume = 0.5;
 let isMuted = false;
 let preMuteVolume = 0.5;
 let audioListener = null;
+
+// ---> ¡LA VARIABLE CLAVE PARA SOLUCIONAR TU PROBLEMA! <---
+let isTargetVisible = false; 
 
 let paisesCargados = {}; 
 
@@ -220,7 +223,7 @@ window.detenerAudioAR = () => {
 };
 
 window.renudarAudioAR = () => {
-    if (globalSound && !globalSound.isPlaying && isARRunning && !window.isARPaused) {
+    if (globalSound && !globalSound.isPlaying && isARRunning && !window.isARPaused && isTargetVisible) {
         globalSound.play();
     }
 };
@@ -423,27 +426,29 @@ function procesarModeloCargado(gltf, accion, index, anchor, infoPais) {
     }
 }
 
-// --- FUNCIÓN DE CARGA MODIFICADA (AUDIO SAFE) ---
+// --- CARGA DE RECURSOS CON VALIDACIÓN DE VISIBILIDAD ---
 function cargarRecursosDelPais(index, anchor, infoPais) {
     if (infoPais.song) {
         if (!infoPais.audioBuffer) {
             audioLoaderGlobal.load(infoPais.song, (buffer) => { 
                 infoPais.audioBuffer = buffer; 
-                if (currentAnchorIndex === index) {
+                // AQUÍ ESTÁ EL CANDADO: ¿Sigue el mismo logo visible?
+                if (currentAnchorIndex === index && isTargetVisible) {
                     if (globalSound.isPlaying) globalSound.stop();
                     globalSound.setBuffer(buffer);
                     globalSound.setLoop(true);
                     globalSound.setVolume(globalVolume);
-                    if (!window.isARPaused) globalSound.play(); // Evita sonar si el usuario ya se fue a la galería
+                    if (!window.isARPaused) globalSound.play();
                 }
             });
         } else {
-            if (currentAnchorIndex === index) {
+            // AQUÍ TAMBIÉN ESTÁ EL CANDADO
+            if (currentAnchorIndex === index && isTargetVisible) {
                 if (globalSound.isPlaying) globalSound.stop();
                 globalSound.setBuffer(infoPais.audioBuffer);
                 globalSound.setLoop(true);
                 globalSound.setVolume(globalVolume);
-                if (!window.isARPaused) globalSound.play(); // Evita sonar si el usuario ya se fue a la galería
+                if (!window.isARPaused) globalSound.play(); 
             }
         }
     }
@@ -475,6 +480,7 @@ window.iniciarAR = async () => {
     currentAnchorIndex = -1;
     currentVisibleModel = null;
     globalCurrentAction = 'idle';
+    isTargetVisible = false; // Reiniciamos el estado
     
     paisesCargados = {}; 
 
@@ -501,7 +507,6 @@ window.iniciarAR = async () => {
         audioListener = new THREE.AudioListener();
         camera.add(audioListener);
         
-        // INSTANCIAMOS EL AUDIO UNA SOLA VEZ
         if (!globalSound) globalSound = new THREE.Audio(audioListener);
 
         const hemiLight = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
@@ -515,8 +520,10 @@ window.iniciarAR = async () => {
             const infoPais = modelosPorPais[i];
 
             anchor.onTargetFound = () => {
-                if (window.isARPaused) return; // FIX 2: Evitar reacciones si la galería está abierta
+                if (window.isARPaused) return; 
 
+                // AVISAMOS QUE HAY UN LOGO VISIBLE
+                isTargetVisible = true; 
                 console.log(`Detectado: ${infoPais.id}`);
 
                 if (currentAnchorIndex !== i) {
@@ -550,6 +557,8 @@ window.iniciarAR = async () => {
 
             anchor.onTargetLost = () => {
                 if (currentAnchorIndex === i) {
+                    // AVISAMOS QUE YA NO ESTÁ VISIBLE
+                    isTargetVisible = false; 
                     console.log(`Perdido: ${infoPais.id}`);
                     
                     document.getElementById('btn-confetti').classList.add('hidden');
@@ -592,6 +601,7 @@ window.detenerAR = () => {
         mindarThree.stop();
         mindarThree.renderer.setAnimationLoop(null);
         isARRunning = false;
+        isTargetVisible = false; // Limpieza profunda
 
         detenerConfetiInmediato();
 
