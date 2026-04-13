@@ -1,15 +1,12 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-// Exponemos THREE globalmente para MindAR
 window.THREE = THREE;
 import 'mindar-image-three';
 
-// --- [OPTIMIZACIÓN: Instanciar Loaders globalmente para ahorrar memoria] ---
 const gltfLoaderGlobal = new GLTFLoader();
 const audioLoaderGlobal = new THREE.AudioLoader();
 
-// --- CONFIGURACIÓN DE MODELOS Y ACCIONES ---
 const modelosPorPais = [
     {
         id: 'mexico',
@@ -165,7 +162,7 @@ let clock = new THREE.Clock();
 
 // Control de Modelos y Estado
 let currentAnchorIndex = -1;
-let currentSound = null;
+let globalSound = null; // REEMPLAZADO: Instancia única de audio para evitar empalmes
 let currentVisibleModel = null;
 let globalCurrentAction = 'idle'; 
 let globalVolume = 0.5;
@@ -200,7 +197,7 @@ window.alternarMute = () => {
 window.getARVolume = () => { return globalVolume; };
 
 function aplicarVolumen() {
-    if (currentSound) currentSound.setVolume(globalVolume);
+    if (globalSound) globalSound.setVolume(globalVolume);
 }
 
 function actualizarIconoMute() {
@@ -217,14 +214,14 @@ function actualizarIconoMute() {
 }
 
 window.detenerAudioAR = () => {
-    if (currentSound && currentSound.isPlaying) {
-        currentSound.pause();
+    if (globalSound && globalSound.isPlaying) {
+        globalSound.pause();
     }
 };
 
 window.renudarAudioAR = () => {
-    if (currentSound && !currentSound.isPlaying && isARRunning) {
-        currentSound.play();
+    if (globalSound && !globalSound.isPlaying && isARRunning && !window.isARPaused) {
+        globalSound.play();
     }
 };
 
@@ -236,7 +233,6 @@ let confettiAnimationId = null;
 let confettiActive = false;
 let confettiTimeout = null;
 
-// --- [OPTIMIZACIÓN: Throttling en el evento resize del confeti] ---
 let resizeTimeoutConfetti;
 
 function initConfettiSystem() {
@@ -312,8 +308,8 @@ function detenerConfetiInmediato() {
 }
 
 window.detenerConfetiInmediato = detenerConfetiInmediato;
-// --- FUNCIONES DE LIMPIEZA DE MEMORIA (DISPOSE) ---
-// --- [OPTIMIZACIÓN: Liberación profunda de memoria VRAM] ---
+
+// --- FUNCIONES DE LIMPIEZA DE MEMORIA ---
 function liberarMemoriaModelo(modelo) {
     if (!modelo) return;
     modelo.traverse((child) => {
@@ -334,7 +330,7 @@ function liberarMemoriaModelo(modelo) {
     });
 }
 
-function resetearModeloAnterior() {
+function resetearModeloAnterior() { 
     if (currentAnchorIndex !== -1 && mindarThree) {
         const anchorAnterior = mindarThree.anchors[currentAnchorIndex];
         
@@ -348,18 +344,17 @@ function resetearModeloAnterior() {
             });
         }
         
-        paisesCargados[currentAnchorIndex] = false;
+        paisesCargados[currentAnchorIndex] = false; 
     }
 
-    if (currentSound && currentSound.isPlaying) {
-        currentSound.stop();
+    if (globalSound && globalSound.isPlaying) { 
+        globalSound.stop();
     }
 
     currentVisibleModel = null;
     currentAnchorIndex = -1;
 }
 
-// --- CAMBIAR ANIMACIÓN ---
 window.cambiarAnimacionAR = (tipoAccion) => {
     globalCurrentAction = tipoAccion; 
 
@@ -392,8 +387,6 @@ window.cambiarAnimacionAR = (tipoAccion) => {
     }
 };
 
-// --- FUNCIÓN DE PROCESAMIENTO REUTILIZABLE ---
-// Función extra para no repetir código en la carga diferida
 function procesarModeloCargado(gltf, accion, index, anchor, infoPais) {
     const model = gltf.scene;
     model.scale.set(...infoPais.scale);
@@ -415,7 +408,6 @@ function procesarModeloCargado(gltf, accion, index, anchor, infoPais) {
     }
     anchor.group.add(model);
 
-    // Lo mostramos solo si es la acción requerida y seguimos viendo el mismo logo
     if (currentAnchorIndex === index && accion === globalCurrentAction) {
         if (currentVisibleModel) {
             currentVisibleModel.visible = false;
@@ -431,43 +423,38 @@ function procesarModeloCargado(gltf, accion, index, anchor, infoPais) {
     }
 }
 
-// --- FUNCIÓN DE CARGA DIFERIDA (PRIORITY LOADING) ---
+// --- FUNCIÓN DE CARGA MODIFICADA (AUDIO SAFE) ---
 function cargarRecursosDelPais(index, anchor, infoPais) {
-    // 1. Cargar o reutilizar el audio
     if (infoPais.song) {
         if (!infoPais.audioBuffer) {
-            // Si no existe, lo descargamos
             audioLoaderGlobal.load(infoPais.song, (buffer) => { 
                 infoPais.audioBuffer = buffer; 
                 if (currentAnchorIndex === index) {
-                    currentSound = new THREE.Audio(audioListener);
-                    currentSound.setBuffer(buffer);
-                    currentSound.setLoop(true);
-                    currentSound.setVolume(globalVolume);
-                    currentSound.play();
+                    if (globalSound.isPlaying) globalSound.stop();
+                    globalSound.setBuffer(buffer);
+                    globalSound.setLoop(true);
+                    globalSound.setVolume(globalVolume);
+                    if (!window.isARPaused) globalSound.play(); // Evita sonar si el usuario ya se fue a la galería
                 }
             });
         } else {
-            // [SOLUCIÓN BUG 1] Si el buffer ya existe, lo instanciamos y reproducimos de nuevo
             if (currentAnchorIndex === index) {
-                currentSound = new THREE.Audio(audioListener);
-                currentSound.setBuffer(infoPais.audioBuffer);
-                currentSound.setLoop(true);
-                currentSound.setVolume(globalVolume);
-                currentSound.play();
+                if (globalSound.isPlaying) globalSound.stop();
+                globalSound.setBuffer(infoPais.audioBuffer);
+                globalSound.setLoop(true);
+                globalSound.setVolume(globalVolume);
+                if (!window.isARPaused) globalSound.play(); // Evita sonar si el usuario ya se fue a la galería
             }
         }
     }
 
-    // 2. Cargamos EXCLUSIVAMENTE el modelo 'idle' primero para dar respuesta rápida
     const rutaIdle = infoPais.acciones['idle'];
     
     gltfLoaderGlobal.load(rutaIdle, (gltfIdle) => {
         procesarModeloCargado(gltfIdle, 'idle', index, anchor, infoPais);
 
-        // 3. UNA VEZ QUE CARGÓ 'idle', empezamos a cargar los demás en segundo plano
         for (const [accion, rutaArchivo] of Object.entries(infoPais.acciones)) {
-            if (accion === 'idle') continue; // Omitimos el idle que ya cargó
+            if (accion === 'idle') continue; 
             
             gltfLoaderGlobal.load(rutaArchivo, (gltfSecundario) => {
                 procesarModeloCargado(gltfSecundario, accion, index, anchor, infoPais);
@@ -477,7 +464,6 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
     }, undefined, (e) => console.warn(`Error cargando idle de país ${index}`));
 }
 
-// --- INICIO DE AR ---
 window.iniciarAR = async () => {
     if (isARRunning) return;
     console.log("Iniciando AR Persistente...");
@@ -488,7 +474,6 @@ window.iniciarAR = async () => {
     mixers = [];
     currentAnchorIndex = -1;
     currentVisibleModel = null;
-    currentSound = null;
     globalCurrentAction = 'idle';
     
     paisesCargados = {}; 
@@ -515,6 +500,9 @@ window.iniciarAR = async () => {
 
         audioListener = new THREE.AudioListener();
         camera.add(audioListener);
+        
+        // INSTANCIAMOS EL AUDIO UNA SOLA VEZ
+        if (!globalSound) globalSound = new THREE.Audio(audioListener);
 
         const hemiLight = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
         scene.add(hemiLight);
@@ -527,6 +515,8 @@ window.iniciarAR = async () => {
             const infoPais = modelosPorPais[i];
 
             anchor.onTargetFound = () => {
+                if (window.isARPaused) return; // FIX 2: Evitar reacciones si la galería está abierta
+
                 console.log(`Detectado: ${infoPais.id}`);
 
                 if (currentAnchorIndex !== i) {
@@ -540,8 +530,8 @@ window.iniciarAR = async () => {
                         paisesCargados[i] = true;
                     } 
                 } else {
-                    if (currentSound && !currentSound.isPlaying) {
-                        currentSound.play();
+                    if (globalSound && !globalSound.isPlaying) {
+                        globalSound.play();
                     }
                 }
 
@@ -570,8 +560,8 @@ window.iniciarAR = async () => {
                         window.ocultarBottomSheetCompleto();
                     }
 
-                    if (currentSound && currentSound.isPlaying) {
-                        currentSound.pause();
+                    if (globalSound && globalSound.isPlaying) {
+                        globalSound.pause();
                     }
 
                     if (typeof detenerConfetiInmediato === 'function') {

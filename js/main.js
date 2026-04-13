@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { translations } from './translations.js'; 
 
 let currentLang = 'es'; 
+window.isARPaused = false; // Variable global para controlar el estado del escáner
 
 // --- SISTEMA DE EFECTOS DE SONIDO (SFX) ---
 const sfxClick = new Audio('https://res.cloudinary.com/duonndfih/video/upload/v1772416650/click_r4g9sr.mp3');
@@ -11,21 +12,22 @@ const sfxWrong = new Audio('https://res.cloudinary.com/duonndfih/video/upload/v1
 
 const playSfx = (sound) => {
     const vol = window.getARVolume ? window.getARVolume() : 0.5;
-    if (vol <= 0) return;
+    if (vol <= 0) return; 
     sound.volume = vol; 
     sound.currentTime = 0; 
-    sound.play().catch(e => {});
+    sound.play().catch(e => {}); 
 };
 
+// --- OPTIMIZACIÓN: Evitar spam de sonidos ---
 document.addEventListener('click', (e) => {
     const btn = e.target.tagName === 'BUTTON' ? e.target : e.target.closest('button');
     if (btn) {
-        if (btn.closest('#trivia-items-container')) return;
-        playSfx(sfxClick);
+        if (btn.closest('#trivia-items-container')) return; 
+        playSfx(sfxClick); 
     }
 });
 
-// --- BASE DE DATOS ESTRUCTURAL (Sin texto, solo configuración) ---
+// --- BASE DE DATOS ESTRUCTURAL ---
 const countriesData = [
     { id: 'mexico', index: 0, color: '#106337', videos: [ { src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417899/mexico1_z6pkxn.mp4" }, { src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417621/mexico2_bgih6s.mp4" }, { src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417592/mexico3_out1tt.mp4" }, { src: "https://res.cloudinary.com/duonndfih/video/upload/v1772417637/mexico4_kpefn9.mp4" } ] },
     { id: 'colombia', index: 1, color: '#FCD116', videos: [ { src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420835/colombia1_hjx62k.mp4" }, { src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420830/colombia2_lsp112.mp4" }, { src: "https://res.cloudinary.com/duonndfih/video/upload/v1772420857/colombia3_pzvp0m.mp4" }, { src: "https://res.cloudinary.com/duonndfih/video/upload/v1772416681/colombia4_weemr1.mp4" } ] },
@@ -41,23 +43,22 @@ const countriesData = [
     { id: 'jamaica', index: 11, color: '#009B3A', videos: [ { src: "https://res.cloudinary.com/duonndfih/video/upload/v1773711897/Jamaica_vs_Bermuda_Concacaf_Qualifiers_2026_World_Cup_-_Concacaf_720p_h264_youtube_uvoumk.mp4" }, { src: "https://res.cloudinary.com/duonndfih/video/upload/v1773712009/JAMAICA_0-3_VENEZUELA_HIGHLIGHTS_CONMEBOL_COPA_AM%C3%89RICA_USA_2024_-_Copa_Am%C3%A9rica_720p_h264_youtube_wkgw6o.mp4" }, { src: "https://res.cloudinary.com/duonndfih/video/upload/v1773712115/Futbol_Retro_El_d%C3%ADa_que_Jamaica_ech%C3%B3_a_M%C3%A9xico_de_la_Copa_Oro_2017_M%C3%A9xico_0_-_1_Jamaica_TUDN_-_TUDN_M%C3%A9xico_720p_h264_youtube_sn3gqd.mp4" }, { src: "https://res.cloudinary.com/duonndfih/video/upload/v1773712135/Jamaica_vs._Curacao_Extended_Highlights_CONCACAF_World_Cup_Qualifiers_CBS_Sports_Golazo_-_CBS_Sports_Golazo_America_720p_h264_youtube_gjlcmq.mp4" } ] }
 ]; 
 
-let currentCountry = null;
+// --- VARIABLES GLOBALES DE ESTADO ---
+let currentCountry = null; 
 let homeRenderer, homeScene, homeCamera, homeBall, carouselGroup; 
 let homeAnimationId = null; 
 let currentScore = 0; 
-
-// --- [OPTIMIZACIÓN: Caché de Elementos DOM para Traducciones] ---
 let cachedI18nElements = null;
 
 window.cambiarIdioma = (lang) => {
-    currentLang = lang;
+    currentLang = lang; 
     const ui = translations[currentLang].ui;
 
-    if (!cachedI18nElements) {
-        cachedI18nElements = document.querySelectorAll('[data-i18n]');
+    if (!cachedI18nElements) { 
+        cachedI18nElements = document.querySelectorAll('[data-i18n]'); 
     }
 
-    cachedI18nElements.forEach(el => {
+    cachedI18nElements.forEach(el => { 
         const key = el.getAttribute('data-i18n');
         if (ui[key]) {
             el.innerHTML = ui[key];
@@ -72,11 +73,11 @@ window.cambiarIdioma = (lang) => {
     }
 };
 
-window.addEventListener('load', () => {
+window.addEventListener('load', () => { 
     initBottomSheet(); 
     window.cambiarIdioma('es'); 
     setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
+        const splash = document.getElementById('splash-screen'); 
         const home = document.getElementById('screen-home');
         if (splash) splash.style.opacity = '0';
         setTimeout(() => {
@@ -87,7 +88,7 @@ window.addEventListener('load', () => {
     }, 2500);
 });
 
-function createCardTexture(text, colorHex) {
+function createCardTexture(text, colorHex) { 
     const canvas = document.createElement('canvas');
     canvas.width = 256; canvas.height = 350; 
     const ctx = canvas.getContext('2d');
@@ -118,10 +119,9 @@ function createCardTexture(text, colorHex) {
     return new THREE.CanvasTexture(canvas);
 }
 
-// --- [OPTIMIZACIÓN: Throttling en Resize] ---
 let resizeTimeoutHome;
 
-function initHome3D() {
+function initHome3D() { 
     const canvas = document.getElementById('home-3d-canvas');
     if (!canvas) return;
     const width = window.innerWidth; const height = window.innerHeight;
@@ -159,7 +159,7 @@ function initHome3D() {
     startHomeLoop();
 }
 
-function onWindowResize() {
+function onWindowResize() { 
     if (!homeCamera || !homeRenderer) return;
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -168,7 +168,6 @@ function onWindowResize() {
     homeRenderer.setSize(width, height);
 }
 
-// --- [OPTIMIZACIÓN: Pausado de Loop de renderizado] ---
 function startHomeLoop() {
     const animate = () => {
         if (document.getElementById('screen-home').classList.contains('hidden')) {
@@ -176,7 +175,7 @@ function startHomeLoop() {
             homeAnimationId = null; 
             return;
         }
-        homeAnimationId = requestAnimationFrame(animate);
+        homeAnimationId = requestAnimationFrame(animate); 
         if (homeBall) homeBall.rotation.y += 0.005;
         if (carouselGroup) carouselGroup.rotation.y += 0.002;
         homeRenderer.render(homeScene, homeCamera);
@@ -184,15 +183,14 @@ function startHomeLoop() {
     animate();
 }
 
-// --- LÓGICA DE INTERFAZ ---
-window.mostrarInfoPais = (index, soloActualizarTexto = false) => {
-    const countryData = countriesData.find(c => c.index === index);
+window.mostrarInfoPais = (index, soloActualizarTexto = false) => {  
+    const countryData = countriesData.find(c => c.index === index); 
     if (!countryData) return;
     
-    const tCountry = translations[currentLang].countries[countryData.id];
+    const tCountry = translations[currentLang].countries[countryData.id]; 
     const ui = translations[currentLang].ui;
     
-    const esNuevoPais = (currentCountry && currentCountry.index !== index) || !currentCountry;
+    const esNuevoPais = (currentCountry && currentCountry.index !== index) || !currentCountry; 
     currentCountry = countryData;
     if(esNuevoPais && !soloActualizarTexto) currentScore = 0;
 
@@ -201,7 +199,7 @@ window.mostrarInfoPais = (index, soloActualizarTexto = false) => {
     document.getElementById('stat-participaciones').innerText = tCountry.stats.copas;
     
     const factsContainer = document.getElementById('facts-items-container');
-    factsContainer.innerHTML = '';
+    factsContainer.innerHTML = ''; 
     tCountry.facts.forEach((fact, i) => {
         const div = document.createElement('div');
         div.className = 'liquid-glass-light p-5 rounded-2xl border border-white/5 shadow-sm';
@@ -209,14 +207,14 @@ window.mostrarInfoPais = (index, soloActualizarTexto = false) => {
         factsContainer.appendChild(div);
     });
 
-    const triviaContainer = document.getElementById('trivia-items-container');
+    const triviaContainer = document.getElementById('trivia-items-container'); 
     triviaContainer.innerHTML = ''; 
-    const scoreDiv = document.createElement('div');
+    const scoreDiv = document.createElement('div'); 
     scoreDiv.className = 'bg-white/10 border border-white/20 p-3 rounded-xl mb-4 text-center sticky top-0 z-10 backdrop-blur-md';
     scoreDiv.innerHTML = `<span id="trivia-score-text" class="font-display text-2xl text-green-400 tracking-widest">${ui.score_label}: ${currentScore} / ${tCountry.trivia.length}</span>`;
     triviaContainer.appendChild(scoreDiv);
     
-    tCountry.trivia.forEach((triv, qIndex) => {
+    tCountry.trivia.forEach((triv, qIndex) => { 
         const div = document.createElement('div');
         div.className = 'bg-white/5 border border-white/10 rounded-2xl p-5 shadow-inner';
         let optionsHtml = '';
@@ -230,7 +228,7 @@ window.mostrarInfoPais = (index, soloActualizarTexto = false) => {
         triviaContainer.appendChild(div);
     });
 
-    if(esNuevoPais && !soloActualizarTexto){
+    if(esNuevoPais && !soloActualizarTexto){ 
         const firstTab = document.querySelector('#tab-navigation .tab-btn');
         switchTab(firstTab, 'stats', true); 
     }
@@ -238,26 +236,26 @@ window.mostrarInfoPais = (index, soloActualizarTexto = false) => {
     if(!soloActualizarTexto) minimizarBottomSheet();
 };
 
-window.switchTab = (btn, tabId, keepMinimized = false) => {
+window.switchTab = (btn, tabId, keepMinimized = false) => { 
     if (!keepMinimized) abrirBottomSheet();
     
     const buttons = document.querySelectorAll('#tab-navigation .tab-btn');
-    buttons.forEach(b => {
+    buttons.forEach(b => { 
         b.classList.remove('active', 'bg-green-600', 'text-white', 'border-green-400', 'shadow-[0_0_15px_rgba(34,197,94,0.3)]');
         b.classList.add('bg-white/5', 'text-gray-400', 'border-white/10');
     });
     btn.classList.remove('bg-white/5', 'text-gray-400', 'border-white/10');
     btn.classList.add('active', 'bg-green-600', 'text-white', 'border-green-400', 'shadow-[0_0_15px_rgba(34,197,94,0.3)]');
     const containers = document.querySelectorAll('.content-container');
-    containers.forEach(c => c.classList.add('hidden'));
+    containers.forEach(c => c.classList.add('hidden')); 
     document.getElementById(`content-${tabId}`).classList.remove('hidden');
     document.getElementById('sheet-content-container').scrollTop = 0;
 };
 
-window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
+window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => { 
     const parent = btn.parentElement;
     const buttons = parent.querySelectorAll('button');
-    buttons.forEach(b => b.disabled = true);
+    buttons.forEach(b => b.disabled = true); 
     if (optIndex === correctIndex) {
         btn.classList.remove('bg-black/40'); btn.classList.add('bg-green-600', 'text-white', 'font-bold', 'border-green-400'); 
         btn.innerHTML += ' <img src="assets/icons/correct.png" loading="lazy" class="w-5 h-5 inline-block ml-2">'; playSfx(sfxCorrect); 
@@ -280,7 +278,7 @@ window.verificarRespuesta = (btn, qIndex, optIndex, correctIndex) => {
 
 window.isMinimized = false;
 
-function initBottomSheet() {
+function initBottomSheet() { 
     const sheet = document.getElementById('bottom-sheet');
     const handle = document.getElementById('drag-handle');
     let startY = 0; let currentY = 0; let isDragging = false; 
@@ -325,7 +323,7 @@ function initBottomSheet() {
     window.addEventListener('mouseup', onEnd);
 }
 
-function abrirBottomSheet() {
+function abrirBottomSheet() { 
     const sheet = document.getElementById('bottom-sheet');
     sheet.classList.remove('translate-y-full'); 
     sheet.style.transform = 'translateY(0)';
@@ -333,7 +331,7 @@ function abrirBottomSheet() {
     window.isMinimized = false; 
 }
 
-function minimizarBottomSheet() {
+function minimizarBottomSheet() { 
     const sheet = document.getElementById('bottom-sheet');
     sheet.classList.remove('translate-y-full'); 
     const headerHeight = document.getElementById('sheet-header').offsetHeight;
@@ -344,7 +342,7 @@ function minimizarBottomSheet() {
     window.isMinimized = true; 
 }
 
-window.ocultarBottomSheetCompleto = () => {
+window.ocultarBottomSheetCompleto = () => { 
     const sheet = document.getElementById('bottom-sheet');
     sheet.style.transform = ''; 
     sheet.classList.add('translate-y-full'); 
@@ -352,13 +350,17 @@ window.ocultarBottomSheetCompleto = () => {
     window.isMinimized = false; 
 };
 
+//--- FUNCIONES DE NAVEGACIÓN ---
+
 window.irAEscanear = async () => {
+    window.isARPaused = false; // Quita la pausa al iniciar
     document.getElementById('screen-home').classList.add('hidden');
     document.getElementById('screen-ar').classList.remove('hidden');
     if (window.iniciarAR) await window.iniciarAR();
 };
 
 window.volverAlHome = () => {
+    window.isARPaused = false; 
     currentCountry = null;
     currentScore = 0;
     window.ocultarBottomSheetCompleto();
@@ -381,9 +383,11 @@ window.cerrarManual = () => {
 window.verHighlights = () => {
     if (!currentCountry) return;
     
+    window.isARPaused = true; // PAUSA EL SISTEMA AR MIENTRAS VES VIDEOS
+    
     if(window.detenerAudioAR) window.detenerAudioAR();
     if(window.detenerConfetiInmediato) window.detenerConfetiInmediato();
-    
+
     window.ocultarBottomSheetCompleto(); 
     
     document.getElementById('screen-ar').classList.add('hidden');
@@ -400,7 +404,7 @@ window.verHighlights = () => {
     currentCountry.videos.forEach((vid, index) => {
         const item = document.createElement('div');
         item.className = 'bg-black/40 border border-white/10 rounded-xl overflow-hidden active:scale-95 transition-transform cursor-pointer group';
-        item.onclick = () => window.reproducirVideoDesdeGaleria(index);
+        item.onclick = () => window.reproducirVideoDesdeGaleria(index); 
         
         const thumbnailSrc = vid.src.replace('.mp4', '.jpg');
         const videoTitle = tCountry.videos[index]; 
@@ -420,6 +424,8 @@ window.verHighlights = () => {
 };
 
 window.cerrarGaleria = async () => {
+    window.isARPaused = false; // QUITA LA PAUSA AL REGRESAR AL AR
+    
     document.getElementById('screen-gallery').classList.add('hidden');
     document.getElementById('screen-ar').classList.remove('hidden');
     
