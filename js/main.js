@@ -50,6 +50,21 @@ let homeAnimationId = null;
 let currentScore = 0; 
 let cachedI18nElements = null;
 
+function actualizarTarjetas3D() {
+    if (!carouselGroup) return; 
+    
+    carouselGroup.children.forEach((mesh, i) => {
+        const countryData = countriesData[i];
+        const countryName = translations[currentLang].countries[countryData.id].name;
+        const newTexture = createCardTexture(countryName, countryData.color);
+        
+        if (mesh.material.map) mesh.material.map.dispose();
+        
+        mesh.material.map = newTexture;
+        mesh.material.needsUpdate = true;
+    });
+}
+
 window.cambiarIdioma = (lang) => {
     currentLang = lang; 
     const ui = translations[currentLang].ui;
@@ -71,6 +86,8 @@ window.cambiarIdioma = (lang) => {
             window.verHighlights();
         }
     }
+
+    actualizarTarjetas3D(); 
 };
 
 window.addEventListener('load', () => { 
@@ -143,7 +160,7 @@ function initHome3D() {
     const radius = 3.5; const geo = new THREE.PlaneGeometry(1.4, 2.0);
     countriesData.forEach((c, i) => {
         const angle = (i / countriesData.length) * Math.PI * 2;
-        const countryName = translations['es'].countries[c.id].name;
+        const countryName = translations[currentLang].countries[c.id].name;
         const mat = new THREE.MeshBasicMaterial({ map: createCardTexture(countryName, c.color), side: THREE.DoubleSide, transparent: true, opacity: 0.9 });
         const mesh = new THREE.Mesh(geo, mat);
         mesh.position.set(Math.cos(angle)*radius, 1.0, Math.sin(angle)*radius);
