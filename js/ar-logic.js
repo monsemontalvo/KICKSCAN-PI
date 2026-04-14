@@ -336,6 +336,7 @@ function liberarMemoriaModelo(modelo) {
 function resetearModeloAnterior() { 
     if (currentAnchorIndex !== -1 && mindarThree) {
         const anchorAnterior = mindarThree.anchors[currentAnchorIndex];
+        const infoAnterior = modelosPorPais[currentAnchorIndex];
         
         if (anchorAnterior && anchorAnterior.group) {
             const modelosDelPais = anchorAnterior.group.children.filter(child => child.userData.esModelo);
@@ -348,6 +349,11 @@ function resetearModeloAnterior() {
         }
         
         paisesCargados[currentAnchorIndex] = false; 
+
+        //  MATAR EL AUDIO DE LA RAM ---
+        if (infoAnterior && infoAnterior.audioBuffer) {
+            infoAnterior.audioBuffer = null; //  libera Megabytes
+        }
     }
 
     if (globalSound && globalSound.isPlaying) { 
@@ -357,6 +363,12 @@ function resetearModeloAnterior() {
     //MATAR EL AUDIO FANTASMA
     if (globalSound) globalSound.buffer = null;
 
+    // --- FORZAR LIMPIEZA PROFUNDA DE THREE.JS ---
+    if (mindarThree && mindarThree.renderer) {
+        mindarThree.renderer.renderLists.dispose();
+    }
+    THREE.Cache.clear();
+    
     currentVisibleModel = null;
     currentAnchorIndex = -1;
 }
