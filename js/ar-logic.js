@@ -354,6 +354,9 @@ function resetearModeloAnterior() {
         globalSound.stop();
     }
 
+    //MATAR EL AUDIO FANTASMA
+    if (globalSound) globalSound.buffer = null;
+
     currentVisibleModel = null;
     currentAnchorIndex = -1;
 }
@@ -537,7 +540,7 @@ window.iniciarAR = async () => {
                         paisesCargados[i] = true;
                     } 
                 } else {
-                    if (globalSound && !globalSound.isPlaying) {
+                    if (globalSound && !globalSound.isPlaying && infoPais.audioBuffer && globalSound.buffer === infoPais.audioBuffer) {
                         globalSound.play();
                     }
                 }
