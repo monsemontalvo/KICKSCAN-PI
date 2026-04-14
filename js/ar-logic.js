@@ -435,7 +435,7 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
         if (!infoPais.audioBuffer) {
             audioLoaderGlobal.load(infoPais.song, (buffer) => { 
                 infoPais.audioBuffer = buffer; 
-                // AQUÍ ESTÁ EL CANDADO: ¿Sigue el mismo logo visible?
+                // CANDADO: ¿Sigue el mismo logo visible?
                 if (currentAnchorIndex === index && isTargetVisible) {
                     if (globalSound.isPlaying) globalSound.stop();
                     globalSound.setBuffer(buffer);
@@ -445,7 +445,7 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
                 }
             });
         } else {
-            // AQUÍ TAMBIÉN ESTÁ EL CANDADO
+            // CANDADO: ¿Sigue el mismo logo visible?
             if (currentAnchorIndex === index && isTargetVisible) {
                 if (globalSound.isPlaying) globalSound.stop();
                 globalSound.setBuffer(infoPais.audioBuffer);
@@ -458,15 +458,23 @@ function cargarRecursosDelPais(index, anchor, infoPais) {
 
     const rutaIdle = infoPais.acciones['idle'];
     
-    gltfLoaderGlobal.load(rutaIdle, (gltfIdle) => {
+    gltfLoaderGlobal.load(rutaIdle, async (gltfIdle) => {
         procesarModeloCargado(gltfIdle, 'idle', index, anchor, infoPais);
 
+        // AQUÍ ESTÁ LA MAGIA: Carga secuencial para no reventar la RAM
         for (const [accion, rutaArchivo] of Object.entries(infoPais.acciones)) {
             if (accion === 'idle') continue; 
             
-            gltfLoaderGlobal.load(rutaArchivo, (gltfSecundario) => {
-                procesarModeloCargado(gltfSecundario, accion, index, anchor, infoPais);
-            }, undefined, (e) => console.warn(`Error cargando ${accion} de país ${index}`));
+            // Usamos await para que no cargue la siguiente animación hasta terminar esta
+            await new Promise((resolve) => {
+                gltfLoaderGlobal.load(rutaArchivo, (gltfSecundario) => {
+                    procesarModeloCargado(gltfSecundario, accion, index, anchor, infoPais);
+                    resolve(); // Avisa que ya terminó y puede seguir con el otro
+                }, undefined, (e) => {
+                    console.warn(`Error cargando ${accion} de país ${index}`);
+                    resolve(); // Resuelve en caso de error para que no se trabe
+                });
+            });
         }
 
     }, undefined, (e) => console.warn(`Error cargando idle de país ${index}`));
